@@ -1,3 +1,6 @@
-nvidia/NVIDIA GPU Computing SDK/OpenCL/common/obj/
-nvidia/NVIDIA GPU Computing SDK/OpenCL/src/oclBandwidthTest/obj/
-nvidia/NVIDIA GPU Computing SDK/OpenCL/common/lib/
+nvidia/nvidia-opencl-examples/OpenCL/common/obj/
+nvidia/nvidia-opencl-examples/OpenCL/bin/
+nvidia/nvidia-opencl-examples/OpenCL/src/*/obj/
+nvidia/nvidia-opencl-examples/shared/obj
+
+

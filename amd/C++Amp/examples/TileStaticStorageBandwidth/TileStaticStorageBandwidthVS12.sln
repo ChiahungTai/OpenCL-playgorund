@@ -1,0 +1,39 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AmpUtil", "..\..\AmpUtil\AmpUtilVS12.vcxproj", "{BF9066C0-515E-49EF-9C3D-C728635266B7}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TileStaticStorageBandwidth", "TileStaticStorageBandwidthVS12.vcxproj", "{9176493F-ACB7-4AA2-974D-EA48FF5FDF5B}"
+	ProjectSection(ProjectDependencies) = postProject
+		{BF9066C0-515E-49EF-9C3D-C728635266B7} = {BF9066C0-515E-49EF-9C3D-C728635266B7}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Debug|x64 = Debug|x64
+		Release|Win32 = Release|Win32
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BF9066C0-515E-49EF-9C3D-C728635266B7}.Debug|Win32.ActiveCfg = Debug|Win32
+		{BF9066C0-515E-49EF-9C3D-C728635266B7}.Debug|Win32.Build.0 = Debug|Win32
+		{BF9066C0-515E-49EF-9C3D-C728635266B7}.Debug|x64.ActiveCfg = Debug|x64
+		{BF9066C0-515E-49EF-9C3D-C728635266B7}.Debug|x64.Build.0 = Debug|x64
+		{BF9066C0-515E-49EF-9C3D-C728635266B7}.Release|Win32.ActiveCfg = Release|Win32
+		{BF9066C0-515E-49EF-9C3D-C728635266B7}.Release|Win32.Build.0 = Release|Win32
+		{BF9066C0-515E-49EF-9C3D-C728635266B7}.Release|x64.ActiveCfg = Release|x64
+		{BF9066C0-515E-49EF-9C3D-C728635266B7}.Release|x64.Build.0 = Release|x64
+		{9176493F-ACB7-4AA2-974D-EA48FF5FDF5B}.Debug|Win32.ActiveCfg = Debug|Win32
+		{9176493F-ACB7-4AA2-974D-EA48FF5FDF5B}.Debug|Win32.Build.0 = Debug|Win32
+		{9176493F-ACB7-4AA2-974D-EA48FF5FDF5B}.Debug|x64.ActiveCfg = Debug|x64
+		{9176493F-ACB7-4AA2-974D-EA48FF5FDF5B}.Debug|x64.Build.0 = Debug|x64
+		{9176493F-ACB7-4AA2-974D-EA48FF5FDF5B}.Release|Win32.ActiveCfg = Release|Win32
+		{9176493F-ACB7-4AA2-974D-EA48FF5FDF5B}.Release|Win32.Build.0 = Release|Win32
+		{9176493F-ACB7-4AA2-974D-EA48FF5FDF5B}.Release|x64.ActiveCfg = Release|x64
+		{9176493F-ACB7-4AA2-974D-EA48FF5FDF5B}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

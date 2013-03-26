@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="Windows-1252"?>
+<VisualStudioPropertySheet
+	ProjectType="Visual C++"
+	Version="8.00"
+	Name="openclsdk_debug"
+	OutputDirectory="$(AMDAPPSDKSAMPLESROOT)\samples\opencl\bin\debug\x86"
+	IntermediateDirectory="$(ConfigurationName)\$(PlatformName)"
+	EnableManagedIncrementalBuild="0"
+	>
+	<Tool
+		Name="VCCLCompilerTool"
+		Optimization="0"
+		AdditionalIncludeDirectories="&quot;$(AMDAPPSDKROOT)\include&quot;;&quot;$(AMDAPPSDKSAMPLESROOT)\include&quot;"
+		PreprocessorDefinitions="ATI_OS_WIN;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE"
+		BasicRuntimeChecks="3"
+		RuntimeLibrary="1"
+		WarningLevel="3"
+		WarnAsError="true"
+		DebugInformationFormat="4"
+	/>
+	<Tool
+		Name="VCCustomBuildTool"
+		Description=""
+		CommandLine=""
+		AdditionalDependencies=""
+		Outputs=""
+	/>
+	<Tool
+		Name="VCLinkerTool"
+		AdditionalDependencies="OpenCL.lib"
+		AdditionalLibraryDirectories="&quot;$(AMDAPPSDKROOT)\lib\x86&quot;;&quot;$(AMDAPPSDKSAMPLESROOT)\lib\x86&quot;"
+		GenerateDebugInformation="true"
+		TargetMachine="1"
+	/>
+</VisualStudioPropertySheet>

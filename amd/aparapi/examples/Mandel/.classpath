@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="lib" path="C:/dev/aparapi/aparapi-2012-05-06/aparapi.jar"/>
+	<classpathentry kind="lib" path="../../AparapiUtil/AparapiUtil.jar" sourcepath="/AparapiUtil"/>
+	<classpathentry kind="output" path="classes"/>
+</classpath>

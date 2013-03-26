@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+
+<project name="Life" default="build" basedir=".">
+   <target name="build" depends="clean">
+      <property environment="env"/>
+      <mkdir dir="classes"/>
+      <javac srcdir="src" destdir="classes" debug="on" includeantruntime="false" >
+         <classpath>
+            <pathelement path="${env.LIBAPARAPI}/aparapi.jar"/>
+         	<pathelement path="../../AparapiUtil/AparapiUtil.jar"/>
+         </classpath>
+      </javac>
+      <jar jarfile="${ant.project.name}.jar" basedir="classes"/>
+   </target>
+
+   <target name="clean">
+      <delete dir="classes"/>
+      <delete file="${ant.project.name}.jar"/>
+   </target>
+
+
+</project>

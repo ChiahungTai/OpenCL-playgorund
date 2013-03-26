@@ -1,0 +1,24 @@
+﻿已經開始建置於 2013/3/22 上午 12:01:49。
+     1>節點 2 (Build 目標) 上的專案 "C:\Users\glaxy\Documents\AMD APP\samples\opencl\SDKUtil\SDKUtilVS12.vcxproj"。
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /I"C:\Program Files (x86)\AMD APP\/include" /I"C:\Users\glaxy\Documents\AMD APP\samples\opencl\SDKUtil\\include" /ZI /nologo /W1 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _CRT_SECURE_NO_WARNINGS /GF- /Gm /EHsc /RTC1 /MTd /GS /Gy- /fp:precise /fp:except- /Zc:wchar_t /Zc:forScope /GR /openmp- /Fo"build\debug\x86\\" /Fd"build\debug\x86\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt SDKApplication.cpp SDKBitMap.cpp SDKCommandArgs.cpp SDKCommon.cpp SDKFile.cpp SDKThread.cpp
+         SDKThread.cpp
+         SDKFile.cpp
+         SDKCommon.cpp
+         SDKCommandArgs.cpp
+         SDKBitMap.cpp
+         SDKApplication.cpp
+         正在產生程式碼...
+       Lib:
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\Lib.exe /OUT:"C:\Users\glaxy\Documents\AMD APP\\TempSDKUtil\lib\debug\x86\\SDKUtil.lib" /NOLOGO build\debug\x86\SDKApplication.obj
+         build\debug\x86\SDKBitMap.obj
+         build\debug\x86\SDKCommandArgs.obj
+         build\debug\x86\SDKCommon.obj
+         build\debug\x86\SDKFile.obj
+         build\debug\x86\SDKThread.obj
+         SDKUtilVS12.vcxproj -> C:\Users\glaxy\Documents\AMD APP\\TempSDKUtil\lib\debug\x86\SDKUtil.lib
+     1>專案 "C:\Users\glaxy\Documents\AMD APP\samples\opencl\SDKUtil\SDKUtilVS12.vcxproj" (Build 目標) 建置完成。
+
+建置成功。
+
+經過時間 00:00:09.68

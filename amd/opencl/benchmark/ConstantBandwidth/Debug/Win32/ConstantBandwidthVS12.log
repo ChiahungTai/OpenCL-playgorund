@@ -1,0 +1,17 @@
+﻿已經開始建置於 2013/3/22 上午 12:01:58。
+     1>節點 2 (Build 目標) 上的專案 "C:\Users\glaxy\Documents\AMD APP\samples\opencl\benchmark\ConstantBandwidth\ConstantBandwidthVS12.vcxproj"。
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /I"C:\Program Files (x86)\AMD APP\\include" /I"C:\Users\glaxy\Documents\AMD APP\\samples\opencl\SDKUtil\include" /I"C:\Users\glaxy\Documents\AMD APP\\include" /ZI /nologo /W3 /WX /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D ATI_OS_WIN /D _CRT_SECURE_NO_DEPRECATE /D _CRT_NONSTDC_NO_DEPRECATE /GF- /Gm- /EHsc /RTC1 /MTd /GS /Gy- /fp:precise /fp:except- /Zc:wchar_t /Zc:forScope /GR /openmp- /Fo"Debug\Win32\\" /Fd"Debug\Win32\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt ConstantBandwidth.cpp
+         ConstantBandwidth.cpp
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\glaxy\Documents\AMD APP\\samples\opencl\bin\debug\x86\ConstantBandwidth.exe" /INCREMENTAL /NOLOGO /LIBPATH:"C:\Program Files (x86)\AMD APP\\lib\x86" /LIBPATH:"C:\Users\glaxy\Documents\AMD APP\\lib\x86" /LIBPATH:"C:\Users\glaxy\Documents\AMD APP\\TempSDKUtil\lib\debug\x86" OpenCL.lib SDKUtil.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"Debug\Win32\ConstantBandwidth.pdb" /ASSEMBLYDEBUG:DISABLE /SUBSYSTEM:CONSOLE /HEAP:"0","0" /STACK:"0","0" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\glaxy\Documents\AMD APP\\samples\opencl\bin\debug\x86\ConstantBandwidth.lib" /MACHINE:X86 Debug\Win32\ConstantBandwidth.obj
+         ConstantBandwidthVS12.vcxproj -> C:\Users\glaxy\Documents\AMD APP\\samples\opencl\bin\debug\x86\ConstantBandwidth.exe
+       PostBuildEvent:
+         copy ConstantBandwidth_Kernels.cl "C:\Users\glaxy\Documents\AMD APP\\samples\opencl\bin\debug\x86\"\ConstantBandwidth_Kernels.cl
+         :VCEnd
+         複製了         1 個檔案。
+     1>專案 "C:\Users\glaxy\Documents\AMD APP\samples\opencl\benchmark\ConstantBandwidth\ConstantBandwidthVS12.vcxproj" (Build 目標) 建置完成。
+
+建置成功。
+
+經過時間 00:00:03.76

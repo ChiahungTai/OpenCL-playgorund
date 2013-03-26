@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+
+<project name="Mandel" default="build" basedir=".">
+   <target name="build" depends="clean">
+      <property environment="env"/>
+      <mkdir dir="classes"/>
+      <javac srcdir="src" destdir="classes" debug="on" includeantruntime="false" >
+         <classpath>
+            <pathelement path="${env.LIBAPARAPI}/aparapi.jar"/>
+            <pathelement path="../../AparapiUtil/AparapiUtil.jar"/>
+         </classpath>
+      </javac>
+      <copy todir="classes/com\amd\aparapi\sample\Mandel" file="src\com\amd\aparapi\sample\Mandel\Mandel.cl"/>
+      <jar jarfile="${ant.project.name}.jar" basedir="classes"/>
+   </target>
+
+   <target name="clean">
+      <delete dir="classes"/>
+      <delete file="${ant.project.name}.jar"/>
+   </target>
+
+
+</project>

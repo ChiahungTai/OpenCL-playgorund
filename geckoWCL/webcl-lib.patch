@@ -1,0 +1,1006 @@
+# HG changeset patch
+# User Chia-hung Tai <ctai@mozilla.com>
+# Date 1363684854 -28800
+# Node ID 6a730cc16c2449aff3219a8846cc6514376223a5
+# Parent  4673849a821ee683aa52977cb809751a0d204965
+[mq]: webcl-lib.patch
+
+diff --git a/content/moz.build b/content/moz.build
+--- a/content/moz.build
++++ b/content/moz.build
+@@ -6,16 +6,17 @@
+ PARALLEL_DIRS += [
+     'base',
+     'canvas',
+     'events',
+     'html',
+     'mathml/content/src',
+     'smil',
+     'svg',
++    'webcl',
+     'xml',
+     'xul',
+     'xbl',
+     'xslt',
+ ]
+ 
+ if CONFIG['MOZ_MEDIA']:
+     PARALLEL_DIRS += ['media']
+diff --git a/content/webcl/defs.mk b/content/webcl/defs.mk
+new file mode 100644
+--- /dev/null
++++ b/content/webcl/defs.mk
+@@ -0,0 +1,3 @@
++ifeq ($(OS_TARGET),WINNT)
++NO_PROFILE_GUIDED_OPTIMIZE := 1 # Don't PGO
++endif
+diff --git a/content/webcl/moz.build b/content/webcl/moz.build
+new file mode 100644
+--- /dev/null
++++ b/content/webcl/moz.build
+@@ -0,0 +1,6 @@
++# vim: set filetype=python:
++# This Source Code Form is subject to the terms of the Mozilla Public
++# License, v. 2.0. If a copy of the MPL was not distributed with this
++# file, You can obtain one at http://mozilla.org/MPL/2.0/.
++
++PARALLEL_DIRS += ['public', 'src']
+diff --git a/content/webcl/public/Makefile.in b/content/webcl/public/Makefile.in
+new file mode 100644
+--- /dev/null
++++ b/content/webcl/public/Makefile.in
+@@ -0,0 +1,48 @@
++#
++# ***** BEGIN LICENSE BLOCK *****
++# Version: MPL 1.1/GPL 2.0/LGPL 2.1
++#
++# The contents of this file are subject to the Mozilla Public License Version
++# 1.1 (the "License"); you may not use this file except in compliance with
++# the License. You may obtain a copy of the License at
++# http://www.mozilla.org/MPL/
++#
++# Software distributed under the License is distributed on an "AS IS" basis,
++# WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
++# for the specific language governing rights and limitations under the
++# License.
++#
++# The Original Code is mozilla.org code.
++#
++# The Initial Developer of the Original Code is
++# Netscape Communications Corporation.
++# Portions created by the Initial Developer are Copyright (C) 2001
++# the Initial Developer. All Rights Reserved.
++#
++# Contributor(s):
++#     Adrien Plagnol <adrien.plagnol@gmail.com>
++#
++# Alternatively, the contents of this file may be used under the terms of
++# either the GNU General Public License Version 2 or later (the "GPL"), or
++# the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
++# in which case the provisions of the GPL or the LGPL are applicable instead
++# of those above. If you wish to allow use of your version of this file only
++# under the terms of either the GPL or the LGPL, and not to allow others to
++# use your version of this file under the terms of the MPL, indicate your
++# decision by deleting the provisions above and replace them with the notice
++# and other provisions required by the GPL or the LGPL. If you do not delete
++# the provisions above, a recipient may use your version of this file under
++# the terms of any one of the MPL, the GPL or the LGPL.
++#
++# ***** END LICENSE BLOCK *****
++
++DEPTH           = ../../..
++topsrcdir       = @top_srcdir@
++srcdir          = @srcdir@
++VPATH           = @srcdir@
++
++include $(DEPTH)/config/autoconf.mk
++
++# nothing yet
++    
++include $(topsrcdir)/config/rules.mk
+diff --git a/content/webcl/public/moz.build b/content/webcl/public/moz.build
+new file mode 100644
+--- /dev/null
++++ b/content/webcl/public/moz.build
+@@ -0,0 +1,5 @@
++# vim: set filetype=python:
++# This Source Code Form is subject to the terms of the Mozilla Public
++# License, v. 2.0. If a copy of the MPL was not distributed with this
++# file, You can obtain one at http://mozilla.org/MPL/2.0/.
++
+diff --git a/content/webcl/src/Makefile.in b/content/webcl/src/Makefile.in
+new file mode 100644
+--- /dev/null
++++ b/content/webcl/src/Makefile.in
+@@ -0,0 +1,59 @@
++#
++# ***** BEGIN LICENSE BLOCK *****
++# Version: MPL 1.1/GPL 2.0/LGPL 2.1
++#
++# The contents of this file are subject to the Mozilla Public License Version
++# 1.1 (the "License"); you may not use this file except in compliance with
++# the License. You may obtain a copy of the License at
++# http://www.mozilla.org/MPL/
++#
++# Software distributed under the License is distributed on an "AS IS" basis,
++# WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
++# for the specific language governing rights and limitations under the
++# License.
++#
++# The Original Code is mozilla.org code.
++#
++# The Initial Developer of the Original Code is
++# Netscape Communications Corporation.
++# Portions created by the Initial Developer are Copyright (C) 2001
++# the Initial Developer. All Rights Reserved.
++#
++# Contributor(s):
++#	  fabien Cellier <fabien.cellier@gmail.com>
++#     Adrien Plagnol <adrien.plagnol@gmail.com>
++#
++# Alternatively, the contents of this file may be used under the terms of
++# either the GNU General Public License Version 2 or later (the "GPL"), or
++# the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
++# in which case the provisions of the GPL or the LGPL are applicable instead
++# of those above. If you wish to allow use of your version of this file only
++# under the terms of either the GPL or the LGPL, and not to allow others to
++# use your version of this file under the terms of the MPL, indicate your
++# decision by deleting the provisions above and replace them with the notice
++# and other provisions required by the GPL or the LGPL. If you do not delete
++# the provisions above, a recipient may use your version of this file under
++# the terms of any one of the MPL, the GPL or the LGPL.
++#
++# ***** END LICENSE BLOCK *****
++
++DEPTH           = ../../..
++topsrcdir       = @top_srcdir@
++srcdir          = @srcdir@
++VPATH           = @srcdir@
++
++include $(DEPTH)/config/autoconf.mk
++
++MODULE = content
++LIBRARY_NAME = webclprov_s
++LIBXUL_LIBRARY = 1
++
++EXPORTS = \
++    OpenCLLib.h\
++    $(NULL)
++
++CPPSRCS = \
++	OpenCLLib.cpp\
++    $(NULL)
++    
++include $(topsrcdir)/config/rules.mk
+diff --git a/content/webcl/src/OpenCLLib.cpp b/content/webcl/src/OpenCLLib.cpp
+new file mode 100644
+--- /dev/null
++++ b/content/webcl/src/OpenCLLib.cpp
+@@ -0,0 +1,322 @@
++/* ***** BEGIN LICENSE BLOCK *****
++ * Version: MPL 1.1/GPL 2.0/LGPL 2.1
++ *
++ * The contents of this file are subject to the Mozilla Public License Version
++ * 1.1 (the "License"); you may not use this file except in compliance with
++ * the License. You may obtain a copy of the License at
++ * http://www.mozilla.org/MPL/
++ *
++ * Software distributed under the License is distributed on an "AS IS" basis,
++ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
++ * for the specific language governing rights and limitations under the
++ * License.
++ *
++ * The Original Code is WebCLWorker.
++ *
++ * The Initial Developer of the Original Code is
++ *   Fabien Cellier <fabien.cellier@gmail.com>
++ *
++ * Portions created by the Initial Developer are Copyright (C) 2011
++ * the Initial Developer. All Rights Reserved.
++ *
++ *
++ * Contributor(s):
++ *   Adrien Plagnol <adrien.plagnol@gmail.com>
++ *
++ * Alternatively, the contents of this file may be used under the terms of
++ * either the GNU General Public License Version 2 or later (the "GPL"), or
++ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
++ * in which case the provisions of the GPL or the LGPL are applicable instead
++ * of those above. If you wish to allow use of your version of this file only
++ * under the terms of either the GPL or the LGPL, and not to allow others to
++ * use your version of this file under the terms of the MPL, indicate your
++ * decision by deleting the provisions above and replace them with the notice
++ * and other provisions required by the GPL or the LGPL. If you do not delete
++ * the provisions above, a recipient may use your version of this file under
++ * the terms of any one of the MPL, the GPL or the LGPL.
++ *
++ * ***** END LICENSE BLOCK ***** */
++
++#include "OpenCLLib.h"
++#include "nsIClassInfoImpl.h"
++#include "nsISupportsPrimitives.h"
++#include "nsIPrefBranch2.h"
++#include "nsIPrefService.h"
++#include "nsServiceManagerUtils.h"
++#include "mozilla/Preferences.h"
++
++#define WEBCL_PREF_ID__OPENCLLIB "webcl.opencllib"
++#define WEBCL_PREF_VALUE__OPENCLLIB__NOT_SET ""
++
++OpenCLLib::OpenCLLib(const char* libName)
++{
++  openCLLibOS = PR_LoadLibrary(libName);
++  if (!openCLLibOS) {
++    mInitialized = PR_FALSE;
++    return;
++  }
++
++  GetPlatformIDs = (mClGetPlatformIDs) (PR_FindFunctionSymbol(openCLLibOS,
++      "clGetPlatformIDs"));
++  GetPlatformInfo = (ns_clGetPlatformInfo_t) PR_FindFunctionSymbol(openCLLibOS,
++      "clGetPlatformInfo");
++  GetDeviceIDs = (ns_clGetDeviceIDs_t) PR_FindFunctionSymbol(openCLLibOS,
++      "clGetDeviceIDs");
++  GetDeviceInfo = (ns_clGetDeviceInfo_t) PR_FindFunctionSymbol(openCLLibOS,
++      "clGetDeviceInfo");
++  CreateContext = (ns_clCreateContext_t) PR_FindFunctionSymbol(openCLLibOS,
++      "clCreateContext");
++  CreateContextFromType = (ns_clCreateContextFromType_t) PR_FindFunctionSymbol(
++      openCLLibOS, "clCreateContextFromType");
++  RetainContext = (ns_clRetainContext_t) PR_FindFunctionSymbol(openCLLibOS,
++      "clRetainContext");
++  ReleaseContext = (ns_clReleaseContext_t) PR_FindFunctionSymbol(openCLLibOS,
++      "clReleaseContext");
++  GetContextInfo = (ns_clGetContextInfo_t) PR_FindFunctionSymbol(openCLLibOS,
++      "clGetContextInfo");
++  CreateCommandQueue = (ns_clCreateCommandQueue_t) PR_FindFunctionSymbol(
++      openCLLibOS, "clCreateCommandQueue");
++  RetainCommandQueue = (ns_clRetainCommandQueue_t) PR_FindFunctionSymbol(
++      openCLLibOS, "clRetainCommandQueue");
++  ReleaseCommandQueue = (ns_clReleaseCommandQueue_t) PR_FindFunctionSymbol(
++      openCLLibOS, "clReleaseCommandQueue");
++  GetCommandQueueInfo = (ns_clGetCommandQueueInfo_t) PR_FindFunctionSymbol(
++      openCLLibOS, "clGetCommandQueueInfo");
++  CreateBuffer = (ns_clCreateBuffer_t) PR_FindFunctionSymbol(openCLLibOS,
++      "clCreateBuffer");
++  CreateSubBuffer = (ns_clCreateSubBuffer_t) PR_FindFunctionSymbol(openCLLibOS,
++      "clCreateSubBuffer");
++  CreateImage2D = (ns_clCreateImage2D_t) PR_FindFunctionSymbol(openCLLibOS,
++      "clCreateImage2D");
++  CreateImage3D = (ns_clCreateImage3D_t) PR_FindFunctionSymbol(openCLLibOS,
++      "clCreateImage3D");
++  RetainMemObject = (ns_clRetainMemObject_t) PR_FindFunctionSymbol(openCLLibOS,
++      "clRetainMemObject");
++  ReleaseMemObject = (ns_clReleaseMemObject_t) PR_FindFunctionSymbol(
++      openCLLibOS, "clReleaseMemObject");
++  GetSupportedImageFormats
++      = (ns_clGetSupportedImageFormats_t) PR_FindFunctionSymbol(openCLLibOS,
++          "clGetSupportedImageFormats");
++  GetMemObjectInfo = (ns_clGetMemObjectInfo_t) PR_FindFunctionSymbol(
++      openCLLibOS, "clGetMemObjectInfo");
++  GetImageInfo = (ns_clGetImageInfo_t) PR_FindFunctionSymbol(openCLLibOS,
++      "clGetImageInfo");
++  SetMemObjectDestructorCallback
++      = (ns_clSetMemObjectDestructorCallback_t) PR_FindFunctionSymbol(
++          openCLLibOS, "clSetMemObjectDestructorCallback");
++  CreateSampler = (ns_clCreateSampler_t) PR_FindFunctionSymbol(openCLLibOS,
++      "clCreateSampler");
++  RetainSampler = (ns_clRetainSampler_t) PR_FindFunctionSymbol(openCLLibOS,
++      "clRetainSampler");
++  ReleaseSampler = (ns_clReleaseSampler_t) PR_FindFunctionSymbol(openCLLibOS,
++      "clReleaseSampler");
++  GetSamplerInfo = (ns_clGetSamplerInfo_t) PR_FindFunctionSymbol(openCLLibOS,
++      "clGetSamplerInfo");
++  CreateProgramWithSource
++      = (ns_clCreateProgramWithSource_t) PR_FindFunctionSymbol(openCLLibOS,
++          "clCreateProgramWithSource");
++  CreateProgramWithBinary
++      = (ns_clCreateProgramWithBinary_t) PR_FindFunctionSymbol(openCLLibOS,
++          "clCreateProgramWithBinary");
++  RetainProgram = (ns_clRetainProgram_t) PR_FindFunctionSymbol(openCLLibOS,
++      "clRetainProgram");
++  ReleaseProgram = (ns_clReleaseProgram_t) PR_FindFunctionSymbol(openCLLibOS,
++      "clReleaseProgram");
++  BuildProgram = (ns_clBuildProgram_t) PR_FindFunctionSymbol(openCLLibOS,
++      "clBuildProgram");
++  UnloadCompiler = (ns_clUnloadCompiler_t) PR_FindFunctionSymbol(openCLLibOS,
++      "clUnloadCompiler");
++  GetProgramInfo = (ns_clGetProgramInfo_t) PR_FindFunctionSymbol(openCLLibOS,
++      "clGetProgramInfo");
++  GetProgramBuildInfo = (ns_clGetProgramBuildInfo_t) PR_FindFunctionSymbol(
++      openCLLibOS, "clGetProgramBuildInfo");
++  CreateKernel = (ns_clCreateKernel_t) PR_FindFunctionSymbol(openCLLibOS,
++      "clCreateKernel");
++  CreateKernelsInProgram
++      = (ns_clCreateKernelsInProgram_t) PR_FindFunctionSymbol(openCLLibOS,
++          "clCreateKernelsInProgram");
++  RetainKernel = (ns_clRetainKernel_t) PR_FindFunctionSymbol(openCLLibOS,
++      "clRetainKernel");
++  ReleaseKernel = (ns_clReleaseKernel_t) PR_FindFunctionSymbol(openCLLibOS,
++      "clReleaseKernel");
++  SetKernelArg = (ns_clSetKernelArg_t) PR_FindFunctionSymbol(openCLLibOS,
++      "clSetKernelArg");
++  GetKernelInfo = (ns_clGetKernelInfo_t) PR_FindFunctionSymbol(openCLLibOS,
++      "clGetKernelInfo");
++  GetKernelWorkGroupInfo
++      = (ns_clGetKernelWorkGroupInfo_t) PR_FindFunctionSymbol(openCLLibOS,
++          "clGetKernelWorkGroupInfo");
++  WaitForEvents = (ns_clWaitForEvents_t) PR_FindFunctionSymbol(openCLLibOS,
++      "clWaitForEvents");
++  GetEventInfo = (ns_clGetEventInfo_t) PR_FindFunctionSymbol(openCLLibOS,
++      "clGetEventInfo");
++  CreateUserEvent = (ns_clCreateUserEvent_t) PR_FindFunctionSymbol(openCLLibOS,
++      "clCreateUserEvent");
++  RetainEvent = (ns_clRetainEvent_t) PR_FindFunctionSymbol(openCLLibOS,
++      "clRetainEvent");
++  ReleaseEvent = (ns_clReleaseEvent_t) PR_FindFunctionSymbol(openCLLibOS,
++      "clReleaseEvent");
++  SetUserEventStatus = (ns_clSetUserEventStatus_t) PR_FindFunctionSymbol(
++      openCLLibOS, "clSetUserEventStatus");
++  SetEventCallback = (ns_clSetEventCallback_t) PR_FindFunctionSymbol(
++      openCLLibOS, "clSetEventCallback");
++  GetEventProfilingInfo = (ns_clGetEventProfilingInfo_t) PR_FindFunctionSymbol(
++      openCLLibOS, "clGetEventProfilingInfo");
++  Flush = (ns_clFlush_t) PR_FindFunctionSymbol(openCLLibOS, "clFlush");
++  Finish = (ns_clFinish_t) PR_FindFunctionSymbol(openCLLibOS, "clFinish");
++  EnqueueReadBuffer = (ns_clEnqueueReadBuffer_t) PR_FindFunctionSymbol(
++      openCLLibOS, "clEnqueueReadBuffer");
++  EnqueueReadBufferRect = (ns_clEnqueueReadBufferRect_t) PR_FindFunctionSymbol(
++      openCLLibOS, "clEnqueueReadBufferRect");
++  EnqueueWriteBuffer = (ns_clEnqueueWriteBuffer_t) PR_FindFunctionSymbol(
++      openCLLibOS, "clEnqueueWriteBuffer");
++  EnqueueWriteBufferRect
++      = (ns_clEnqueueWriteBufferRect_t) PR_FindFunctionSymbol(openCLLibOS,
++          "clEnqueueWriteBufferRect");
++  EnqueueCopyBuffer = (ns_clEnqueueCopyBuffer_t) PR_FindFunctionSymbol(
++      openCLLibOS, "clEnqueueCopyBuffer");
++  EnqueueCopyBufferRect = (ns_clEnqueueCopyBufferRect_t) PR_FindFunctionSymbol(
++      openCLLibOS, "clEnqueueCopyBufferRect");
++  EnqueueReadImage = (ns_clEnqueueReadImage_t) PR_FindFunctionSymbol(
++      openCLLibOS, "clEnqueueReadImage");
++  EnqueueWriteImage = (ns_clEnqueueWriteImage_t) PR_FindFunctionSymbol(
++      openCLLibOS, "clEnqueueWriteImage");
++  EnqueueCopyImage = (ns_clEnqueueCopyImage_t) PR_FindFunctionSymbol(
++      openCLLibOS, "clEnqueueCopyImage");
++  EnqueueCopyImageToBuffer
++      = (ns_clEnqueueCopyImageToBuffer_t) PR_FindFunctionSymbol(openCLLibOS,
++          "clEnqueueCopyImageToBuffer");
++  EnqueueCopyBufferToImage
++      = (ns_clEnqueueCopyBufferToImage_t) PR_FindFunctionSymbol(openCLLibOS,
++          "clEnqueueCopyBufferToImage");
++  EnqueueMapBuffer = (ns_clEnqueueMapBuffer_t) PR_FindFunctionSymbol(
++      openCLLibOS, "clEnqueueMapBuffer");
++  EnqueueMapImage = (ns_clEnqueueMapImage_t) PR_FindFunctionSymbol(openCLLibOS,
++      "clEnqueueMapImage");
++  EnqueueUnmapMemObject = (ns_clEnqueueUnmapMemObject_t) PR_FindFunctionSymbol(
++      openCLLibOS, "clEnqueueUnmapMemObject");
++  EnqueueNDRangeKernel = (ns_clEnqueueNDRangeKernel_t) PR_FindFunctionSymbol(
++      openCLLibOS, "clEnqueueNDRangeKernel");
++  EnqueueTask = (ns_clEnqueueTask_t) PR_FindFunctionSymbol(openCLLibOS,
++      "clEnqueueTask");
++  EnqueueNativeKernel = (ns_clEnqueueNativeKernel_t) PR_FindFunctionSymbol(
++      openCLLibOS, "clEnqueueNativeKernel");
++  EnqueueMarker = (ns_clEnqueueMarker_t) PR_FindFunctionSymbol(openCLLibOS,
++      "clEnqueueMarker");
++  EnqueueWaitForEvents = (ns_clEnqueueWaitForEvents_t) PR_FindFunctionSymbol(
++      openCLLibOS, "clEnqueueWaitForEvents");
++  EnqueueBarrier = (ns_clEnqueueBarrier_t) PR_FindFunctionSymbol(openCLLibOS,
++      "clEnqueueBarrier");
++  GetExtensionFunctionAddress
++      = (ns_clGetExtensionFunctionAddress_t) PR_FindFunctionSymbol(openCLLibOS,
++          "clGetExtensionFunctionAddress");
++  CreateFromGLBuffer = (ns_clCreateFromGLBuffer_t) PR_FindFunctionSymbol(
++      openCLLibOS, "clCreateFromGLBuffer");
++  CreateFromGLTexture2D = (ns_clCreateFromGLTexture2D_t) PR_FindFunctionSymbol(
++      openCLLibOS, "clCreateFromGLTexture2D");
++  CreateFromGLRenderbuffer
++      = (ns_clCreateFromGLRenderbuffer_t) PR_FindFunctionSymbol(openCLLibOS,
++          "clCreateFromGLRenderbuffer");
++  EnqueueAcquireGLObjects
++      = (ns_clEnqueueAcquireGLObjects_t) PR_FindFunctionSymbol(openCLLibOS,
++          "clEnqueueAcquireGLObjects");
++  EnqueueReleaseGLObjects
++      = (ns_clEnqueueReleaseGLObjects_t) PR_FindFunctionSymbol(openCLLibOS,
++          "clEnqueueReleaseGLObjects");
++
++  mInitialized = PR_TRUE;
++}
++
++OpenCLLib::~OpenCLLib()
++{
++  if (mInitialized) {
++    PR_UnloadLibrary(openCLLibOS);
++  }
++}
++
++class CLLibObserver: public nsIObserver {
++NS_DECL_ISUPPORTS
++  CLLibObserver()
++  {
++    nsresult rv;
++    rv = mozilla::Preferences::AddStrongObserver(this, WEBCL_PREF_ID__OPENCLLIB);
++  }
++
++  ~CLLibObserver()
++  {
++    nsresult rv;
++    rv = mozilla::Preferences::RemoveObserver(this, WEBCL_PREF_ID__OPENCLLIB);
++  }
++
++  NS_IMETHODIMP Observe(nsISupports* aSubject, const char* aTopic,
++      const PRUnichar* aData)
++  {
++    OpenCLLibFactory::needsUpdate();
++    return NS_OK;
++  }
++};
++NS_IMPL_ISUPPORTS1(CLLibObserver, nsIObserver)
++
++nsAdoptingCString OpenCLLibFactory::opencllib;
++PRBool OpenCLLibFactory::needUpdate = PR_FALSE;
++OpenCLLib* OpenCLLibFactory::myOpenCLLib = nsnull;
++mozilla::Mutex OpenCLLibFactory::mMutex("OpenCLLibMutex");
++
++
++OpenCLLibFactory::OpenCLLibFactory()
++{
++}
++
++OpenCLLibFactory& OpenCLLibFactory::operator=(
++    const OpenCLLibFactory& aOpenCLLibFactory)
++{
++  return *this;
++}
++
++OpenCLLibFactory::OpenCLLibFactory(const OpenCLLibFactory& aOpenCLLibFactory)
++{
++}
++
++PRBool OpenCLLibFactory::readPref()
++{
++  opencllib = mozilla::Preferences::GetCString(WEBCL_PREF_ID__OPENCLLIB);
++  if(!opencllib)
++    return PR_FALSE;
++
++  return PR_TRUE;
++}
++
++void OpenCLLibFactory::needsUpdate()
++{
++  OpenCLLibFactory::needUpdate = PR_TRUE;
++}
++
++already_AddRefed<OpenCLLib> OpenCLLibFactory::getOpenCLLib()
++{
++  mozilla::MutexAutoLock al(mMutex);
++
++  static PRBool isInitialized = PR_FALSE;
++  static nsCOMPtr<CLLibObserver> mCLLibObserver = new CLLibObserver();
++  if (!isInitialized) {
++    needUpdate = PR_FALSE;
++    readPref();
++    myOpenCLLib = new OpenCLLib(opencllib.get());
++    isInitialized = PR_TRUE;
++  }
++  else {
++    if (needUpdate) {
++      readPref();
++      delete myOpenCLLib;
++      myOpenCLLib = nsnull;
++      myOpenCLLib = new OpenCLLib(opencllib.get());
++      needUpdate = PR_FALSE;
++    }
++  }
++
++  if (!myOpenCLLib) {
++    return nsnull;
++  }
++  NS_IF_ADDREF(myOpenCLLib);
++  return myOpenCLLib;
++}
++
+diff --git a/content/webcl/src/OpenCLLib.h b/content/webcl/src/OpenCLLib.h
+new file mode 100644
+--- /dev/null
++++ b/content/webcl/src/OpenCLLib.h
+@@ -0,0 +1,387 @@
++/* ***** BEGIN LICENSE BLOCK *****
++ * Version: MPL 1.1/GPL 2.0/LGPL 2.1
++ *
++ * The contents of this file are subject to the Mozilla Public License Version
++ * 1.1 (the "License"); you may not use this file except in compliance with
++ * the License. You may obtain a copy of the License at
++ * http://www.mozilla.org/MPL/
++ *
++ * Software distributed under the License is distributed on an "AS IS" basis,
++ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
++ * for the specific language governing rights and limitations under the
++ * License.
++ *
++ * The Original Code is WebCLWorker.
++ *
++ * The Initial Developer of the Original Code is
++ *   Fabien Cellier <fabien.cellier@gmail.com>
++ *
++ * Portions created by the Initial Developer are Copyright (C) 2011
++ * the Initial Developer. All Rights Reserved.
++ *
++ *
++ * Contributor(s):
++ *   Joe R. Nassimian <nassimian.joseph@gmail.com>
++ *   Adrien Plagnol <adrien.plagnol@gmail.com>
++ *
++ * Alternatively, the contents of this file may be used under the terms of
++ * either the GNU General Public License Version 2 or later (the "GPL"), or
++ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
++ * in which case the provisions of the GPL or the LGPL are applicable instead
++ * of those above. If you wish to allow use of your version of this file only
++ * under the terms of either the GPL or the LGPL, and not to allow others to
++ * use your version of this file under the terms of the MPL, indicate your
++ * decision by deleting the provisions above and replace them with the notice
++ * and other provisions required by the GPL or the LGPL. If you do not delete
++ * the provisions above, a recipient may use your version of this file under
++ * the terms of any one of the MPL, the GPL or the LGPL.
++ *
++ * ***** END LICENSE BLOCK ***** */
++
++#ifndef OPENCL_LIB_H
++#define OPENCL_LIB_H
++
++#include <string>
++
++#include <CL/cl.h>
++#include <CL/cl_gl.h>
++#include <GLDefs.h>
++#include <prlink.h>
++#include "prtypes.h"
++#include "nsAtomicRefcnt.h"
++#include "nsCOMPtr.h"
++#include "nsAutoPtr.h"
++#include "nsIObserver.h"
++#include "nsStringGlue.h"
++#include <mozilla/Mutex.h>
++
++#ifndef CLAPIENTRY
++#ifdef XP_WIN
++#define CLAPIENTRY __stdcall
++#else
++#define CLAPIENTRY
++#endif
++#endif
++
++#ifndef OPENCL_LIB_NAME
++#ifdef XP_WIN
++#define OPENCL_LIB_NAME "OpenCL.dll"
++#endif
++#if defined(MOZ_X11)
++#define OPENCL_LIB_NAME "libOpenCL.so"
++#endif
++#endif
++
++#define INLINE_REFCOUNT_THREADSAFE(_class) \
++public:                                                                       \
++    nsrefcnt AddRef(void) {                                                   \
++        nsrefcnt count = NS_AtomicIncrementRefcnt(mRefCnt);                   \
++        return count;                                                         \
++    }                                                                         \
++    nsrefcnt Release(void) {                                                  \
++        nsrefcnt count = NS_AtomicDecrementRefcnt(mRefCnt);                   \
++        if (count == 0) {                                                     \
++            mRefCnt = 1;                                      \
++            delete this;                                                      \
++            return 0;                                                         \
++        }                                                                     \
++        return count;                                                         \
++    }                                                                         \
++protected:                                                                    \
++    nsAutoRefCnt mRefCnt;
++
++class OpenCLLib {
++INLINE_REFCOUNT_THREADSAFE(OpenCLLib)
++private:
++  PRLibrary* openCLLibOS;
++  PRBool mInitialized;
++
++public:
++  OpenCLLib(const char* libname = OPENCL_LIB_NAME);
++  ~OpenCLLib();
++
++  friend class OpenCLLibFactory;
++
++  typedef cl_int (CLAPIENTRY *mClGetPlatformIDs)(cl_uint, cl_platform_id *,
++      cl_uint *);
++  typedef cl_int (CLAPIENTRY *ns_clGetPlatformInfo_t)(cl_platform_id,
++      cl_platform_info, size_t, void *, size_t *);
++  typedef cl_int (CLAPIENTRY *ns_clGetDeviceIDs_t)(cl_platform_id,
++      cl_device_type, cl_uint, cl_device_id *, cl_uint *);
++  typedef cl_int (CLAPIENTRY *ns_clGetDeviceInfo_t)(cl_device_id,
++      cl_device_info, size_t, void *, size_t *);
++  typedef cl_context (CLAPIENTRY *ns_clCreateContext_t)(
++      const cl_context_properties *, cl_uint, const cl_device_id *,
++      void(CL_CALLBACK *)(const char *, const void *, size_t, void *), void *,
++      cl_int *);
++  typedef cl_context (CLAPIENTRY *ns_clCreateContextFromType_t)(
++      const cl_context_properties *, cl_device_type,
++      void(CL_CALLBACK *)(const char *, const void *, size_t, void *), void *,
++      cl_int *);
++  typedef cl_int (CLAPIENTRY *ns_clRetainContext_t)(cl_context);
++  typedef cl_int (CLAPIENTRY *ns_clReleaseContext_t)(cl_context);
++  typedef cl_int (CLAPIENTRY *ns_clGetContextInfo_t)(cl_context,
++      cl_context_info, size_t, void *, size_t *);
++  typedef cl_command_queue (CLAPIENTRY *ns_clCreateCommandQueue_t)(cl_context,
++      cl_device_id, cl_command_queue_properties, cl_int *);
++  typedef cl_int (CLAPIENTRY *ns_clRetainCommandQueue_t)(cl_command_queue);
++  typedef cl_int (CLAPIENTRY *ns_clReleaseCommandQueue_t)(cl_command_queue);
++  typedef cl_int (CLAPIENTRY *ns_clGetCommandQueueInfo_t)(cl_command_queue,
++      cl_command_queue_info, size_t, void *, size_t *);
++  typedef cl_mem (CLAPIENTRY *ns_clCreateBuffer_t)(cl_context, cl_mem_flags,
++      size_t, void *, cl_int *);
++  typedef cl_mem (CLAPIENTRY *ns_clCreateSubBuffer_t)(cl_mem, cl_mem_flags,
++      cl_buffer_create_type, const void *, cl_int *);
++  typedef cl_mem (CLAPIENTRY *ns_clCreateImage2D_t)(cl_context, cl_mem_flags,
++      const cl_image_format *, size_t, size_t, size_t, void *, cl_int *);
++  typedef cl_mem (CLAPIENTRY *ns_clCreateImage3D_t)(cl_context, cl_mem_flags,
++      const cl_image_format *, size_t, size_t, size_t, size_t, size_t, void *,
++      cl_int *);
++  typedef cl_int (CLAPIENTRY *ns_clRetainMemObject_t)(cl_mem);
++  typedef cl_int (CLAPIENTRY *ns_clReleaseMemObject_t)(cl_mem);
++  typedef cl_int (CLAPIENTRY *ns_clGetSupportedImageFormats_t)(cl_context,
++      cl_mem_flags, cl_mem_object_type, cl_uint, cl_image_format *, cl_uint *);
++  typedef cl_int (CLAPIENTRY *ns_clGetMemObjectInfo_t)(cl_mem, cl_mem_info,
++      size_t, void *, size_t *);
++  typedef cl_int (CLAPIENTRY *ns_clGetImageInfo_t)(cl_mem, cl_image_info,
++      size_t, void *, size_t *);
++  typedef cl_int (CLAPIENTRY *ns_clSetMemObjectDestructorCallback_t)(cl_mem,
++      void(CL_CALLBACK *)(cl_mem, void*), void *);
++  typedef cl_sampler (CLAPIENTRY *ns_clCreateSampler_t)(cl_context, cl_bool,
++      cl_addressing_mode, cl_filter_mode, cl_int *);
++  typedef cl_int (CLAPIENTRY *ns_clRetainSampler_t)(cl_sampler);
++  typedef cl_int (CLAPIENTRY *ns_clReleaseSampler_t)(cl_sampler);
++  typedef cl_int (CLAPIENTRY *ns_clGetSamplerInfo_t)(cl_sampler,
++      cl_sampler_info, size_t, void *, size_t *);
++  typedef cl_program (CLAPIENTRY *ns_clCreateProgramWithSource_t)(cl_context,
++      cl_uint, const char **, const size_t *, cl_int *);
++  typedef cl_program (CLAPIENTRY *ns_clCreateProgramWithBinary_t)(cl_context,
++      cl_uint, const cl_device_id *, const size_t *, const unsigned char **,
++      cl_int *, cl_int *);
++  typedef cl_int (CLAPIENTRY *ns_clRetainProgram_t)(cl_program);
++  typedef cl_int (CLAPIENTRY *ns_clReleaseProgram_t)(cl_program);
++  typedef cl_int (CLAPIENTRY *ns_clBuildProgram_t)(cl_program, cl_uint,
++      const cl_device_id *, const char *,
++      void(CL_CALLBACK *)(cl_program, void *), void *);
++  typedef cl_int (CLAPIENTRY *ns_clUnloadCompiler_t)(void);
++  typedef cl_int (CLAPIENTRY *ns_clGetProgramInfo_t)(cl_program,
++      cl_program_info, size_t, void *, size_t *);
++  typedef cl_int (CLAPIENTRY *ns_clGetProgramBuildInfo_t)(cl_program,
++      cl_device_id, cl_program_build_info, size_t, void *, size_t *);
++  typedef cl_kernel (CLAPIENTRY *ns_clCreateKernel_t)(cl_program, const char *,
++      cl_int *);
++  typedef cl_int (CLAPIENTRY *ns_clCreateKernelsInProgram_t)(cl_program,
++      cl_uint, cl_kernel *, cl_uint *);
++  typedef cl_int (CLAPIENTRY *ns_clRetainKernel_t)(cl_kernel);
++  typedef cl_int (CLAPIENTRY *ns_clReleaseKernel_t)(cl_kernel);
++  typedef cl_int (CLAPIENTRY *ns_clSetKernelArg_t)(cl_kernel, cl_uint, size_t,
++      const void *);
++  typedef cl_int (CLAPIENTRY *ns_clGetKernelInfo_t)(cl_kernel, cl_kernel_info,
++      size_t, void *, size_t *);
++  typedef cl_int (CLAPIENTRY *ns_clGetKernelWorkGroupInfo_t)(cl_kernel,
++      cl_device_id, cl_kernel_work_group_info, size_t, void *, size_t *);
++  typedef cl_int (CLAPIENTRY *ns_clWaitForEvents_t)(cl_uint, const cl_event *);
++  typedef cl_int (CLAPIENTRY *ns_clGetEventInfo_t)(cl_event, cl_event_info,
++      size_t, void *, size_t *);
++  typedef cl_event (CLAPIENTRY *ns_clCreateUserEvent_t)(cl_context, cl_int *);
++  typedef cl_int (CLAPIENTRY *ns_clRetainEvent_t)(cl_event);
++  typedef cl_int (CLAPIENTRY *ns_clReleaseEvent_t)(cl_event);
++  typedef cl_int (CLAPIENTRY *ns_clSetUserEventStatus_t)(cl_event, cl_int);
++  typedef cl_int (CLAPIENTRY *ns_clSetEventCallback_t)(cl_event, cl_int,
++      void(CL_CALLBACK *)(cl_event, cl_int, void *), void *);
++  typedef cl_int (CLAPIENTRY *ns_clGetEventProfilingInfo_t)(cl_event,
++      cl_profiling_info, size_t, void *, size_t *);
++  typedef cl_int (CLAPIENTRY *ns_clFlush_t)(cl_command_queue);
++  typedef cl_int (CLAPIENTRY *ns_clFinish_t)(cl_command_queue);
++  typedef cl_int (CLAPIENTRY *ns_clEnqueueReadBuffer_t)(cl_command_queue,
++      cl_mem, cl_bool, size_t, size_t, void *, cl_uint, const cl_event *,
++      cl_event *);
++  typedef cl_int (CLAPIENTRY *ns_clEnqueueReadBufferRect_t)(cl_command_queue,
++      cl_mem, cl_bool, const size_t *, const size_t *, const size_t *, size_t,
++      size_t, size_t, size_t, void *, cl_uint, const cl_event *, cl_event *);
++  typedef cl_int (CLAPIENTRY *ns_clEnqueueWriteBuffer_t)(cl_command_queue,
++      cl_mem, cl_bool, size_t, size_t, const void *, cl_uint, const cl_event *,
++      cl_event *);
++  typedef cl_int (CLAPIENTRY *ns_clEnqueueWriteBufferRect_t)(cl_command_queue,
++      cl_mem, cl_bool, const size_t *, const size_t *, const size_t *, size_t,
++      size_t, size_t, size_t, const void *, cl_uint, const cl_event *,
++      cl_event *);
++  typedef cl_int (CLAPIENTRY *ns_clEnqueueCopyBuffer_t)(cl_command_queue,
++      cl_mem, cl_mem, size_t, size_t, size_t, cl_uint, const cl_event *,
++      cl_event *);
++  typedef cl_int (CLAPIENTRY *ns_clEnqueueCopyBufferRect_t)(cl_command_queue,
++      cl_mem, cl_mem, const size_t *, const size_t *, const size_t *, size_t,
++      size_t, size_t, size_t, cl_uint, const cl_event *, cl_event *);
++  typedef cl_int (CLAPIENTRY *ns_clEnqueueReadImage_t)(cl_command_queue,
++      cl_mem, cl_bool, const size_t *, const size_t *, size_t, size_t, void *,
++      cl_uint, const cl_event *, cl_event *);
++  typedef cl_int (CLAPIENTRY *ns_clEnqueueWriteImage_t)(cl_command_queue,
++      cl_mem, cl_bool, const size_t *, const size_t *, size_t, size_t,
++      const void *, cl_uint, const cl_event *, cl_event *);
++  typedef cl_int (CLAPIENTRY *ns_clEnqueueCopyImage_t)(cl_command_queue,
++      cl_mem, cl_mem, const size_t *, const size_t *, const size_t *, cl_uint,
++      const cl_event *, cl_event *);
++  typedef cl_int (CLAPIENTRY *ns_clEnqueueCopyImageToBuffer_t)(
++      cl_command_queue, cl_mem, cl_mem, const size_t *, const size_t *, size_t,
++      cl_uint, const cl_event *, cl_event *);
++  typedef cl_int (CLAPIENTRY *ns_clEnqueueCopyBufferToImage_t)(
++      cl_command_queue, cl_mem, cl_mem, size_t, const size_t *, const size_t *,
++      cl_uint, const cl_event *, cl_event *);
++  typedef void * (CLAPIENTRY *ns_clEnqueueMapBuffer_t)(cl_command_queue,
++      cl_mem, cl_bool, cl_map_flags, size_t, size_t, cl_uint, const cl_event *,
++      cl_event *, cl_int *);
++  typedef void * (CLAPIENTRY *ns_clEnqueueMapImage_t)(cl_command_queue, cl_mem,
++      cl_bool, cl_map_flags, const size_t *, const size_t *, size_t *,
++      size_t *, cl_uint, const cl_event *, cl_event *, cl_int *);
++  typedef cl_int (CLAPIENTRY *ns_clEnqueueUnmapMemObject_t)(cl_command_queue,
++      cl_mem, void *, cl_uint, const cl_event *, cl_event *);
++  typedef cl_int (CLAPIENTRY *ns_clEnqueueNDRangeKernel_t)(cl_command_queue,
++      cl_kernel, cl_uint, const size_t *, const size_t *, const size_t *,
++      cl_uint, const cl_event *, cl_event *);
++  typedef cl_int (CLAPIENTRY *ns_clEnqueueTask_t)(cl_command_queue, cl_kernel,
++      cl_uint, const cl_event *, cl_event *);
++  typedef cl_int (CLAPIENTRY *ns_clEnqueueNativeKernel_t)(cl_command_queue,
++      void(CLAPIENTRY *user_func)(void *), void *, size_t, cl_uint,
++      const cl_mem *, const void **, cl_uint, const cl_event *, cl_event *);
++  typedef cl_int (CLAPIENTRY *ns_clEnqueueMarker_t)(cl_command_queue,
++      cl_event *);
++  typedef cl_int (CLAPIENTRY *ns_clEnqueueWaitForEvents_t)(cl_command_queue,
++      cl_uint, const cl_event *);
++  typedef cl_int (CLAPIENTRY *ns_clEnqueueBarrier_t)(cl_command_queue);
++  typedef void * (CLAPIENTRY *ns_clGetExtensionFunctionAddress_t)(const char *);
++  typedef cl_mem (CLAPIENTRY *ns_clCreateFromGLBuffer_t)(cl_context,
++      cl_mem_flags, GLuint, cl_int *);
++  typedef cl_mem (CLAPIENTRY *ns_clCreateFromGLTexture2D_t)(cl_context,
++      cl_mem_flags, GLenum, GLint, GLuint, cl_int *);
++  typedef cl_mem (CLAPIENTRY *ns_clCreateFromGLRenderbuffer_t)(cl_context,
++      cl_mem_flags, GLuint, cl_int *);
++  typedef cl_int (CLAPIENTRY *ns_clEnqueueAcquireGLObjects_t)(
++      cl_command_queue command_queue, cl_uint, const cl_mem *, cl_uint,
++      const cl_event *, cl_event *);
++  typedef cl_int (CLAPIENTRY *ns_clEnqueueReleaseGLObjects_t)(
++      cl_command_queue command_queue, cl_uint, const cl_mem *, cl_uint,
++      const cl_event *, cl_event *);
++
++  mClGetPlatformIDs GetPlatformIDs;
++  ns_clGetPlatformInfo_t GetPlatformInfo;
++  ns_clGetDeviceIDs_t GetDeviceIDs;
++  ns_clGetDeviceInfo_t GetDeviceInfo;
++  ns_clCreateContext_t CreateContext;
++  ns_clCreateContextFromType_t CreateContextFromType;
++  ns_clRetainContext_t RetainContext;
++  ns_clReleaseContext_t ReleaseContext;
++  ns_clGetContextInfo_t GetContextInfo;
++  ns_clCreateCommandQueue_t CreateCommandQueue;
++  ns_clRetainCommandQueue_t RetainCommandQueue;
++  ns_clReleaseCommandQueue_t ReleaseCommandQueue;
++  ns_clGetCommandQueueInfo_t GetCommandQueueInfo;
++  ns_clCreateBuffer_t CreateBuffer;
++  ns_clCreateSubBuffer_t CreateSubBuffer;
++  ns_clCreateImage2D_t CreateImage2D;
++  ns_clCreateImage3D_t CreateImage3D;
++  ns_clRetainMemObject_t RetainMemObject;
++  ns_clReleaseMemObject_t ReleaseMemObject;
++  ns_clGetSupportedImageFormats_t GetSupportedImageFormats;
++  ns_clGetMemObjectInfo_t GetMemObjectInfo;
++  ns_clGetImageInfo_t GetImageInfo;
++  ns_clSetMemObjectDestructorCallback_t SetMemObjectDestructorCallback;
++  ns_clCreateSampler_t CreateSampler;
++  ns_clRetainSampler_t RetainSampler;
++  ns_clReleaseSampler_t ReleaseSampler;
++  ns_clGetSamplerInfo_t GetSamplerInfo;
++  ns_clCreateProgramWithSource_t CreateProgramWithSource;
++  ns_clCreateProgramWithBinary_t CreateProgramWithBinary;
++  ns_clRetainProgram_t RetainProgram;
++  ns_clReleaseProgram_t ReleaseProgram;
++  ns_clBuildProgram_t BuildProgram;
++  ns_clUnloadCompiler_t UnloadCompiler;
++  ns_clGetProgramInfo_t GetProgramInfo;
++  ns_clGetProgramBuildInfo_t GetProgramBuildInfo;
++  ns_clCreateKernel_t CreateKernel;
++  ns_clCreateKernelsInProgram_t CreateKernelsInProgram;
++  ns_clRetainKernel_t RetainKernel;
++  ns_clReleaseKernel_t ReleaseKernel;
++  ns_clSetKernelArg_t SetKernelArg;
++  ns_clGetKernelInfo_t GetKernelInfo;
++  ns_clGetKernelWorkGroupInfo_t GetKernelWorkGroupInfo;
++  ns_clWaitForEvents_t WaitForEvents;
++  ns_clGetEventInfo_t GetEventInfo;
++  ns_clCreateUserEvent_t CreateUserEvent;
++  ns_clRetainEvent_t RetainEvent;
++  ns_clReleaseEvent_t ReleaseEvent;
++  ns_clSetUserEventStatus_t SetUserEventStatus;
++  ns_clSetEventCallback_t SetEventCallback;
++  ns_clGetEventProfilingInfo_t GetEventProfilingInfo;
++  ns_clFlush_t Flush;
++  ns_clFinish_t Finish;
++  ns_clEnqueueReadBuffer_t EnqueueReadBuffer;
++  ns_clEnqueueReadBufferRect_t EnqueueReadBufferRect;
++  ns_clEnqueueWriteBuffer_t EnqueueWriteBuffer;
++  ns_clEnqueueWriteBufferRect_t EnqueueWriteBufferRect;
++  ns_clEnqueueCopyBuffer_t EnqueueCopyBuffer;
++  ns_clEnqueueCopyBufferRect_t EnqueueCopyBufferRect;
++  ns_clEnqueueReadImage_t EnqueueReadImage;
++  ns_clEnqueueWriteImage_t EnqueueWriteImage;
++  ns_clEnqueueCopyImage_t EnqueueCopyImage;
++  ns_clEnqueueCopyImageToBuffer_t EnqueueCopyImageToBuffer;
++  ns_clEnqueueCopyBufferToImage_t EnqueueCopyBufferToImage;
++  ns_clEnqueueMapBuffer_t EnqueueMapBuffer;
++  ns_clEnqueueMapImage_t EnqueueMapImage;
++  ns_clEnqueueUnmapMemObject_t EnqueueUnmapMemObject;
++  ns_clEnqueueNDRangeKernel_t EnqueueNDRangeKernel;
++  ns_clEnqueueTask_t EnqueueTask;
++  ns_clEnqueueNativeKernel_t EnqueueNativeKernel;
++  ns_clEnqueueMarker_t EnqueueMarker;
++  ns_clEnqueueWaitForEvents_t EnqueueWaitForEvents;
++  ns_clEnqueueBarrier_t EnqueueBarrier;
++  ns_clGetExtensionFunctionAddress_t GetExtensionFunctionAddress;
++  ns_clCreateFromGLBuffer_t CreateFromGLBuffer;
++  ns_clCreateFromGLTexture2D_t CreateFromGLTexture2D;
++  ns_clCreateFromGLRenderbuffer_t CreateFromGLRenderbuffer;
++  ns_clEnqueueAcquireGLObjects_t EnqueueAcquireGLObjects;
++  ns_clEnqueueReleaseGLObjects_t EnqueueReleaseGLObjects;
++};
++
++const std::string OpenCLErrors[] = { "CL_SUCCESS", "CL_DEVICE_NOT_FOUND",
++    "CL_DEVICE_NOT_AVAILABLE", "CL_COMPILER_NOT_AVAILABLE",
++    "CL_MEM_OBJECT_ALLOCATION_FAILURE", "CL_OUT_OF_RESOURCES",
++    "CL_OUT_OF_HOST_MEMORY", "CL_PROFILING_INFO_NOT_AVAILABLE",
++    "CL_MEM_COPY_OVERLAP", "CL_IMAGE_FORMAT_MISMATCH",
++    "CL_IMAGE_FORMAT_NOT_SUPPORTED", "CL_BUILD_PROGRAM_FAILURE",
++    "CL_MAP_FAILURE", "CL_MISALIGNED_SUB_BUFFER_OFFSET",
++    "CL_EXEC_STATUS_ERROR_FOR_EVENTS_IN_WAIT_LIST", "", "", "", "", "", "", "",
++    "", "", "", "", "", "", "", "", "CL_INVALID_VALUE",
++    "CL_INVALID_DEVICE_TYPE", "CL_INVALID_PLATFORM", "CL_INVALID_DEVICE",
++    "CL_INVALID_CONTEXT", "CL_INVALID_QUEUE_PROPERTIES",
++    "CL_INVALID_COMMAND_QUEUE", "CL_INVALID_HOST_PTR", "CL_INVALID_MEM_OBJECT",
++    "CL_INVALID_IMAGE_FORMAT_DESCRIPTOR", "CL_INVALID_IMAGE_SIZE",
++    "CL_INVALID_SAMPLER", "CL_INVALID_BINARY", "CL_INVALID_BUILD_OPTIONS",
++    "CL_INVALID_PROGRAM", "CL_INVALID_PROGRAM_EXECUTABLE",
++    "CL_INVALID_KERNEL_NAME", "CL_INVALID_KERNEL_DEFINITION",
++    "CL_INVALID_KERNEL", "CL_INVALID_ARG_INDEX", "CL_INVALID_ARG_VALUE",
++    "CL_INVALID_ARG_SIZE", "CL_INVALID_KERNEL_ARGS",
++    "CL_INVALID_WORK_DIMENSION", "CL_INVALID_WORK_GROUP_SIZE",
++    "CL_INVALID_WORK_ITEM_SIZE", "CL_INVALID_GLOBAL_OFFSET",
++    "CL_INVALID_EVENT_WAIT_LIST", "CL_INVALID_EVENT", "CL_INVALID_OPERATION",
++    "CL_INVALID_GL_OBJECT", "CL_INVALID_BUFFER_SIZE", "CL_INVALID_MIP_LEVEL",
++    "CL_INVALID_GLOBAL_WORK_SIZE", "CL_INVALID_PROPERTY", };
++
++class OpenCLLibFactory {
++public:
++  static already_AddRefed<OpenCLLib> getOpenCLLib();
++  static void needsUpdate();
++
++private:
++  OpenCLLibFactory();
++  OpenCLLibFactory(const OpenCLLibFactory&);
++  OpenCLLibFactory& operator=(const OpenCLLibFactory&);
++  static nsAdoptingCString opencllib;
++  static PRBool needUpdate;
++  static OpenCLLib* myOpenCLLib;
++  static mozilla::Mutex mMutex;
++  static PRBool readPref();
++
++  friend class CLLibObserver;
++};
++
++#endif
+diff --git a/content/webcl/src/moz.build b/content/webcl/src/moz.build
+new file mode 100644
+--- /dev/null
++++ b/content/webcl/src/moz.build
+@@ -0,0 +1,5 @@
++# vim: set filetype=python:
++# This Source Code Form is subject to the terms of the Mozilla Public
++# License, v. 2.0. If a copy of the MPL was not distributed with this
++# file, You can obtain one at http://mozilla.org/MPL/2.0/.
++
+diff --git a/content/webcl/test/Makefile.in b/content/webcl/test/Makefile.in
+new file mode 100644
+--- /dev/null
++++ b/content/webcl/test/Makefile.in
+@@ -0,0 +1,54 @@
++#
++# ***** BEGIN LICENSE BLOCK *****
++# Version: MPL 1.1/GPL 2.0/LGPL 2.1
++#
++# The contents of this file are subject to the Mozilla Public License Version
++# 1.1 (the "License"); you may not use this file except in compliance with
++# the License. You may obtain a copy of the License at
++# http://www.mozilla.org/MPL/
++#
++# Software distributed under the License is distributed on an "AS IS" basis,
++# WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
++# for the specific language governing rights and limitations under the
++# License.
++#
++# The Original Code is mozilla.org code.
++#
++# The Initial Developer of the Original Code is
++# Netscape Communications Corporation.
++# Portions created by the Initial Developer are Copyright (C) 2001
++# the Initial Developer. All Rights Reserved.
++#
++# Contributor(s):
++#     Adrien Plagnol <adrien.plagnol@gmail.com>
++#
++# Alternatively, the contents of this file may be used under the terms of
++# either the GNU General Public License Version 2 or later (the "GPL"), or
++# the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
++# in which case the provisions of the GPL or the LGPL are applicable instead
++# of those above. If you wish to allow use of your version of this file only
++# under the terms of either the GPL or the LGPL, and not to allow others to
++# use your version of this file under the terms of the MPL, indicate your
++# decision by deleting the provisions above and replace them with the notice
++# and other provisions required by the GPL or the LGPL. If you do not delete
++# the provisions above, a recipient may use your version of this file under
++# the terms of any one of the MPL, the GPL or the LGPL.
++#
++# ***** END LICENSE BLOCK *****
++
++DEPTH           = ../../..
++topsrcdir       = @top_srcdir@
++srcdir          = @srcdir@
++VPATH           = @srcdir@
++
++include $(DEPTH)/config/autoconf.mk
++
++# Won't work with libxul
++#CPP_UNIT_TESTS = testOpenCLLibFactory.cpp \
++#					$(NULL)
++#
++#LIBS		= \
++#	$(call EXPAND_LIBNAME_PATH,webclprov,../src) \
++#	$(NULL)
++    
++include $(topsrcdir)/config/rules.mk
+diff --git a/layout/build/Makefile.in b/layout/build/Makefile.in
+--- a/layout/build/Makefile.in
++++ b/layout/build/Makefile.in
+@@ -48,16 +48,17 @@ SHARED_LIBRARY_LIBS = \
+ 	../tables/$(LIB_PREFIX)gktable_s.$(LIB_SUFFIX) \
+ 	../xul/base/src/$(LIB_PREFIX)gkxulbase_s.$(LIB_SUFFIX) \
+ 	../mathml/$(LIB_PREFIX)gkmathml_s.$(LIB_SUFFIX) \
+ 	$(DEPTH)/content/base/src/$(LIB_PREFIX)gkconbase_s.$(LIB_SUFFIX) \
+ 	$(DEPTH)/content/canvas/src/$(LIB_PREFIX)gkconcvs_s.$(LIB_SUFFIX) \
+ 	$(DEPTH)/content/events/src/$(LIB_PREFIX)gkconevents_s.$(LIB_SUFFIX) \
+ 	$(DEPTH)/content/html/content/src/$(LIB_PREFIX)gkconhtmlcon_s.$(LIB_SUFFIX) \
+ 	$(DEPTH)/content/html/document/src/$(LIB_PREFIX)gkconhtmldoc_s.$(LIB_SUFFIX) \
++	$(DEPTH)/content/webcl/src/$(LIB_PREFIX)webclprov_s.$(LIB_SUFFIX) \
+ 	$(DEPTH)/content/xml/content/src/$(LIB_PREFIX)gkconxmlcon_s.$(LIB_SUFFIX) \
+ 	$(DEPTH)/content/xml/document/src/$(LIB_PREFIX)gkconxmldoc_s.$(LIB_SUFFIX) \
+ 	$(DEPTH)/content/xslt/src/base/$(LIB_PREFIX)txbase_s.$(LIB_SUFFIX) \
+ 	$(DEPTH)/content/xslt/src/xml/$(LIB_PREFIX)txxml_s.$(LIB_SUFFIX) \
+ 	$(DEPTH)/content/xslt/src/xpath/$(LIB_PREFIX)txxpath_s.$(LIB_SUFFIX) \
+ 	$(DEPTH)/content/xslt/src/xslt/$(LIB_PREFIX)txxslt_s.$(LIB_SUFFIX) \
+ 	$(DEPTH)/content/xbl/src/$(LIB_PREFIX)gkconxbl_s.$(LIB_SUFFIX) \
+ 	$(DEPTH)/content/xul/document/src/$(LIB_PREFIX)gkconxuldoc_s.$(LIB_SUFFIX) \
+diff --git a/modules/libpref/src/init/all.js b/modules/libpref/src/init/all.js
+--- a/modules/libpref/src/init/all.js
++++ b/modules/libpref/src/init/all.js
+@@ -3979,16 +3979,19 @@ pref("extensions.alwaysUnpack", false);
+ pref("extensions.minCompatiblePlatformVersion", "2.0");
+ 
+ pref("network.buffer.cache.count", 24);
+ pref("network.buffer.cache.size",  32768);
+ 
+ // Desktop Notification
+ pref("notification.feature.enabled", false);
+ 
++// WebCL prefs
++pref("webcl.opencllib", "");
++
+ // Web Notification
+ pref("dom.webnotifications.enabled", true);
+ 
+ // Alert animation effect, name is disableSlidingEffect for backwards-compat.
+ pref("alerts.disableSlidingEffect", false);
+ 
+ // DOM full-screen API.
+ pref("full-screen-api.enabled", false);

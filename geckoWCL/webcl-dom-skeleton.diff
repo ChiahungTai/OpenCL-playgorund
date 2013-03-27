@@ -1,0 +1,2258 @@
+# HG changeset patch
+# User Chia-hung Tai <ctai@mozilla.com>
+# Date 1364378255 -28800
+# Node ID fc71a98193e9e4956a5372397b2b289ad08c1bac
+# Parent  f11ca67953ec088488717d560208fc70189bf27a
+imported patch webcl-dom-skeleton.diff
+
+diff --git a/configure.in b/configure.in
+--- a/configure.in
++++ b/configure.in
+@@ -4208,16 +4208,17 @@ MOZ_TREMOR=
+ MOZ_WAVE=1
+ MOZ_SAMPLE_TYPE_FLOAT32=
+ MOZ_SAMPLE_TYPE_S16=
+ MOZ_MEDIA=
+ MOZ_OPUS=1
+ MOZ_WEBM=1
+ MOZ_DASH=1
+ MOZ_WMF=
++MOZ_WEBCL=1
+ MOZ_WEBRTC=1
+ MOZ_PEERCONNECTION=
+ MOZ_SRTP=
+ MOZ_WEBRTC_SIGNALING=
+ MOZ_WEBRTC_IN_LIBXUL=
+ MOZ_SCTP=
+ MOZ_MEDIA_PLUGINS=
+ MOZ_MEDIA_NAVIGATOR=
+diff --git a/dom/base/nsDOMClassInfo.cpp b/dom/base/nsDOMClassInfo.cpp
+--- a/dom/base/nsDOMClassInfo.cpp
++++ b/dom/base/nsDOMClassInfo.cpp
+@@ -385,16 +385,29 @@ using mozilla::dom::workers::ResolveWork
+ #include "TimeManager.h"
+ #endif
+ 
+ #ifdef MOZ_WEBRTC
+ #include "nsIDOMDataChannel.h"
+ #include "nsIDOMRTCPeerConnection.h"
+ #endif
+ 
++#ifdef MOZ_WEBCL
++#include "nsIDOMWebCL.h"
++#include "nsIDOMWebCLCommandQueue.h"
++#include "nsIDOMWebCLPlatform.h"
++#include "nsIDOMWebCLContext.h"
++#include "nsIDOMWebCLDevice.h"
++#include "nsIDOMWebCLEvent.h"
++#include "nsIDOMWebCLKernel.h"
++#include "nsIDOMWebCLMem.h"
++#include "nsIDOMWebCLProgram.h"
++#include "nsIDOMWebCLSampler.h"
++#endif
++
+ using namespace mozilla;
+ using namespace mozilla::dom;
+ 
+ static NS_DEFINE_CID(kDOMSOF_CID, NS_DOM_SCRIPT_OBJECT_FACTORY_CID);
+ 
+ static const char kDOMStringBundleURL[] =
+   "chrome://global/locale/dom/dom.properties";
+ 
+@@ -1127,16 +1140,39 @@ static nsDOMClassInfoData sClassInfoData
+ #endif
+ 
+ #ifdef MOZ_WEBRTC
+   NS_DEFINE_CLASSINFO_DATA(DataChannel, nsEventTargetSH,
+                            EVENTTARGET_SCRIPTABLE_FLAGS)
+   NS_DEFINE_CLASSINFO_DATA(RTCPeerConnection, nsDOMGenericSH,
+                            DOM_DEFAULT_SCRIPTABLE_FLAGS)
+ #endif
++
++#ifdef MOZ_WEBCL
++  NS_DEFINE_CLASSINFO_DATA(WebCL, nsDOMGenericSH,
++                           DOM_DEFAULT_SCRIPTABLE_FLAGS)
++  NS_DEFINE_CLASSINFO_DATA(WebCLCommandQueue, nsDOMGenericSH,
++                           DOM_DEFAULT_SCRIPTABLE_FLAGS)
++  NS_DEFINE_CLASSINFO_DATA(WebCLPlatform, nsDOMGenericSH,
++                           DOM_DEFAULT_SCRIPTABLE_FLAGS)
++  NS_DEFINE_CLASSINFO_DATA(WebCLContext, nsDOMGenericSH,
++                           DOM_DEFAULT_SCRIPTABLE_FLAGS)
++  NS_DEFINE_CLASSINFO_DATA(WebCLDevice, nsDOMGenericSH,
++                           DOM_DEFAULT_SCRIPTABLE_FLAGS)
++  NS_DEFINE_CLASSINFO_DATA(WebCLEvent, nsDOMGenericSH,
++                           DOM_DEFAULT_SCRIPTABLE_FLAGS)
++  NS_DEFINE_CLASSINFO_DATA(WebCLKernel, nsDOMGenericSH,
++                           DOM_DEFAULT_SCRIPTABLE_FLAGS)
++  NS_DEFINE_CLASSINFO_DATA(WebCLMem, nsDOMGenericSH,
++                           DOM_DEFAULT_SCRIPTABLE_FLAGS)
++  NS_DEFINE_CLASSINFO_DATA(WebCLProgram, nsDOMGenericSH,
++                           DOM_DEFAULT_SCRIPTABLE_FLAGS)
++  NS_DEFINE_CLASSINFO_DATA(WebCLSampler, nsDOMGenericSH,
++                           DOM_DEFAULT_SCRIPTABLE_FLAGS)
++#endif
+ };
+ 
+ #define NS_DEFINE_CONTRACT_CTOR(_class, _contract_id)                           \
+   static nsresult                                                               \
+   _class##Ctor(nsISupports** aInstancePtrResult)                                \
+   {                                                                             \
+     nsresult rv = NS_OK;                                                        \
+     nsCOMPtr<nsISupports> native = do_CreateInstance(_contract_id, &rv);        \
+@@ -2797,16 +2833,58 @@ nsDOMClassInfo::Init()
+     DOM_CLASSINFO_MAP_ENTRY(nsIDOMEventTarget)
+   DOM_CLASSINFO_MAP_END
+ 
+   DOM_CLASSINFO_MAP_BEGIN(RTCPeerConnection, nsIDOMRTCPeerConnection)
+     DOM_CLASSINFO_MAP_ENTRY(nsIDOMRTCPeerConnection)
+   DOM_CLASSINFO_MAP_END
+ #endif
+ 
++#ifdef MOZ_WEBCL
++  DOM_CLASSINFO_MAP_BEGIN(WebCL,nsIDOMWebCL)
++    DOM_CLASSINFO_MAP_ENTRY(nsIDOMWebCL)
++  DOM_CLASSINFO_MAP_END
++
++  DOM_CLASSINFO_MAP_BEGIN(WebCLCommandQueue, nsIDOMWebCLCommandQueue)
++    DOM_CLASSINFO_MAP_ENTRY(nsIDOMWebCLCommandQueue)
++  DOM_CLASSINFO_MAP_END
++
++  DOM_CLASSINFO_MAP_BEGIN(WebCLPlatform, nsIDOMWebCLPlatform)
++    DOM_CLASSINFO_MAP_ENTRY(nsIDOMWebCLPlatform)
++  DOM_CLASSINFO_MAP_END
++
++  DOM_CLASSINFO_MAP_BEGIN(WebCLContext, nsIDOMWebCLContext)
++    DOM_CLASSINFO_MAP_ENTRY(nsIDOMWebCLContext)
++  DOM_CLASSINFO_MAP_END
++
++  DOM_CLASSINFO_MAP_BEGIN(WebCLDevice, nsIDOMWebCLDevice)
++    DOM_CLASSINFO_MAP_ENTRY(nsIDOMWebCLDevice)
++  DOM_CLASSINFO_MAP_END
++
++  DOM_CLASSINFO_MAP_BEGIN(WebCLEvent, nsIDOMWebCLEvent)
++    DOM_CLASSINFO_MAP_ENTRY(nsIDOMWebCLEvent)
++  DOM_CLASSINFO_MAP_END
++
++  DOM_CLASSINFO_MAP_BEGIN(WebCLKernel, nsIDOMWebCLKernel)
++    DOM_CLASSINFO_MAP_ENTRY(nsIDOMWebCLKernel)
++  DOM_CLASSINFO_MAP_END
++
++  DOM_CLASSINFO_MAP_BEGIN(WebCLMem, nsIDOMWebCLMem)
++    DOM_CLASSINFO_MAP_ENTRY(nsIDOMWebCLMem)
++  DOM_CLASSINFO_MAP_END
++
++  DOM_CLASSINFO_MAP_BEGIN(WebCLProgram, nsIDOMWebCLProgram)
++    DOM_CLASSINFO_MAP_ENTRY(nsIDOMWebCLProgram)
++  DOM_CLASSINFO_MAP_END
++
++  DOM_CLASSINFO_MAP_BEGIN(WebCLSampler, nsIDOMWebCLSampler)
++    DOM_CLASSINFO_MAP_ENTRY(nsIDOMWebCLSampler)
++  DOM_CLASSINFO_MAP_END
++#endif
++
+   MOZ_STATIC_ASSERT(MOZ_ARRAY_LENGTH(sClassInfoData) == eDOMClassInfoIDCount,
+                     "The number of items in sClassInfoData doesn't match the "
+                     "number of nsIDOMClassInfo ID's, this is bad! Fix it!");
+ 
+ #ifdef DEBUG
+   for (size_t i = 0; i < eDOMClassInfoIDCount; i++) {
+     if (!sClassInfoData[i].u.mConstructorFptr ||
+         sClassInfoData[i].mDebugID != i) {
+diff --git a/dom/base/nsDOMClassInfoClasses.h b/dom/base/nsDOMClassInfoClasses.h
+--- a/dom/base/nsDOMClassInfoClasses.h
++++ b/dom/base/nsDOMClassInfoClasses.h
+@@ -304,8 +304,22 @@ DOMCI_CLASS(LockedFile)
+ #ifdef MOZ_TIME_MANAGER
+ DOMCI_CLASS(MozTimeManager)
+ #endif
+ 
+ #ifdef MOZ_WEBRTC
+ DOMCI_CLASS(DataChannel)
+ DOMCI_CLASS(RTCPeerConnection)
+ #endif
++
++#ifdef MOZ_WEBCL
++DOMCI_CLASS(WebCL)
++DOMCI_CLASS(WebCLCommandQueue)
++DOMCI_CLASS(WebCLPlatform)
++DOMCI_CLASS(WebCLContext)
++DOMCI_CLASS(WebCLDevice)
++DOMCI_CLASS(WebCLEvent)
++DOMCI_CLASS(WebCLKernel)
++DOMCI_CLASS(WebCLMem)
++DOMCI_CLASS(WebCLProgram)
++DOMCI_CLASS(WebCLSampler)
++#endif
++
+diff --git a/dom/base/nsGlobalWindow.cpp b/dom/base/nsGlobalWindow.cpp
+--- a/dom/base/nsGlobalWindow.cpp
++++ b/dom/base/nsGlobalWindow.cpp
+@@ -220,16 +220,20 @@
+ #include "nsDOMEventTargetHelper.h"
+ #include "nsIAppsService.h"
+ #include "prrng.h"
+ #include "nsSandboxFlags.h"
+ #include "TimeChangeObserver.h"
+ #include "nsPISocketTransportService.h"
+ #include "mozilla/dom/AudioContext.h"
+ 
++#ifdef MOZ_WEBCL
++#include "WebCL.h"
++#endif
++
+ // Apple system headers seem to have a check() macro.  <sigh>
+ #ifdef check
+ #undef check
+ #endif // check
+ #include "AccessCheck.h"
+ 
+ #ifdef ANDROID
+ #include <android/log.h>
+@@ -1039,16 +1043,20 @@ nsGlobalWindow::nsGlobalWindow(nsGlobalW
+ /* static */
+ void
+ nsGlobalWindow::Init()
+ {
+   CallGetService(NS_ENTROPYCOLLECTOR_CONTRACTID, &gEntropyCollector);
+   NS_ASSERTION(gEntropyCollector,
+                "gEntropyCollector should have been initialized!");
+ 
++#ifdef MOZ_WEBCL
++  mWebCL = nsnull;
++#endif
++
+ #ifdef PR_LOGGING
+   gDOMLeakPRLog = PR_NewLogModule("DOMLeak");
+   NS_ASSERTION(gDOMLeakPRLog, "gDOMLeakPRLog should have been initialized!");
+ #endif
+ 
+   sWindowsById = new WindowByIdTable();
+   sWindowsById->Init();
+ }
+@@ -3115,16 +3123,36 @@ nsGlobalWindow::GetSelf(nsIDOMWindow** a
+ {
+   FORWARD_TO_OUTER(GetSelf, (aWindow), NS_ERROR_NOT_INITIALIZED);
+ 
+   *aWindow = static_cast<nsIDOMWindow*>(this);
+   NS_ADDREF(*aWindow);
+   return NS_OK;
+ }
+ 
++#ifdef MOZ_WEBCL
++NS_IMETHODIMP
++nsGlobalWindow::GetWebCL(nsIDOMWebCL **aWebCL)
++{
++
++  *aWebCL = nsnull;
++
++  if (!mWebCL) {
++    mWebCL = new WebCL();
++    if (!mWebCL) {
++      return NS_ERROR_FAILURE;
++    }
++  }
++
++  NS_ADDREF(*aWebCL = mWebCL);
++
++  return NS_OK;
++}
++#endif
++
+ NS_IMETHODIMP
+ nsGlobalWindow::GetNavigator(nsIDOMNavigator** aNavigator)
+ {
+   FORWARD_TO_INNER(GetNavigator, (aNavigator), NS_ERROR_NOT_INITIALIZED);
+ 
+   *aNavigator = nullptr;
+ 
+   if (!mNavigator) {
+diff --git a/dom/base/nsGlobalWindow.h b/dom/base/nsGlobalWindow.h
+--- a/dom/base/nsGlobalWindow.h
++++ b/dom/base/nsGlobalWindow.h
+@@ -1144,16 +1144,20 @@ protected:
+   // window (e.g. when we are closing the tab and therefore are guaranteed to be
+   // destroying this window).
+   bool                          mDialogsPermanentlyDisabled;
+ 
+   nsTHashtable<nsPtrHashKey<nsDOMEventTargetHelper> > mEventTargetObjects;
+ 
+   nsTArray<uint32_t> mEnabledSensors;
+ 
++#ifdef MOZ_WEBCL
++  nsCOMPtr<nsIDOMWebCL> mWebCL;
++#endif
++
+   friend class nsDOMScriptableHelper;
+   friend class nsDOMWindowUtils;
+   friend class PostMessageEvent;
+   friend class nsDOMDesktopNotification;
+ 
+   static WindowByIdTable* sWindowsById;
+   static bool sWarnedAboutWindowInternal;
+ };
+diff --git a/dom/dom-config.mk b/dom/dom-config.mk
+--- a/dom/dom-config.mk
++++ b/dom/dom-config.mk
+@@ -16,16 +16,17 @@ DOM_SRCDIRS = \
+   dom/contacts \
+   dom/permission \
+   dom/alarm \
+   dom/src/events \
+   dom/src/storage \
+   dom/src/offline \
+   dom/src/geolocation \
+   dom/src/notification \
++  dom/src/webcl \
+   dom/workers \
+   dom/time \
+   content/xbl/src \
+   content/xul/document/src \
+   content/events/src \
+   content/base/src \
+   content/html/content/src \
+   content/html/document/src \
+diff --git a/dom/interfaces/base/nsIDOMWindow.idl b/dom/interfaces/base/nsIDOMWindow.idl
+--- a/dom/interfaces/base/nsIDOMWindow.idl
++++ b/dom/interfaces/base/nsIDOMWindow.idl
+@@ -11,16 +11,18 @@ interface nsIDOMBlob;
+ interface nsIDOMLocation;
+ interface nsIDOMMediaQueryList;
+ interface nsIDOMOfflineResourceList;
+ interface nsIDOMStorage;
+ interface nsIPrompt;
+ interface nsISelection;
+ interface nsIVariant;
+ 
++interface nsIDOMWebCL;
++
+ /**
+  * The nsIDOMWindow interface is the primary interface for a DOM
+  * window object. It represents a single window object that may
+  * contain child windows if the document in the window contains a
+  * HTML frameset document or if the document contains iframe elements.
+  *
+  * @see <http://www.whatwg.org/html/#window>
+  */
+@@ -375,16 +377,18 @@ interface nsIDOMWindow : nsISupports
+ 
+   /* The maximum offset that the window can be scrolled to
+      (i.e., the document width/height minus the scrollport width/height) */
+   readonly attribute long                               scrollMaxX;
+   readonly attribute long                               scrollMaxY;
+ 
+            attribute boolean                            fullScreen;
+ 
++  readonly attribute nsIDOMWebCL                 webCL;
++
+   void                      back();
+   void                      forward();
+   void                      home();
+ 
+   void                      moveTo(in long xPos, in long yPos);
+   void                      moveBy(in long xDif, in long yDif);
+   void                      resizeTo(in long width, in long height);
+   void                      resizeBy(in long widthDif, in long heightDif);
+diff --git a/dom/src/moz.build b/dom/src/moz.build
+--- a/dom/src/moz.build
++++ b/dom/src/moz.build
+@@ -6,11 +6,12 @@
+ DIRS += [
+     'jsurl',
+     'events',
+     'storage',
+     'offline',
+     'json',
+     'geolocation',
+     'notification',
++    'webcl',
+ ]
+ 
+ TEST_DIRS += ['foo']
+diff --git a/dom/src/webcl/Makefile.in b/dom/src/webcl/Makefile.in
+new file mode 100644
+--- /dev/null
++++ b/dom/src/webcl/Makefile.in
+@@ -0,0 +1,74 @@
++# ***** BEGIN LICENSE BLOCK *****
++# Version: MPL 1.1/GPL 2.0/LGPL 2.1
++#
++# The contents of this file are subject to the Mozilla Public License Version
++# 1.1 (the "License"); you may not use this file except in compliance with
++# the License. You may obtain a copy of the License at
++# http://www.mozilla.org/MPL/
++#
++# Software distributed under the License is distributed on an "AS IS" basis,
++# WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
++# for the specific language governing rights and limitations under the
++# License.
++#
++# The Original Code is webclworker.
++#
++# The Initial Developer of the Original Code is
++#   Mozilla Corporation
++# Portions created by the Initial Developer are Copyright (C) 2011
++# the Initial Developer. All Rights Reserved.
++#
++# Contributor(s):
++#   Fabien Cellier <fabien.cellier@gmail.com> (Original Author)
++#
++# Alternatively, the contents of this file may be used under the terms of
++# either the GNU General Public License Version 2 or later (the "GPL"), or
++# the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
++# in which case the provisions of the GPL or the LGPL are applicable instead
++# of those above. If you wish to allow use of your version of this file only
++# under the terms of either the GPL or the LGPL, and not to allow others to
++# use your version of this file under the terms of the MPL, indicate your
++# decision by deleting the provisions above and replace them with the notice
++# and other provisions required by the GPL or the LGPL. If you do not delete
++# the provisions above, a recipient may use your version of this file under
++# the terms of any one of the MPL, the GPL or the LGPL.
++#
++# ***** END LICENSE BLOCK *****
++
++DEPTH            = ../../..
++topsrcdir        = @top_srcdir@
++srcdir           = @srcdir@
++VPATH            = @srcdir@
++
++include $(DEPTH)/config/autoconf.mk
++
++MODULE           = dom
++LIBRARY_NAME     = jsdomwebcl_s
++LIBXUL_LIBRARY = 1
++
++FORCE_STATIC_LIB = 1
++
++CPPSRCS = \
++  WebCL.cpp \
++  WebCLCommandQueue.cpp \
++  WebCLPlatform.cpp \
++  WebCLContext.cpp \
++  WebCLDevice.cpp \
++  WebCLEvent.cpp \
++  WebCLKernel.cpp \
++  WebCLMem.cpp \
++  WebCLProgram.cpp \
++  WebCLSampler.cpp \
++  $(NULL)
++
++
++EXPORTS = \
++	WebCL.h \
++	$(NULL)
++
++
++include $(topsrcdir)/config/config.mk
++include $(topsrcdir)/config/rules.mk
++
++DEFINES += -D_IMPL_NS_LAYOUT
++
+diff --git a/dom/src/webcl/WebCL.cpp b/dom/src/webcl/WebCL.cpp
+new file mode 100644
+--- /dev/null
++++ b/dom/src/webcl/WebCL.cpp
+@@ -0,0 +1,109 @@
++/* ***** BEGIN LICENSE BLOCK *****
++* Version: MPL 1.1/GPL 2.0/LGPL 2.1
++*
++* The contents of this file are subject to the Mozilla Public License Version
++* 1.1 (the "License"); you may not use this file except in compliance with
++* the License. You may obtain a copy of the License at
++* http://www.mozilla.org/MPL/
++*
++* Software distributed under the License is distributed on an "AS IS" basis,
++* WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
++* for the specific language governing rights and limitations under the
++* License.
++*
++* The Original Code is Mozilla.
++*
++* The Initial Developer of the Original Code is
++*   Mozilla Corporation
++* Portions created by the Initial Developer are Copyright (C) 2011
++* the Initial Developer. All Rights Reserved.
++*
++* Contributor(s):
++*
++* Alternatively, the contents of this file may be used under the terms of
++* either the GNU General Public License Version 2 or later (the "GPL"), or
++* the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
++* in which case the provisions of the GPL or the LGPL are applicable instead
++* of those above. If you wish to allow use of your version of this file only
++* under the terms of either the GPL or the LGPL, and not to allow others to
++* use your version of this file under the terms of the MPL, indicate your
++* decision by deleting the provisions above and replace them with the notice
++* and other provisions required by the GPL or the LGPL. If you do not delete
++* the provisions above, a recipient may use your version of this file under
++* the terms of any one of the MPL, the GPL or the LGPL.
++*
++* ***** END LICENSE BLOCK *****/
++
++#include "WebCL.h"
++#include "nsIClassInfoImpl.h"
++#include "nsContentUtils.h"
++
++WebCL::WebCL()
++{
++  /* member initializers and constructor code */
++}
++
++WebCL::~WebCL()
++{
++  /* destructor code */
++}
++
++/* readonly attribute nsIVariant types; */
++NS_IMETHODIMP WebCL::GetTypes(nsIVariant **aTypes)
++{
++    return NS_ERROR_NOT_IMPLEMENTED;
++}
++
++/* readonly attribute nsIVariant version; */
++NS_IMETHODIMP WebCL::GetVersion(nsIVariant **aVersion)
++{
++    return NS_ERROR_NOT_IMPLEMENTED;
++}
++
++/* nsIVariant getPlatformIDs (); */
++NS_IMETHODIMP WebCL::GetPlatformIDs(nsIVariant **_retval NS_OUTPARAM)
++{
++    return NS_ERROR_NOT_IMPLEMENTED;
++}
++
++
++NS_IMETHODIMP
++WebCL::CreateContext(nsIVariant *properties, nsIVariant *devices,
++                     nsIDOMWebCLContext **_retval NS_OUTPARAM)
++{
++    return NS_ERROR_NOT_IMPLEMENTED;
++}
++
++
++NS_IMETHODIMP
++WebCL::CreateContextFromType(nsIVariant *properties,
++                             T_WebCLDeviceType deviceType,
++                             nsIDOMWebCLContext **_retval NS_OUTPARAM)
++{
++    return NS_ERROR_NOT_IMPLEMENTED;
++}
++
++/* void waitForEvents (in nsIVariant eventList); */
++NS_IMETHODIMP WebCL::WaitForEvents(nsIVariant *eventList)
++{
++    return NS_ERROR_NOT_IMPLEMENTED;
++}
++
++/* void unloadCompiler (); */
++NS_IMETHODIMP WebCL::UnloadCompiler()
++{
++    return NS_ERROR_NOT_IMPLEMENTED;
++}
++
++NS_IMPL_ADDREF(WebCL)
++NS_IMPL_RELEASE(WebCL)
++
++DOMCI_DATA(WebCL,WebCL)
++
++
++NS_INTERFACE_MAP_BEGIN(WebCL)
++  NS_INTERFACE_MAP_ENTRY(WebCL)
++  NS_INTERFACE_MAP_ENTRY(nsIDOMWebCL)
++  NS_INTERFACE_MAP_ENTRY(nsISupports)
++  NS_DOM_INTERFACE_MAP_ENTRY_CLASSINFO(WebCL)
++NS_INTERFACE_MAP_END
+diff --git a/dom/src/webcl/WebCL.h b/dom/src/webcl/WebCL.h
+new file mode 100644
+--- /dev/null
++++ b/dom/src/webcl/WebCL.h
+@@ -0,0 +1,68 @@
++/* ***** BEGIN LICENSE BLOCK *****
++* Version: MPL 1.1/GPL 2.0/LGPL 2.1
++*
++* The contents of this file are subject to the Mozilla Public License Version
++* 1.1 (the "License"); you may not use this file except in compliance with
++* the License. You may obtain a copy of the License at
++* http://www.mozilla.org/MPL/
++*
++* Software distributed under the License is distributed on an "AS IS" basis,
++* WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
++* for the specific language governing rights and limitations under the
++* License.
++*
++* The Original Code is Mozilla.
++*
++* The Initial Developer of the Original Code is
++*   Mozilla Corporation
++* Portions created by the Initial Developer are Copyright (C) 2011
++* the Initial Developer. All Rights Reserved.
++*
++* Contributor(s):
++*
++* Alternatively, the contents of this file may be used under the terms of
++* either the GNU General Public License Version 2 or later (the "GPL"), or
++* the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
++* in which case the provisions of the GPL or the LGPL are applicable instead
++* of those above. If you wish to allow use of your version of this file only
++* under the terms of either the GPL or the LGPL, and not to allow others to
++* use your version of this file under the terms of the MPL, indicate your
++* decision by deleting the provisions above and replace them with the notice
++* and other provisions required by the GPL or the LGPL. If you do not delete
++* the provisions above, a recipient may use your version of this file under
++* the terms of any one of the MPL, the GPL or the LGPL.
++*
++* ***** END LICENSE BLOCK *****/
++
++
++#ifndef WEBCL_H
++#define WEBCL_H
++
++#include "nsIDOMWebCL.h"
++#include "nsIClassInfoImpl.h"
++
++#define WEBCL_IID \
++{ 0xc4d36e7b, 0x4ae6, 0x4ee1,\
++  { 0xbf, 0xb0, 0xbe, 0x25, 0x3c, 0x59, 0x09, 0x93 } }
++//c4d36e7b-4ae6-4ee1-bfb0-be253c590993
++
++class WebCL : public nsIDOMWebCL
++{
++public:
++  NS_DECLARE_STATIC_IID_ACCESSOR(WEBCL_IID)
++
++  NS_DECL_ISUPPORTS
++  NS_DECL_NSIDOMWEBCL
++
++  WebCL();
++
++private:
++  ~WebCL();
++
++protected:
++  /* additional members */
++};
++
++NS_DEFINE_STATIC_IID_ACCESSOR(WebCL, WEBCL_IID)
++
++#endif // WEBCL_H
+diff --git a/dom/src/webcl/WebCLCommandQueue.cpp b/dom/src/webcl/WebCLCommandQueue.cpp
+new file mode 100644
+--- /dev/null
++++ b/dom/src/webcl/WebCLCommandQueue.cpp
+@@ -0,0 +1,243 @@
++/* ***** BEGIN LICENSE BLOCK *****
++* Version: MPL 1.1/GPL 2.0/LGPL 2.1
++*
++* The contents of this file are subject to the Mozilla Public License Version
++* 1.1 (the "License"); you may not use this file except in compliance with
++* the License. You may obtain a copy of the License at
++* http://www.mozilla.org/MPL/
++*
++* Software distributed under the License is distributed on an "AS IS" basis,
++* WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
++* for the specific language governing rights and limitations under the
++* License.
++*
++* The Original Code is Mozilla.
++*
++* The Initial Developer of the Original Code is
++*   Mozilla Corporation
++* Portions created by the Initial Developer are Copyright (C) 2011
++* the Initial Developer. All Rights Reserved.
++*
++* Contributor(s):
++*
++* Alternatively, the contents of this file may be used under the terms of
++* either the GNU General Public License Version 2 or later (the "GPL"), or
++* the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
++* in which case the provisions of the GPL or the LGPL are applicable instead
++* of those above. If you wish to allow use of your version of this file only
++* under the terms of either the GPL or the LGPL, and not to allow others to
++* use your version of this file under the terms of the MPL, indicate your
++* decision by deleting the provisions above and replace them with the notice
++* and other provisions required by the GPL or the LGPL. If you do not delete
++* the provisions above, a recipient may use your version of this file under
++* the terms of any one of the MPL, the GPL or the LGPL.
++*
++* ***** END LICENSE BLOCK *****/
++
++#include "WebCLCommandQueue.h"
++#include "nsIClassInfoImpl.h"
++#include "nsContentUtils.h"
++
++
++WebCLCommandQueue::WebCLCommandQueue()
++{
++  /* member initializers and constructor code */
++}
++
++WebCLCommandQueue::~WebCLCommandQueue()
++{
++  /* destructor code */
++}
++
++/* nsIVariant getCommandQueueInfo (in long name, [optional] in long type); */
++NS_IMETHODIMP WebCLCommandQueue::GetCommandQueueInfo(PRInt32 name, PRInt32 type, nsIVariant **_retval NS_OUTPARAM)
++{
++    return NS_ERROR_NOT_IMPLEMENTED;
++}
++
++/* nsIDOMWebCLEvent enqueueNDRangeKernel (in nsIDOMWebCLKernel kernel, in unsigned long workDim, in nsIVariant globalWorkOffset, in nsIVariant globalWorkSize, in nsIVariant localWorkSize, [optional] in nsIVariant eventWaitList); */
++NS_IMETHODIMP WebCLCommandQueue::EnqueueNDRangeKernel(nsIDOMWebCLKernel *kernel, PRUint32 workDim, nsIVariant *globalWorkOffset, nsIVariant *globalWorkSize, nsIVariant *localWorkSize, nsIVariant *eventWaitList, nsIDOMWebCLEvent **_retval NS_OUTPARAM)
++{
++    return NS_ERROR_NOT_IMPLEMENTED;
++}
++
++/* nsIDOMWebCLEvent enqueueTask (in nsIDOMWebCLKernel kernel, [optional] in nsIVariant eventWaitList); */
++NS_IMETHODIMP WebCLCommandQueue::EnqueueTask(nsIDOMWebCLKernel *kernel, nsIVariant *eventWaitList, nsIDOMWebCLEvent **_retval NS_OUTPARAM)
++{
++    return NS_ERROR_NOT_IMPLEMENTED;
++}
++
++/* nsIDOMWebCLEvent enqueueWriteBuffer ([optional] in long dummy); */
++NS_IMETHODIMP WebCLCommandQueue::EnqueueWriteBuffer(PRInt32 dummy, nsIDOMWebCLEvent **_retval NS_OUTPARAM)
++{
++    return NS_ERROR_NOT_IMPLEMENTED;
++}
++
++/* [noscript] nsIDOMWebCLEvent enqueueWriteBuffer_impl (in nsIDOMWebCLMem buffer, in boolean blockingWrite, in T_WebCLSize offset, in T_WebCLSize size, in WebCLArrayPtr data, [optional] in nsIVariant eventWaitList); */
++NS_IMETHODIMP WebCLCommandQueue::EnqueueWriteBuffer_impl(nsIDOMWebCLMem *buffer, PRBool blockingWrite, T_WebCLSize offset, T_WebCLSize size, js::TypedArray *data, nsIVariant *eventWaitList, nsIDOMWebCLEvent **_retval NS_OUTPARAM)
++{
++    return NS_ERROR_NOT_IMPLEMENTED;
++}
++
++/* nsIDOMWebCLEvent enqueueReadBuffer ([optional] in long dummy); */
++NS_IMETHODIMP WebCLCommandQueue::EnqueueReadBuffer(PRInt32 dummy, nsIDOMWebCLEvent **_retval NS_OUTPARAM)
++{
++    return NS_ERROR_NOT_IMPLEMENTED;
++}
++
++/* [noscript] nsIDOMWebCLEvent enqueueReadBuffer_impl (in nsIDOMWebCLMem buffer, in boolean blockingRead, in T_WebCLSize offset, in T_WebCLSize size, in WebCLArrayPtr data, [optional] in nsIVariant eventWaitList); */
++NS_IMETHODIMP WebCLCommandQueue::EnqueueReadBuffer_impl(nsIDOMWebCLMem *buffer, PRBool blockingRead, T_WebCLSize offset, T_WebCLSize size, js::TypedArray *data, nsIVariant *eventWaitList, nsIDOMWebCLEvent **_retval NS_OUTPARAM)
++{
++    return NS_ERROR_NOT_IMPLEMENTED;
++}
++
++/* nsIDOMWebCLEvent enqueueWriteBufferRect ([optional] in long dummy); */
++NS_IMETHODIMP WebCLCommandQueue::EnqueueWriteBufferRect(PRInt32 dummy, nsIDOMWebCLEvent **_retval NS_OUTPARAM)
++{
++    return NS_ERROR_NOT_IMPLEMENTED;
++}
++
++/* [noscript] nsIDOMWebCLEvent enqueueWriteBufferRect_impl (in nsIDOMWebCLMem buffer, in boolean blockingWrite, in nsIVariant bufferOrigin, in nsIVariant hostOrigin, in nsIVariant region, in T_WebCLSize bufferRowPitch, in T_WebCLSize bufferSlicePitch, in T_WebCLSize hostRowPitch, in T_WebCLSize hostSlicePitch, in WebCLArrayPtr data, [optional] in nsIVariant eventWaitList); */
++NS_IMETHODIMP WebCLCommandQueue::EnqueueWriteBufferRect_impl(nsIDOMWebCLMem *buffer, PRBool blockingWrite, nsIVariant *bufferOrigin, nsIVariant *hostOrigin, nsIVariant *region, T_WebCLSize bufferRowPitch, T_WebCLSize bufferSlicePitch, T_WebCLSize hostRowPitch, T_WebCLSize hostSlicePitch, js::TypedArray *data, nsIVariant *eventWaitList, nsIDOMWebCLEvent **_retval NS_OUTPARAM)
++{
++    return NS_ERROR_NOT_IMPLEMENTED;
++}
++
++/* nsIDOMWebCLEvent enqueueReadBufferRect ([optional] in long dummy); */
++NS_IMETHODIMP WebCLCommandQueue::EnqueueReadBufferRect(PRInt32 dummy, nsIDOMWebCLEvent **_retval NS_OUTPARAM)
++{
++    return NS_ERROR_NOT_IMPLEMENTED;
++}
++
++/* [noscript] nsIDOMWebCLEvent enqueueReadBufferRect_impl (in nsIDOMWebCLMem buffer, in boolean blockingRead, in nsIVariant bufferOrigin, in nsIVariant hostOrigin, in nsIVariant region, in T_WebCLSize bufferRowPitch, in T_WebCLSize bufferSlicePitch, in T_WebCLSize hostRowPitch, in T_WebCLSize hostSlicePitch, in WebCLArrayPtr data, [optional] in nsIVariant eventWaitList); */
++NS_IMETHODIMP WebCLCommandQueue::EnqueueReadBufferRect_impl(nsIDOMWebCLMem *buffer, PRBool blockingRead, nsIVariant *bufferOrigin, nsIVariant *hostOrigin, nsIVariant *region, T_WebCLSize bufferRowPitch, T_WebCLSize bufferSlicePitch, T_WebCLSize hostRowPitch, T_WebCLSize hostSlicePitch, js::TypedArray *data, nsIVariant *eventWaitList, nsIDOMWebCLEvent **_retval NS_OUTPARAM)
++{
++    return NS_ERROR_NOT_IMPLEMENTED;
++}
++
++/* nsIDOMWebCLEvent enqueueWriteImage ([optional] in long dummy); */
++NS_IMETHODIMP WebCLCommandQueue::EnqueueWriteImage(PRInt32 dummy, nsIDOMWebCLEvent **_retval NS_OUTPARAM)
++{
++    return NS_ERROR_NOT_IMPLEMENTED;
++}
++
++/* [noscript] nsIDOMWebCLEvent enqueueWriteImage_impl (in nsIDOMWebCLMem image, in boolean blockingWrite, in nsIVariant origin, in nsIVariant region, in T_WebCLSize inputRowPitch, in T_WebCLSize inputSlicePitch, in WebCLArrayPtr data, [optional] in nsIVariant eventWaitList); */
++NS_IMETHODIMP WebCLCommandQueue::EnqueueWriteImage_impl(nsIDOMWebCLMem *image, PRBool blockingWrite, nsIVariant *origin, nsIVariant *region, T_WebCLSize inputRowPitch, T_WebCLSize inputSlicePitch, js::TypedArray *data, nsIVariant *eventWaitList, nsIDOMWebCLEvent **_retval NS_OUTPARAM)
++{
++    return NS_ERROR_NOT_IMPLEMENTED;
++}
++
++/* nsIDOMWebCLEvent enqueueReadImage ([optional] in long dummy); */
++NS_IMETHODIMP WebCLCommandQueue::EnqueueReadImage(PRInt32 dummy, nsIDOMWebCLEvent **_retval NS_OUTPARAM)
++{
++    return NS_ERROR_NOT_IMPLEMENTED;
++}
++
++/* [noscript] nsIDOMWebCLEvent enqueueReadImage_impl (in nsIDOMWebCLMem image, in boolean blockingRead, in nsIVariant origin, in nsIVariant region, in T_WebCLSize rowPitch, in T_WebCLSize slicePitch, in WebCLArrayPtr data, [optional] in nsIVariant eventWaitList); */
++NS_IMETHODIMP WebCLCommandQueue::EnqueueReadImage_impl(nsIDOMWebCLMem *image, PRBool blockingRead, nsIVariant *origin, nsIVariant *region, T_WebCLSize rowPitch, T_WebCLSize slicePitch, js::TypedArray *data, nsIVariant *eventWaitList, nsIDOMWebCLEvent **_retval NS_OUTPARAM)
++{
++    return NS_ERROR_NOT_IMPLEMENTED;
++}
++
++/* nsIDOMWebCLEvent enqueueCopyImage (in nsIDOMWebCLMem srcImage, in nsIDOMWebCLMem dstImage, in nsIVariant srcOrigin, in nsIVariant dstOrigin, in nsIVariant region, [optional] in nsIVariant eventWaitList); */
++NS_IMETHODIMP WebCLCommandQueue::EnqueueCopyImage(nsIDOMWebCLMem *srcImage, nsIDOMWebCLMem *dstImage, nsIVariant *srcOrigin, nsIVariant *dstOrigin, nsIVariant *region, nsIVariant *eventWaitList, nsIDOMWebCLEvent **_retval NS_OUTPARAM)
++{
++    return NS_ERROR_NOT_IMPLEMENTED;
++}
++
++/* nsIDOMWebCLEvent enqueueCopyImageToBuffer (in nsIDOMWebCLMem srcImage, in nsIDOMWebCLMem dstBuffer, in nsIVariant srcOrigin, in nsIVariant region, in T_WebCLSize dstOffset, [optional] in nsIVariant eventWaitList); */
++NS_IMETHODIMP WebCLCommandQueue::EnqueueCopyImageToBuffer(nsIDOMWebCLMem *srcImage, nsIDOMWebCLMem *dstBuffer, nsIVariant *srcOrigin, nsIVariant *region, T_WebCLSize dstOffset, nsIVariant *eventWaitList, nsIDOMWebCLEvent **_retval NS_OUTPARAM)
++{
++    return NS_ERROR_NOT_IMPLEMENTED;
++}
++
++/* nsIDOMWebCLEvent enqueueCopyBufferToImage (in nsIDOMWebCLMem srcBuffer, in nsIDOMWebCLMem dstImage, in T_WebCLSize srcOffset, in nsIVariant dstOrigin, in nsIVariant region, [optional] in nsIVariant eventWaitList); */
++NS_IMETHODIMP WebCLCommandQueue::EnqueueCopyBufferToImage(nsIDOMWebCLMem *srcBuffer, nsIDOMWebCLMem *dstImage, T_WebCLSize srcOffset, nsIVariant *dstOrigin, nsIVariant *region, nsIVariant *eventWaitList, nsIDOMWebCLEvent **_retval NS_OUTPARAM)
++{
++    return NS_ERROR_NOT_IMPLEMENTED;
++}
++
++/* nsIDOMWebCLEvent enqueueMapBuffer ([optional] in long dummy); */
++NS_IMETHODIMP WebCLCommandQueue::EnqueueMapBuffer(PRInt32 dummy, nsIDOMWebCLEvent **_retval NS_OUTPARAM)
++{
++    return NS_ERROR_NOT_IMPLEMENTED;
++}
++
++/* [noscript] nsIDOMWebCLEvent enqueueMapBuffer_impl (in nsIDOMWebCLMem buffer, in boolean blockingMap, in T_WebCLMapFlags mapFlags, in T_WebCLSize offset, in T_WebCLSize size, in nsIVariant eventWaitList, in WebCLArrayPtr data); */
++NS_IMETHODIMP WebCLCommandQueue::EnqueueMapBuffer_impl(nsIDOMWebCLMem *buffer, PRBool blockingMap, T_WebCLMapFlags mapFlags, T_WebCLSize offset, T_WebCLSize size, nsIVariant *eventWaitList, js::TypedArray *data, nsIDOMWebCLEvent **_retval NS_OUTPARAM)
++{
++    return NS_ERROR_NOT_IMPLEMENTED;
++}
++
++/* nsIDOMWebCLEvent enqueueMapImage ([optional] in long dummy); */
++NS_IMETHODIMP WebCLCommandQueue::EnqueueMapImage(PRInt32 dummy, nsIDOMWebCLEvent **_retval NS_OUTPARAM)
++{
++    return NS_ERROR_NOT_IMPLEMENTED;
++}
++
++/* [noscript] nsIDOMWebCLEvent enqueueMapImage_impl (in nsIDOMWebCLMem image, in boolean blockingMap, in T_WebCLMapFlags mapFlags, in nsIVariant origin, in nsIVariant region, in nsIVariant eventWaitList, in WebCLJSObjectPtr data); */
++NS_IMETHODIMP WebCLCommandQueue::EnqueueMapImage_impl(nsIDOMWebCLMem *image, PRBool blockingMap, T_WebCLMapFlags mapFlags, nsIVariant *origin, nsIVariant *region, nsIVariant *eventWaitList, JSObject *data, nsIDOMWebCLEvent **_retval NS_OUTPARAM)
++{
++    return NS_ERROR_NOT_IMPLEMENTED;
++}
++
++/* nsIDOMWebCLEvent enqueueUnmapMemObject ([optional] in long dummy); */
++NS_IMETHODIMP WebCLCommandQueue::EnqueueUnmapMemObject(PRInt32 dummy, nsIDOMWebCLEvent **_retval NS_OUTPARAM)
++{
++    return NS_ERROR_NOT_IMPLEMENTED;
++}
++
++/* [noscript] nsIDOMWebCLEvent enqueueUnmapMemObject_impl (in nsIDOMWebCLMem memObj, in WebCLArrayPtr mappedData, [optional] in nsIVariant eventWaitList); */
++NS_IMETHODIMP WebCLCommandQueue::EnqueueUnmapMemObject_impl(nsIDOMWebCLMem *memObj, js::TypedArray *mappedData, nsIVariant *eventWaitList, nsIDOMWebCLEvent **_retval NS_OUTPARAM)
++{
++    return NS_ERROR_NOT_IMPLEMENTED;
++}
++
++/* nsIDOMWebCLEvent enqueueMarker (); */
++NS_IMETHODIMP WebCLCommandQueue::EnqueueMarker(nsIDOMWebCLEvent **_retval NS_OUTPARAM)
++{
++    return NS_ERROR_NOT_IMPLEMENTED;
++}
++
++/* void enqueueWaitForEvents (in nsIVariant eventWaitList); */
++NS_IMETHODIMP WebCLCommandQueue::EnqueueWaitForEvents(nsIVariant *eventWaitList)
++{
++    return NS_ERROR_NOT_IMPLEMENTED;
++}
++
++/* void enqueueBarrier (); */
++NS_IMETHODIMP WebCLCommandQueue::EnqueueBarrier()
++{
++    return NS_ERROR_NOT_IMPLEMENTED;
++}
++
++/* void flush (); */
++NS_IMETHODIMP WebCLCommandQueue::Flush()
++{
++    return NS_ERROR_NOT_IMPLEMENTED;
++}
++
++/* void finish (); */
++NS_IMETHODIMP WebCLCommandQueue::Finish()
++{
++    return NS_ERROR_NOT_IMPLEMENTED;
++}
++
++/* void releaseCLResources (); */
++NS_IMETHODIMP WebCLCommandQueue::ReleaseCLResources()
++{
++    return NS_ERROR_NOT_IMPLEMENTED;
++}
++
++NS_IMPL_ADDREF(WebCLCommandQueue)
++NS_IMPL_RELEASE(WebCLCommandQueue)
++
++DOMCI_DATA(WebCLCommandQueue,WebCLCommandQueue)
++
++
++NS_INTERFACE_MAP_BEGIN(WebCLCommandQueue)
++  NS_INTERFACE_MAP_ENTRY(WebCLCommandQueue)
++  NS_INTERFACE_MAP_ENTRY(nsIDOMWebCLCommandQueue)
++  NS_INTERFACE_MAP_ENTRY(nsISupports)
++  NS_DOM_INTERFACE_MAP_ENTRY_CLASSINFO(WebCLCommandQueue)
++NS_INTERFACE_MAP_END
+diff --git a/dom/src/webcl/WebCLCommandQueue.h b/dom/src/webcl/WebCLCommandQueue.h
+new file mode 100644
+--- /dev/null
++++ b/dom/src/webcl/WebCLCommandQueue.h
+@@ -0,0 +1,60 @@
++/* ***** BEGIN LICENSE BLOCK *****
++* Version: MPL 1.1/GPL 2.0/LGPL 2.1
++*
++* The contents of this file are subject to the Mozilla Public License Version
++* 1.1 (the "License"); you may not use this file except in compliance with
++* the License. You may obtain a copy of the License at
++* http://www.mozilla.org/MPL/
++*
++* Software distributed under the License is distributed on an "AS IS" basis,
++* WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
++* for the specific language governing rights and limitations under the
++* License.
++*
++* The Original Code is Mozilla.
++*
++* The Initial Developer of the Original Code is
++*   Mozilla Corporation
++* Portions created by the Initial Developer are Copyright (C) 2011
++* the Initial Developer. All Rights Reserved.
++*
++* Contributor(s):
++*
++* Alternatively, the contents of this file may be used under the terms of
++* either the GNU General Public License Version 2 or later (the "GPL"), or
++* the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
++* in which case the provisions of the GPL or the LGPL are applicable instead
++* of those above. If you wish to allow use of your version of this file only
++* under the terms of either the GPL or the LGPL, and not to allow others to
++* use your version of this file under the terms of the MPL, indicate your
++* decision by deleting the provisions above and replace them with the notice
++* and other provisions required by the GPL or the LGPL. If you do not delete
++* the provisions above, a recipient may use your version of this file under
++* the terms of any one of the MPL, the GPL or the LGPL.
++*
++* ***** END LICENSE BLOCK *****/
++
++#ifndef WEBCLCOMMANDQUEUE_H
++#define WEBCLCOMMANDQUEUE_H
++
++#include "nsIDOMWebCLCommandQueue.h"
++#include "nsIClassInfoImpl.h"
++#include "nsContentUtils.h"
++
++class WebCLCommandQueue : public nsIDOMWebCLCommandQueue
++{
++public:
++  NS_DECL_ISUPPORTS
++  NS_DECL_NSIDOMWEBCLCOMMANDQUEUE
++
++  WebCLCommandQueue();
++
++private:
++  ~WebCLCommandQueue();
++
++protected:
++  /* additional members */
++};
++
++
++#endif // WEBCLCOMMANDQUEUE_H
+diff --git a/dom/src/webcl/WebCLContext.cpp b/dom/src/webcl/WebCLContext.cpp
+new file mode 100644
+--- /dev/null
++++ b/dom/src/webcl/WebCLContext.cpp
+@@ -0,0 +1,145 @@
++/* ***** BEGIN LICENSE BLOCK *****
++* Version: MPL 1.1/GPL 2.0/LGPL 2.1
++*
++* The contents of this file are subject to the Mozilla Public License Version
++* 1.1 (the "License"); you may not use this file except in compliance with
++* the License. You may obtain a copy of the License at
++* http://www.mozilla.org/MPL/
++*
++* Software distributed under the License is distributed on an "AS IS" basis,
++* WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
++* for the specific language governing rights and limitations under the
++* License.
++*
++* The Original Code is Mozilla.
++*
++* The Initial Developer of the Original Code is
++*   Mozilla Corporation
++* Portions created by the Initial Developer are Copyright (C) 2011
++* the Initial Developer. All Rights Reserved.
++*
++* Contributor(s):
++*
++* Alternatively, the contents of this file may be used under the terms of
++* either the GNU General Public License Version 2 or later (the "GPL"), or
++* the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
++* in which case the provisions of the GPL or the LGPL are applicable instead
++* of those above. If you wish to allow use of your version of this file only
++* under the terms of either the GPL or the LGPL, and not to allow others to
++* use your version of this file under the terms of the MPL, indicate your
++* decision by deleting the provisions above and replace them with the notice
++* and other provisions required by the GPL or the LGPL. If you do not delete
++* the provisions above, a recipient may use your version of this file under
++* the terms of any one of the MPL, the GPL or the LGPL.
++*
++* ***** END LICENSE BLOCK *****/
++
++
++#include "WebCLContext.h"
++#include "nsIClassInfoImpl.h"
++#include "nsContentUtils.h"
++
++WebCLContext::WebCLContext()
++{
++  /* member initializers and constructor code */
++}
++
++WebCLContext::~WebCLContext()
++{
++  /* destructor code */
++}
++
++/* nsIVariant getContextInfo (in long name, [optional] in long type); */
++NS_IMETHODIMP
++WebCLContext::GetContextInfo(PRInt32 name, PRInt32 type,
++                             nsIVariant **_retval NS_OUTPARAM)
++{
++    return NS_ERROR_NOT_IMPLEMENTED;
++}
++
++/* nsIDOMWebCLProgram createProgramWithSource (in string source); */
++NS_IMETHODIMP
++WebCLContext::CreateProgramWithSource(const char *source,
++                                      nsIDOMWebCLProgram **_retval NS_OUTPARAM)
++{
++    return NS_ERROR_NOT_IMPLEMENTED;
++}
++
++NS_IMETHODIMP
++WebCLContext::CreateCommandQueue(nsIDOMWebCLDevice *device,
++                                 T_WebCLCommandQueueProperties properties,
++                                 nsIDOMWebCLCommandQueue **_retval NS_OUTPARAM)
++{
++    return NS_ERROR_NOT_IMPLEMENTED;
++}
++
++NS_IMETHODIMP
++WebCLContext::CreateBuffer(T_WebCLMemFlags flags,
++                           T_WebCLSize size,
++                           nsIDOMWebCLMem **_retval NS_OUTPARAM)
++{
++    return NS_ERROR_NOT_IMPLEMENTED;
++}
++
++NS_IMETHODIMP
++WebCLContext::CreateImage2D(T_WebCLMemFlags flags,
++                            nsIVariant *imageFormat,
++                            T_WebCLSize width, T_WebCLSize height,
++                            T_WebCLSize rowPitch,
++                            nsIDOMWebCLMem **_retval NS_OUTPARAM)
++{
++    return NS_ERROR_NOT_IMPLEMENTED;
++}
++
++NS_IMETHODIMP
++WebCLContext::CreateImage3D(T_WebCLMemFlags flags, nsIVariant *imageFormat,
++                            T_WebCLSize width, T_WebCLSize height,
++                            T_WebCLSize depth, T_WebCLSize rowPitch,
++                            T_WebCLSize slicePitch,
++                            nsIDOMWebCLMem **_retval NS_OUTPARAM)
++{
++    return NS_ERROR_NOT_IMPLEMENTED;
++}
++
++NS_IMETHODIMP
++WebCLContext::CreateSampler(PRBool normalizedCoords,
++                            T_WebCLAddressingMode addressingMode,
++                            T_WebCLFilterMode filterMode,
++                            nsIDOMWebCLSampler **_retval NS_OUTPARAM)
++{
++    return NS_ERROR_NOT_IMPLEMENTED;
++}
++
++NS_IMETHODIMP
++WebCLContext::GetSupportedImageFormats(T_WebCLMemFlags flags,
++                                       T_WebCLMemObjectType imageType,
++                                       nsIVariant **_retval NS_OUTPARAM)
++{
++    return NS_ERROR_NOT_IMPLEMENTED;
++}
++
++/* nsIDOMWebCLEvent createUserEvent (); */
++NS_IMETHODIMP
++WebCLContext::CreateUserEvent(nsIDOMWebCLEvent **_retval NS_OUTPARAM)
++{
++    return NS_ERROR_NOT_IMPLEMENTED;
++}
++
++/* void releaseCLResources (); */
++NS_IMETHODIMP WebCLContext::ReleaseCLResources()
++{
++    return NS_ERROR_NOT_IMPLEMENTED;
++}
++
++NS_IMPL_ADDREF(WebCLContext)
++NS_IMPL_RELEASE(WebCLContext)
++
++DOMCI_DATA(WebCLContext,WebCLContext)
++
++
++NS_INTERFACE_MAP_BEGIN(WebCLContext)
++  NS_INTERFACE_MAP_ENTRY(WebCLContext)
++  NS_INTERFACE_MAP_ENTRY(nsIDOMWebCLContext)
++  NS_INTERFACE_MAP_ENTRY(nsISupports)
++  NS_DOM_INTERFACE_MAP_ENTRY_CLASSINFO(WebCLContext)
++NS_INTERFACE_MAP_END
+diff --git a/dom/src/webcl/WebCLContext.h b/dom/src/webcl/WebCLContext.h
+new file mode 100644
+--- /dev/null
++++ b/dom/src/webcl/WebCLContext.h
+@@ -0,0 +1,57 @@
++/* ***** BEGIN LICENSE BLOCK *****
++* Version: MPL 1.1/GPL 2.0/LGPL 2.1
++*
++* The contents of this file are subject to the Mozilla Public License Version
++* 1.1 (the "License"); you may not use this file except in compliance with
++* the License. You may obtain a copy of the License at
++* http://www.mozilla.org/MPL/
++*
++* Software distributed under the License is distributed on an "AS IS" basis,
++* WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
++* for the specific language governing rights and limitations under the
++* License.
++*
++* The Original Code is Mozilla.
++*
++* The Initial Developer of the Original Code is
++*   Mozilla Corporation
++* Portions created by the Initial Developer are Copyright (C) 2011
++* the Initial Developer. All Rights Reserved.
++*
++* Contributor(s):
++*
++* Alternatively, the contents of this file may be used under the terms of
++* either the GNU General Public License Version 2 or later (the "GPL"), or
++* the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
++* in which case the provisions of the GPL or the LGPL are applicable instead
++* of those above. If you wish to allow use of your version of this file only
++* under the terms of either the GPL or the LGPL, and not to allow others to
++* use your version of this file under the terms of the MPL, indicate your
++* decision by deleting the provisions above and replace them with the notice
++* and other provisions required by the GPL or the LGPL. If you do not delete
++* the provisions above, a recipient may use your version of this file under
++* the terms of any one of the MPL, the GPL or the LGPL.
++*
++* ***** END LICENSE BLOCK *****/
++
++#ifndef WEBCLCONTEXT_H
++#define WEBCLCONTEXT_H
++
++#include "nsIDOMWebCLContext.h"
++
++class WebCLContext : public nsIDOMWebCLContext
++{
++public:
++  NS_DECL_ISUPPORTS
++  NS_DECL_NSIDOMWEBCLCONTEXT
++
++  WebCLContext();
++
++private:
++  ~WebCLContext();
++
++protected:
++  /* additional members */
++};
++
++#endif // WEBCLCONTEXT_H
+diff --git a/dom/src/webcl/WebCLDevice.cpp b/dom/src/webcl/WebCLDevice.cpp
+new file mode 100644
+--- /dev/null
++++ b/dom/src/webcl/WebCLDevice.cpp
+@@ -0,0 +1,71 @@
++/* ***** BEGIN LICENSE BLOCK *****
++* Version: MPL 1.1/GPL 2.0/LGPL 2.1
++*
++* The contents of this file are subject to the Mozilla Public License Version
++* 1.1 (the "License"); you may not use this file except in compliance with
++* the License. You may obtain a copy of the License at
++* http://www.mozilla.org/MPL/
++*
++* Software distributed under the License is distributed on an "AS IS" basis,
++* WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
++* for the specific language governing rights and limitations under the
++* License.
++*
++* The Original Code is Mozilla.
++*
++* The Initial Developer of the Original Code is
++*   Mozilla Corporation
++* Portions created by the Initial Developer are Copyright (C) 2011
++* the Initial Developer. All Rights Reserved.
++*
++* Contributor(s):
++*
++* Alternatively, the contents of this file may be used under the terms of
++* either the GNU General Public License Version 2 or later (the "GPL"), or
++* the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
++* in which case the provisions of the GPL or the LGPL are applicable instead
++* of those above. If you wish to allow use of your version of this file only
++* under the terms of either the GPL or the LGPL, and not to allow others to
++* use your version of this file under the terms of the MPL, indicate your
++* decision by deleting the provisions above and replace them with the notice
++* and other provisions required by the GPL or the LGPL. If you do not delete
++* the provisions above, a recipient may use your version of this file under
++* the terms of any one of the MPL, the GPL or the LGPL.
++*
++* ***** END LICENSE BLOCK *****/
++
++
++#include "WebCLDevice.h"
++#include "nsIClassInfoImpl.h"
++#include "nsContentUtils.h"
++
++WebCLDevice::WebCLDevice()
++{
++  /* member initializers and constructor code */
++}
++
++WebCLDevice::~WebCLDevice()
++{
++  /* destructor code */
++}
++
++/* nsIVariant getDeviceInfo (in long name, [optional] in long type); */
++NS_IMETHODIMP
++WebCLDevice::GetDeviceInfo(PRInt32 name, PRInt32 type,
++                           nsIVariant **_retval NS_OUTPARAM)
++{
++    return NS_ERROR_NOT_IMPLEMENTED;
++}
++
++NS_IMPL_ADDREF(WebCLDevice)
++NS_IMPL_RELEASE(WebCLDevice)
++
++DOMCI_DATA(WebCLDevice,WebCLDevice)
++
++
++NS_INTERFACE_MAP_BEGIN(WebCLDevice)
++  NS_INTERFACE_MAP_ENTRY(WebCLDevice)
++  NS_INTERFACE_MAP_ENTRY(nsIDOMWebCLDevice)
++  NS_INTERFACE_MAP_ENTRY(nsISupports)
++  NS_DOM_INTERFACE_MAP_ENTRY_CLASSINFO(WebCLDevice)
++NS_INTERFACE_MAP_END
+diff --git a/dom/src/webcl/WebCLDevice.h b/dom/src/webcl/WebCLDevice.h
+new file mode 100644
+--- /dev/null
++++ b/dom/src/webcl/WebCLDevice.h
+@@ -0,0 +1,57 @@
++/* ***** BEGIN LICENSE BLOCK *****
++* Version: MPL 1.1/GPL 2.0/LGPL 2.1
++*
++* The contents of this file are subject to the Mozilla Public License Version
++* 1.1 (the "License"); you may not use this file except in compliance with
++* the License. You may obtain a copy of the License at
++* http://www.mozilla.org/MPL/
++*
++* Software distributed under the License is distributed on an "AS IS" basis,
++* WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
++* for the specific language governing rights and limitations under the
++* License.
++*
++* The Original Code is Mozilla.
++*
++* The Initial Developer of the Original Code is
++*   Mozilla Corporation
++* Portions created by the Initial Developer are Copyright (C) 2011
++* the Initial Developer. All Rights Reserved.
++*
++* Contributor(s):
++*
++* Alternatively, the contents of this file may be used under the terms of
++* either the GNU General Public License Version 2 or later (the "GPL"), or
++* the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
++* in which case the provisions of the GPL or the LGPL are applicable instead
++* of those above. If you wish to allow use of your version of this file only
++* under the terms of either the GPL or the LGPL, and not to allow others to
++* use your version of this file under the terms of the MPL, indicate your
++* decision by deleting the provisions above and replace them with the notice
++* and other provisions required by the GPL or the LGPL. If you do not delete
++* the provisions above, a recipient may use your version of this file under
++* the terms of any one of the MPL, the GPL or the LGPL.
++*
++* ***** END LICENSE BLOCK *****/
++
++#ifndef WEBCLDEVICE_H
++#define WEBCLDEVICE_H
++
++#include "nsIDOMWebCLDevice.h"
++
++class WebCLDevice : public nsIDOMWebCLDevice
++{
++public:
++  NS_DECL_ISUPPORTS
++  NS_DECL_NSIDOMWEBCLDEVICE
++
++  WebCLDevice();
++
++private:
++  ~WebCLDevice();
++
++protected:
++  /* additional members */
++};
++
++#endif // WEBCLDEVICE_H
+diff --git a/dom/src/webcl/WebCLEvent.cpp b/dom/src/webcl/WebCLEvent.cpp
+new file mode 100644
+--- /dev/null
++++ b/dom/src/webcl/WebCLEvent.cpp
+@@ -0,0 +1,86 @@
++/* ***** BEGIN LICENSE BLOCK *****
++* Version: MPL 1.1/GPL 2.0/LGPL 2.1
++*
++* The contents of this file are subject to the Mozilla Public License Version
++* 1.1 (the "License"); you may not use this file except in compliance with
++* the License. You may obtain a copy of the License at
++* http://www.mozilla.org/MPL/
++*
++* Software distributed under the License is distributed on an "AS IS" basis,
++* WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
++* for the specific language governing rights and limitations under the
++* License.
++*
++* The Original Code is Mozilla.
++*
++* The Initial Developer of the Original Code is
++*   Mozilla Corporation
++* Portions created by the Initial Developer are Copyright (C) 2011
++* the Initial Developer. All Rights Reserved.
++*
++* Contributor(s):
++*
++* Alternatively, the contents of this file may be used under the terms of
++* either the GNU General Public License Version 2 or later (the "GPL"), or
++* the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
++* in which case the provisions of the GPL or the LGPL are applicable instead
++* of those above. If you wish to allow use of your version of this file only
++* under the terms of either the GPL or the LGPL, and not to allow others to
++* use your version of this file under the terms of the MPL, indicate your
++* decision by deleting the provisions above and replace them with the notice
++* and other provisions required by the GPL or the LGPL. If you do not delete
++* the provisions above, a recipient may use your version of this file under
++* the terms of any one of the MPL, the GPL or the LGPL.
++*
++* ***** END LICENSE BLOCK *****/
++
++#include "WebCLEvent.h"
++#include "nsIClassInfoImpl.h"
++#include "nsContentUtils.h"
++
++WebCLEvent::WebCLEvent()
++{
++  /* member initializers and constructor code */
++}
++
++WebCLEvent::~WebCLEvent()
++{
++  /* destructor code */
++}
++
++/* nsIVariant getEventInfo (in long name, [optional] in long type); */
++NS_IMETHODIMP WebCLEvent::GetEventInfo(PRInt32 name, PRInt32 type, nsIVariant **_retval NS_OUTPARAM)
++{
++    return NS_ERROR_NOT_IMPLEMENTED;
++}
++
++/* nsIVariant getEventProfilingInfo (in long name, [optional] in long type); */
++NS_IMETHODIMP WebCLEvent::GetEventProfilingInfo(PRInt32 name, PRInt32 type, nsIVariant **_retval NS_OUTPARAM)
++{
++    return NS_ERROR_NOT_IMPLEMENTED;
++}
++
++/* void setUserEventStatus (in long executionStatus); */
++NS_IMETHODIMP WebCLEvent::SetUserEventStatus(PRInt32 executionStatus)
++{
++    return NS_ERROR_NOT_IMPLEMENTED;
++}
++
++/* void releaseCLResources (); */
++NS_IMETHODIMP WebCLEvent::ReleaseCLResources()
++{
++    return NS_ERROR_NOT_IMPLEMENTED;
++}
++
++NS_IMPL_ADDREF(WebCLEvent)
++NS_IMPL_RELEASE(WebCLEvent)
++
++DOMCI_DATA(WebCLEvent,WebCLEvent)
++
++
++NS_INTERFACE_MAP_BEGIN(WebCLEvent)
++  NS_INTERFACE_MAP_ENTRY(WebCLEvent)
++  NS_INTERFACE_MAP_ENTRY(nsIDOMWebCLEvent)
++  NS_INTERFACE_MAP_ENTRY(nsISupports)
++  NS_DOM_INTERFACE_MAP_ENTRY_CLASSINFO(WebCLEvent)
++NS_INTERFACE_MAP_END
+diff --git a/dom/src/webcl/WebCLEvent.h b/dom/src/webcl/WebCLEvent.h
+new file mode 100644
+--- /dev/null
++++ b/dom/src/webcl/WebCLEvent.h
+@@ -0,0 +1,58 @@
++/* ***** BEGIN LICENSE BLOCK *****
++* Version: MPL 1.1/GPL 2.0/LGPL 2.1
++*
++* The contents of this file are subject to the Mozilla Public License Version
++* 1.1 (the "License"); you may not use this file except in compliance with
++* the License. You may obtain a copy of the License at
++* http://www.mozilla.org/MPL/
++*
++* Software distributed under the License is distributed on an "AS IS" basis,
++* WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
++* for the specific language governing rights and limitations under the
++* License.
++*
++* The Original Code is Mozilla.
++*
++* The Initial Developer of the Original Code is
++*   Mozilla Corporation
++* Portions created by the Initial Developer are Copyright (C) 2011
++* the Initial Developer. All Rights Reserved.
++*
++* Contributor(s):
++*
++* Alternatively, the contents of this file may be used under the terms of
++* either the GNU General Public License Version 2 or later (the "GPL"), or
++* the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
++* in which case the provisions of the GPL or the LGPL are applicable instead
++* of those above. If you wish to allow use of your version of this file only
++* under the terms of either the GPL or the LGPL, and not to allow others to
++* use your version of this file under the terms of the MPL, indicate your
++* decision by deleting the provisions above and replace them with the notice
++* and other provisions required by the GPL or the LGPL. If you do not delete
++* the provisions above, a recipient may use your version of this file under
++* the terms of any one of the MPL, the GPL or the LGPL.
++*
++* ***** END LICENSE BLOCK *****/
++
++
++#ifndef WEBCLEVENT_H
++#define WEBCLEVENT_H
++
++#include "nsIDOMWebCLEvent.h"
++
++class WebCLEvent : public nsIDOMWebCLEvent
++{
++public:
++  NS_DECL_ISUPPORTS
++  NS_DECL_NSIDOMWEBCLEVENT
++
++  WebCLEvent();
++
++private:
++  ~WebCLEvent();
++
++protected:
++  /* additional members */
++};
++
++#endif // WEBCLEVENT_H
+diff --git a/dom/src/webcl/WebCLKernel.cpp b/dom/src/webcl/WebCLKernel.cpp
+new file mode 100644
+--- /dev/null
++++ b/dom/src/webcl/WebCLKernel.cpp
+@@ -0,0 +1,96 @@
++/* ***** BEGIN LICENSE BLOCK *****
++* Version: MPL 1.1/GPL 2.0/LGPL 2.1
++*
++* The contents of this file are subject to the Mozilla Public License Version
++* 1.1 (the "License"); you may not use this file except in compliance with
++* the License. You may obtain a copy of the License at
++* http://www.mozilla.org/MPL/
++*
++* Software distributed under the License is distributed on an "AS IS" basis,
++* WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
++* for the specific language governing rights and limitations under the
++* License.
++*
++* The Original Code is Mozilla.
++*
++* The Initial Developer of the Original Code is
++*   Mozilla Corporation
++* Portions created by the Initial Developer are Copyright (C) 2011
++* the Initial Developer. All Rights Reserved.
++*
++* Contributor(s):
++*
++* Alternatively, the contents of this file may be used under the terms of
++* either the GNU General Public License Version 2 or later (the "GPL"), or
++* the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
++* in which case the provisions of the GPL or the LGPL are applicable instead
++* of those above. If you wish to allow use of your version of this file only
++* under the terms of either the GPL or the LGPL, and not to allow others to
++* use your version of this file under the terms of the MPL, indicate your
++* decision by deleting the provisions above and replace them with the notice
++* and other provisions required by the GPL or the LGPL. If you do not delete
++* the provisions above, a recipient may use your version of this file under
++* the terms of any one of the MPL, the GPL or the LGPL.
++*
++* ***** END LICENSE BLOCK *****/
++
++#include "WebCLKernel.h"
++#include "nsIClassInfoImpl.h"
++#include "nsContentUtils.h"
++
++WebCLKernel::WebCLKernel()
++{
++  /* member initializers and constructor code */
++}
++
++WebCLKernel::~WebCLKernel()
++{
++  /* destructor code */
++}
++
++/* nsIVariant getKernelInfo (in long name, [optional] in long type); */
++NS_IMETHODIMP WebCLKernel::GetKernelInfo(PRInt32 name, PRInt32 type,
++                                         nsIVariant **_retval NS_OUTPARAM)
++{
++    return NS_ERROR_NOT_IMPLEMENTED;
++}
++
++NS_IMETHODIMP
++WebCLKernel::GetKernelWorkGroupInfo(nsIDOMWebCLDevice *device,
++                                    PRInt32 name, PRInt32 type,
++                                    nsIVariant **_retval NS_OUTPARAM)
++{
++    return NS_ERROR_NOT_IMPLEMENTED;
++}
++
++/* void setKernelArg (in long index, in nsIVariant value, [optional] in long type); */
++NS_IMETHODIMP WebCLKernel::SetKernelArg(PRInt32 index,
++                                        nsIVariant *value, PRInt32 type)
++{
++    return NS_ERROR_NOT_IMPLEMENTED;
++}
++
++/* void setKernelArgLocal (in long index, in unsigned long size); */
++NS_IMETHODIMP WebCLKernel::SetKernelArgLocal(PRInt32 index, PRUint32 size)
++{
++    return NS_ERROR_NOT_IMPLEMENTED;
++}
++
++/* void releaseCLResources (); */
++NS_IMETHODIMP WebCLKernel::ReleaseCLResources()
++{
++    return NS_ERROR_NOT_IMPLEMENTED;
++}
++
++NS_IMPL_ADDREF(WebCLKernel)
++NS_IMPL_RELEASE(WebCLKernel)
++
++DOMCI_DATA(WebCLKernel,WebCLKernel)
++
++
++NS_INTERFACE_MAP_BEGIN(WebCLKernel)
++  NS_INTERFACE_MAP_ENTRY(WebCLKernel)
++  NS_INTERFACE_MAP_ENTRY(nsIDOMWebCLKernel)
++  NS_INTERFACE_MAP_ENTRY(nsISupports)
++  NS_DOM_INTERFACE_MAP_ENTRY_CLASSINFO(WebCLKernel)
++NS_INTERFACE_MAP_END
+diff --git a/dom/src/webcl/WebCLKernel.h b/dom/src/webcl/WebCLKernel.h
+new file mode 100644
+--- /dev/null
++++ b/dom/src/webcl/WebCLKernel.h
+@@ -0,0 +1,57 @@
++/* ***** BEGIN LICENSE BLOCK *****
++* Version: MPL 1.1/GPL 2.0/LGPL 2.1
++*
++* The contents of this file are subject to the Mozilla Public License Version
++* 1.1 (the "License"); you may not use this file except in compliance with
++* the License. You may obtain a copy of the License at
++* http://www.mozilla.org/MPL/
++*
++* Software distributed under the License is distributed on an "AS IS" basis,
++* WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
++* for the specific language governing rights and limitations under the
++* License.
++*
++* The Original Code is Mozilla.
++*
++* The Initial Developer of the Original Code is
++*   Mozilla Corporation
++* Portions created by the Initial Developer are Copyright (C) 2011
++* the Initial Developer. All Rights Reserved.
++*
++* Contributor(s):
++*
++* Alternatively, the contents of this file may be used under the terms of
++* either the GNU General Public License Version 2 or later (the "GPL"), or
++* the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
++* in which case the provisions of the GPL or the LGPL are applicable instead
++* of those above. If you wish to allow use of your version of this file only
++* under the terms of either the GPL or the LGPL, and not to allow others to
++* use your version of this file under the terms of the MPL, indicate your
++* decision by deleting the provisions above and replace them with the notice
++* and other provisions required by the GPL or the LGPL. If you do not delete
++* the provisions above, a recipient may use your version of this file under
++* the terms of any one of the MPL, the GPL or the LGPL.
++*
++* ***** END LICENSE BLOCK *****/
++
++#ifndef WEBCLKERNEL_H
++#define WEBCLKERNEL_H
++
++#include "nsIDOMWebCLKernel.h"
++
++class WebCLKernel : public nsIDOMWebCLKernel
++{
++public:
++  NS_DECL_ISUPPORTS
++  NS_DECL_NSIDOMWEBCLKERNEL
++
++  WebCLKernel();
++
++private:
++  ~WebCLKernel();
++
++protected:
++  /* additional members */
++};
++
++#endif // WEBCLKERNEL_H
+diff --git a/dom/src/webcl/WebCLMem.cpp b/dom/src/webcl/WebCLMem.cpp
+new file mode 100644
+--- /dev/null
++++ b/dom/src/webcl/WebCLMem.cpp
+@@ -0,0 +1,87 @@
++/* ***** BEGIN LICENSE BLOCK *****
++* Version: MPL 1.1/GPL 2.0/LGPL 2.1
++*
++* The contents of this file are subject to the Mozilla Public License Version
++* 1.1 (the "License"); you may not use this file except in compliance with
++* the License. You may obtain a copy of the License at
++* http://www.mozilla.org/MPL/
++*
++* Software distributed under the License is distributed on an "AS IS" basis,
++* WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
++* for the specific language governing rights and limitations under the
++* License.
++*
++* The Original Code is Mozilla.
++*
++* The Initial Developer of the Original Code is
++*   Mozilla Corporation
++* Portions created by the Initial Developer are Copyright (C) 2011
++* the Initial Developer. All Rights Reserved.
++*
++* Contributor(s):
++*
++* Alternatively, the contents of this file may be used under the terms of
++* either the GNU General Public License Version 2 or later (the "GPL"), or
++* the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
++* in which case the provisions of the GPL or the LGPL are applicable instead
++* of those above. If you wish to allow use of your version of this file only
++* under the terms of either the GPL or the LGPL, and not to allow others to
++* use your version of this file under the terms of the MPL, indicate your
++* decision by deleting the provisions above and replace them with the notice
++* and other provisions required by the GPL or the LGPL. If you do not delete
++* the provisions above, a recipient may use your version of this file under
++* the terms of any one of the MPL, the GPL or the LGPL.
++*
++* ***** END LICENSE BLOCK *****/
++
++#include "WebCLMem.h"
++#include "nsIClassInfoImpl.h"
++#include "nsContentUtils.h"
++
++
++WebCLMem::WebCLMem()
++{
++  /* member initializers and constructor code */
++}
++
++WebCLMem::~WebCLMem()
++{
++  /* destructor code */
++}
++
++/* nsIVariant getMemObjectInfo (in long name, [optional] in long type); */
++NS_IMETHODIMP WebCLMem::GetMemObjectInfo(PRInt32 name, PRInt32 type, nsIVariant **_retval NS_OUTPARAM)
++{
++    return NS_ERROR_NOT_IMPLEMENTED;
++}
++
++/* nsIVariant getImageInfo (in long name, [optional] in long type); */
++NS_IMETHODIMP WebCLMem::GetImageInfo(PRInt32 name, PRInt32 type, nsIVariant **_retval NS_OUTPARAM)
++{
++    return NS_ERROR_NOT_IMPLEMENTED;
++}
++
++/* nsIDOMWebCLMem createSubBuffer (in T_WebCLMemFlags flags, in nsIVariant region); */
++NS_IMETHODIMP WebCLMem::CreateSubBuffer(T_WebCLMemFlags flags, nsIVariant *region, nsIDOMWebCLMem **_retval NS_OUTPARAM)
++{
++    return NS_ERROR_NOT_IMPLEMENTED;
++}
++
++/* void releaseCLResources (); */
++NS_IMETHODIMP WebCLMem::ReleaseCLResources()
++{
++    return NS_ERROR_NOT_IMPLEMENTED;
++}
++
++NS_IMPL_ADDREF(WebCLMem)
++NS_IMPL_RELEASE(WebCLMem)
++
++DOMCI_DATA(WebCLMem,WebCLMem)
++
++
++NS_INTERFACE_MAP_BEGIN(WebCLMem)
++  NS_INTERFACE_MAP_ENTRY(WebCLMem)
++  NS_INTERFACE_MAP_ENTRY(nsIDOMWebCLMem)
++  NS_INTERFACE_MAP_ENTRY(nsISupports)
++  NS_DOM_INTERFACE_MAP_ENTRY_CLASSINFO(WebCLMem)
++NS_INTERFACE_MAP_END
+diff --git a/dom/src/webcl/WebCLMem.h b/dom/src/webcl/WebCLMem.h
+new file mode 100644
+--- /dev/null
++++ b/dom/src/webcl/WebCLMem.h
+@@ -0,0 +1,56 @@
++/* ***** BEGIN LICENSE BLOCK *****
++* Version: MPL 1.1/GPL 2.0/LGPL 2.1
++*
++* The contents of this file are subject to the Mozilla Public License Version
++* 1.1 (the "License"); you may not use this file except in compliance with
++* the License. You may obtain a copy of the License at
++* http://www.mozilla.org/MPL/
++*
++* Software distributed under the License is distributed on an "AS IS" basis,
++* WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
++* for the specific language governing rights and limitations under the
++* License.
++*
++* The Original Code is Mozilla.
++*
++* The Initial Developer of the Original Code is
++*   Mozilla Corporation
++* Portions created by the Initial Developer are Copyright (C) 2011
++* the Initial Developer. All Rights Reserved.
++*
++* Contributor(s):
++*
++* Alternatively, the contents of this file may be used under the terms of
++* either the GNU General Public License Version 2 or later (the "GPL"), or
++* the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
++* in which case the provisions of the GPL or the LGPL are applicable instead
++* of those above. If you wish to allow use of your version of this file only
++* under the terms of either the GPL or the LGPL, and not to allow others to
++* use your version of this file under the terms of the MPL, indicate your
++* decision by deleting the provisions above and replace them with the notice
++* and other provisions required by the GPL or the LGPL. If you do not delete
++* the provisions above, a recipient may use your version of this file under
++* the terms of any one of the MPL, the GPL or the LGPL.
++*
++* ***** END LICENSE BLOCK *****/
++
++#ifndef WEBCLMEM_H
++#define WEBCLMEM_H
++
++#include "nsIDOMWebCLMem.h"
++class WebCLMem : public nsIDOMWebCLMem
++{
++public:
++  NS_DECL_ISUPPORTS
++  NS_DECL_NSIDOMWEBCLMEM
++
++  WebCLMem();
++
++private:
++  ~WebCLMem();
++
++protected:
++  /* additional members */
++};
++
++#endif // WEBCLMEM_H
+diff --git a/dom/src/webcl/WebCLPlatform.cpp b/dom/src/webcl/WebCLPlatform.cpp
+new file mode 100644
+--- /dev/null
++++ b/dom/src/webcl/WebCLPlatform.cpp
+@@ -0,0 +1,74 @@
++/* ***** BEGIN LICENSE BLOCK *****
++* Version: MPL 1.1/GPL 2.0/LGPL 2.1
++*
++* The contents of this file are subject to the Mozilla Public License Version
++* 1.1 (the "License"); you may not use this file except in compliance with
++* the License. You may obtain a copy of the License at
++* http://www.mozilla.org/MPL/
++*
++* Software distributed under the License is distributed on an "AS IS" basis,
++* WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
++* for the specific language governing rights and limitations under the
++* License.
++*
++* The Original Code is Mozilla.
++*
++* The Initial Developer of the Original Code is
++*   Mozilla Corporation
++* Portions created by the Initial Developer are Copyright (C) 2011
++* the Initial Developer. All Rights Reserved.
++*
++* Contributor(s):
++*
++* Alternatively, the contents of this file may be used under the terms of
++* either the GNU General Public License Version 2 or later (the "GPL"), or
++* the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
++* in which case the provisions of the GPL or the LGPL are applicable instead
++* of those above. If you wish to allow use of your version of this file only
++* under the terms of either the GPL or the LGPL, and not to allow others to
++* use your version of this file under the terms of the MPL, indicate your
++* decision by deleting the provisions above and replace them with the notice
++* and other provisions required by the GPL or the LGPL. If you do not delete
++* the provisions above, a recipient may use your version of this file under
++* the terms of any one of the MPL, the GPL or the LGPL.
++*
++* ***** END LICENSE BLOCK *****/
++
++#include "WebCLPlatform.h"
++#include "nsIClassInfoImpl.h"
++#include "nsContentUtils.h"
++
++WebCLPlatform::WebCLPlatform()
++{
++  /* member initializers and constructor code */
++}
++
++WebCLPlatform::~WebCLPlatform()
++{
++  /* destructor code */
++}
++
++/* nsIVariant getPlatformInfo (in long name, [optional] in long type); */
++NS_IMETHODIMP WebCLPlatform::GetPlatformInfo(PRInt32 name, PRInt32 type, nsIVariant **_retval NS_OUTPARAM)
++{
++    return NS_ERROR_NOT_IMPLEMENTED;
++}
++
++/* nsIVariant getDeviceIDs (in T_WebCLDeviceType type); */
++NS_IMETHODIMP WebCLPlatform::GetDeviceIDs(T_WebCLDeviceType type, nsIVariant **_retval NS_OUTPARAM)
++{
++    return NS_ERROR_NOT_IMPLEMENTED;
++}
++
++NS_IMPL_ADDREF(WebCLPlatform)
++NS_IMPL_RELEASE(WebCLPlatform)
++
++DOMCI_DATA(WebCLPlatform,WebCLPlatform)
++
++
++NS_INTERFACE_MAP_BEGIN(WebCLPlatform)
++  NS_INTERFACE_MAP_ENTRY(WebCLPlatform)
++  NS_INTERFACE_MAP_ENTRY(nsIDOMWebCLPlatform)
++  NS_INTERFACE_MAP_ENTRY(nsISupports)
++  NS_DOM_INTERFACE_MAP_ENTRY_CLASSINFO(WebCLPlatform)
++NS_INTERFACE_MAP_END
+diff --git a/dom/src/webcl/WebCLPlatform.h b/dom/src/webcl/WebCLPlatform.h
+new file mode 100644
+--- /dev/null
++++ b/dom/src/webcl/WebCLPlatform.h
+@@ -0,0 +1,59 @@
++/* ***** BEGIN LICENSE BLOCK *****
++* Version: MPL 1.1/GPL 2.0/LGPL 2.1
++*
++* The contents of this file are subject to the Mozilla Public License Version
++* 1.1 (the "License"); you may not use this file except in compliance with
++* the License. You may obtain a copy of the License at
++* http://www.mozilla.org/MPL/
++*
++* Software distributed under the License is distributed on an "AS IS" basis,
++* WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
++* for the specific language governing rights and limitations under the
++* License.
++*
++* The Original Code is Mozilla.
++*
++* The Initial Developer of the Original Code is
++*   Mozilla Corporation
++* Portions created by the Initial Developer are Copyright (C) 2011
++* the Initial Developer. All Rights Reserved.
++*
++* Contributor(s):
++*
++* Alternatively, the contents of this file may be used under the terms of
++* either the GNU General Public License Version 2 or later (the "GPL"), or
++* the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
++* in which case the provisions of the GPL or the LGPL are applicable instead
++* of those above. If you wish to allow use of your version of this file only
++* under the terms of either the GPL or the LGPL, and not to allow others to
++* use your version of this file under the terms of the MPL, indicate your
++* decision by deleting the provisions above and replace them with the notice
++* and other provisions required by the GPL or the LGPL. If you do not delete
++* the provisions above, a recipient may use your version of this file under
++* the terms of any one of the MPL, the GPL or the LGPL.
++*
++* ***** END LICENSE BLOCK *****/
++
++#ifndef WEBCLPLATFORM_H
++#define WEBCLPLATFORM_H
++
++#include "nsIDOMWebCLPlatform.h"
++#include "nsIClassInfoImpl.h"
++#include "nsContentUtils.h"
++
++class WebCLPlatform : public nsIDOMWebCLPlatform
++{
++public:
++  NS_DECL_ISUPPORTS
++  NS_DECL_NSIDOMWEBCLPLATFORM
++
++  WebCLPlatform();
++
++private:
++  ~WebCLPlatform();
++
++protected:
++  /* additional members */
++};
++
++#endif // WEBCLPLATFORM_H
+diff --git a/dom/src/webcl/WebCLProgram.cpp b/dom/src/webcl/WebCLProgram.cpp
+new file mode 100644
+--- /dev/null
++++ b/dom/src/webcl/WebCLProgram.cpp
+@@ -0,0 +1,106 @@
++/* ***** BEGIN LICENSE BLOCK *****
++* Version: MPL 1.1/GPL 2.0/LGPL 2.1
++*
++* The contents of this file are subject to the Mozilla Public License Version
++* 1.1 (the "License"); you may not use this file except in compliance with
++* the License. You may obtain a copy of the License at
++* http://www.mozilla.org/MPL/
++*
++* Software distributed under the License is distributed on an "AS IS" basis,
++* WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
++* for the specific language governing rights and limitations under the
++* License.
++*
++* The Original Code is Mozilla.
++*
++* The Initial Developer of the Original Code is
++*   Mozilla Corporation
++* Portions created by the Initial Developer are Copyright (C) 2011
++* the Initial Developer. All Rights Reserved.
++*
++* Contributor(s):
++*
++* Alternatively, the contents of this file may be used under the terms of
++* either the GNU General Public License Version 2 or later (the "GPL"), or
++* the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
++* in which case the provisions of the GPL or the LGPL are applicable instead
++* of those above. If you wish to allow use of your version of this file only
++* under the terms of either the GPL or the LGPL, and not to allow others to
++* use your version of this file under the terms of the MPL, indicate your
++* decision by deleting the provisions above and replace them with the notice
++* and other provisions required by the GPL or the LGPL. If you do not delete
++* the provisions above, a recipient may use your version of this file under
++* the terms of any one of the MPL, the GPL or the LGPL.
++*
++* ***** END LICENSE BLOCK *****/
++
++#include "WebCLProgram.h"
++#include "nsIClassInfoImpl.h"
++#include "nsContentUtils.h"
++
++
++WebCLProgram::WebCLProgram()
++{
++  /* member initializers and constructor code */
++}
++
++WebCLProgram::~WebCLProgram()
++{
++  /* destructor code */
++}
++
++/* nsIVariant getProgramInfo (in long name, [optional] in long type); */
++NS_IMETHODIMP WebCLProgram::GetProgramInfo(PRInt32 name, PRInt32 type,
++                                           nsIVariant **_retval NS_OUTPARAM)
++{
++    return NS_ERROR_NOT_IMPLEMENTED;
++}
++
++NS_IMETHODIMP
++WebCLProgram::GetProgramBuildInfo(nsIDOMWebCLDevice *device,
++                                  PRInt32 name, PRInt32 type,
++                                  nsIVariant **_retval NS_OUTPARAM)
++{
++    return NS_ERROR_NOT_IMPLEMENTED;
++}
++
++/* void buildProgram (in nsIVariant devices, in string options); */
++NS_IMETHODIMP WebCLProgram::BuildProgram(nsIVariant *devices,
++                                         const char *options)
++{
++    return NS_ERROR_NOT_IMPLEMENTED;
++}
++
++/* nsIDOMWebCLKernel createKernel (in string kernelName); */
++NS_IMETHODIMP
++WebCLProgram::CreateKernel(const char *kernelName,
++                           nsIDOMWebCLKernel **_retval NS_OUTPARAM)
++{
++    return NS_ERROR_NOT_IMPLEMENTED;
++}
++
++/* nsIVariant createKernelsInProgram (); */
++NS_IMETHODIMP
++WebCLProgram::CreateKernelsInProgram(nsIVariant **_retval NS_OUTPARAM)
++{
++    return NS_ERROR_NOT_IMPLEMENTED;
++}
++
++/* void releaseCLResources (); */
++NS_IMETHODIMP WebCLProgram::ReleaseCLResources()
++{
++    return NS_ERROR_NOT_IMPLEMENTED;
++}
++
++NS_IMPL_ADDREF(WebCLProgram)
++NS_IMPL_RELEASE(WebCLProgram)
++
++DOMCI_DATA(WebCLProgram,WebCLProgram)
++
++
++NS_INTERFACE_MAP_BEGIN(WebCLProgram)
++  NS_INTERFACE_MAP_ENTRY(WebCLProgram)
++  NS_INTERFACE_MAP_ENTRY(nsIDOMWebCLProgram)
++  NS_INTERFACE_MAP_ENTRY(nsISupports)
++  NS_DOM_INTERFACE_MAP_ENTRY_CLASSINFO(WebCLProgram)
++NS_INTERFACE_MAP_END
+diff --git a/dom/src/webcl/WebCLProgram.h b/dom/src/webcl/WebCLProgram.h
+new file mode 100644
+--- /dev/null
++++ b/dom/src/webcl/WebCLProgram.h
+@@ -0,0 +1,57 @@
++/* ***** BEGIN LICENSE BLOCK *****
++* Version: MPL 1.1/GPL 2.0/LGPL 2.1
++*
++* The contents of this file are subject to the Mozilla Public License Version
++* 1.1 (the "License"); you may not use this file except in compliance with
++* the License. You may obtain a copy of the License at
++* http://www.mozilla.org/MPL/
++*
++* Software distributed under the License is distributed on an "AS IS" basis,
++* WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
++* for the specific language governing rights and limitations under the
++* License.
++*
++* The Original Code is Mozilla.
++*
++* The Initial Developer of the Original Code is
++*   Mozilla Corporation
++* Portions created by the Initial Developer are Copyright (C) 2011
++* the Initial Developer. All Rights Reserved.
++*
++* Contributor(s):
++*
++* Alternatively, the contents of this file may be used under the terms of
++* either the GNU General Public License Version 2 or later (the "GPL"), or
++* the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
++* in which case the provisions of the GPL or the LGPL are applicable instead
++* of those above. If you wish to allow use of your version of this file only
++* under the terms of either the GPL or the LGPL, and not to allow others to
++* use your version of this file under the terms of the MPL, indicate your
++* decision by deleting the provisions above and replace them with the notice
++* and other provisions required by the GPL or the LGPL. If you do not delete
++* the provisions above, a recipient may use your version of this file under
++* the terms of any one of the MPL, the GPL or the LGPL.
++*
++* ***** END LICENSE BLOCK *****/
++
++#ifndef WEBCLPROGRAM_H
++#define WEBCLPROGRAM_H
++
++#include "nsIDOMWebCLProgram.h"
++
++class WebCLProgram : public nsIDOMWebCLProgram
++{
++public:
++  NS_DECL_ISUPPORTS
++  NS_DECL_NSIDOMWEBCLPROGRAM
++
++  WebCLProgram();
++
++private:
++  ~WebCLProgram();
++
++protected:
++  /* additional members */
++};
++
++#endif // WEBCLPROGRAM_H
+diff --git a/dom/src/webcl/WebCLSampler.cpp b/dom/src/webcl/WebCLSampler.cpp
+new file mode 100644
+--- /dev/null
++++ b/dom/src/webcl/WebCLSampler.cpp
+@@ -0,0 +1,74 @@
++/* ***** BEGIN LICENSE BLOCK *****
++* Version: MPL 1.1/GPL 2.0/LGPL 2.1
++*
++* The contents of this file are subject to the Mozilla Public License Version
++* 1.1 (the "License"); you may not use this file except in compliance with
++* the License. You may obtain a copy of the License at
++* http://www.mozilla.org/MPL/
++*
++* Software distributed under the License is distributed on an "AS IS" basis,
++* WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
++* for the specific language governing rights and limitations under the
++* License.
++*
++* The Original Code is Mozilla.
++*
++* The Initial Developer of the Original Code is
++*   Mozilla Corporation
++* Portions created by the Initial Developer are Copyright (C) 2011
++* the Initial Developer. All Rights Reserved.
++*
++* Contributor(s):
++*
++* Alternatively, the contents of this file may be used under the terms of
++* either the GNU General Public License Version 2 or later (the "GPL"), or
++* the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
++* in which case the provisions of the GPL or the LGPL are applicable instead
++* of those above. If you wish to allow use of your version of this file only
++* under the terms of either the GPL or the LGPL, and not to allow others to
++* use your version of this file under the terms of the MPL, indicate your
++* decision by deleting the provisions above and replace them with the notice
++* and other provisions required by the GPL or the LGPL. If you do not delete
++* the provisions above, a recipient may use your version of this file under
++* the terms of any one of the MPL, the GPL or the LGPL.
++*
++* ***** END LICENSE BLOCK *****/
++
++#include "nsIClassInfoImpl.h"
++#include "nsContentUtils.h"
++#include "WebCLSampler.h"
++
++WebCLSampler::WebCLSampler()
++{
++  /* member initializers and constructor code */
++}
++
++WebCLSampler::~WebCLSampler()
++{
++  /* destructor code */
++}
++
++/* nsIVariant getSamplerInfo (in long name, [optional] in long type); */
++NS_IMETHODIMP WebCLSampler::GetSamplerInfo(PRInt32 name, PRInt32 type, nsIVariant **_retval NS_OUTPARAM)
++{
++    return NS_ERROR_NOT_IMPLEMENTED;
++}
++
++/* void releaseCLResources (); */
++NS_IMETHODIMP WebCLSampler::ReleaseCLResources()
++{
++    return NS_ERROR_NOT_IMPLEMENTED;
++}
++
++NS_IMPL_ADDREF(WebCLSampler)
++NS_IMPL_RELEASE(WebCLSampler)
++
++DOMCI_DATA(WebCLSampler,WebCLSampler)
++
++
++NS_INTERFACE_MAP_BEGIN(WebCLSampler)
++  NS_INTERFACE_MAP_ENTRY(WebCLSampler)
++  NS_INTERFACE_MAP_ENTRY(nsIDOMWebCLSampler)
++  NS_INTERFACE_MAP_ENTRY(nsISupports)
++  NS_DOM_INTERFACE_MAP_ENTRY_CLASSINFO(WebCLSampler)
++NS_INTERFACE_MAP_END
+diff --git a/dom/src/webcl/WebCLSampler.h b/dom/src/webcl/WebCLSampler.h
+new file mode 100644
+--- /dev/null
++++ b/dom/src/webcl/WebCLSampler.h
+@@ -0,0 +1,58 @@
++/* ***** BEGIN LICENSE BLOCK *****
++* Version: MPL 1.1/GPL 2.0/LGPL 2.1
++*
++* The contents of this file are subject to the Mozilla Public License Version
++* 1.1 (the "License"); you may not use this file except in compliance with
++* the License. You may obtain a copy of the License at
++* http://www.mozilla.org/MPL/
++*
++* Software distributed under the License is distributed on an "AS IS" basis,
++* WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
++* for the specific language governing rights and limitations under the
++* License.
++*
++* The Original Code is Mozilla.
++*
++* The Initial Developer of the Original Code is
++*   Mozilla Corporation
++* Portions created by the Initial Developer are Copyright (C) 2011
++* the Initial Developer. All Rights Reserved.
++*
++* Contributor(s):
++*
++* Alternatively, the contents of this file may be used under the terms of
++* either the GNU General Public License Version 2 or later (the "GPL"), or
++* the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
++* in which case the provisions of the GPL or the LGPL are applicable instead
++* of those above. If you wish to allow use of your version of this file only
++* under the terms of either the GPL or the LGPL, and not to allow others to
++* use your version of this file under the terms of the MPL, indicate your
++* decision by deleting the provisions above and replace them with the notice
++* and other provisions required by the GPL or the LGPL. If you do not delete
++* the provisions above, a recipient may use your version of this file under
++* the terms of any one of the MPL, the GPL or the LGPL.
++*
++* ***** END LICENSE BLOCK *****/
++
++#ifndef WEBCLSAMPLER_H
++#define WEBCLSAMPLER_H
++
++#include "nsIDOMWebCLSampler.h"
++
++class WebCLSampler : public nsIDOMWebCLSampler
++{
++public:
++  NS_DECL_ISUPPORTS
++  NS_DECL_NSIDOMWEBCLSAMPLER
++
++  WebCLSampler();
++
++private:
++  ~WebCLSampler();
++
++protected:
++  /* additional members */
++};
++
++
++#endif // WEBCLSAMPLER_H
+diff --git a/dom/src/webcl/moz.build b/dom/src/webcl/moz.build
+new file mode 100644
+--- /dev/null
++++ b/dom/src/webcl/moz.build
+@@ -0,0 +1,5 @@
++# vim: set filetype=python:
++# This Source Code Form is subject to the terms of the Mozilla Public
++# License, v. 2.0. If a copy of the MPL was not distributed with this
++# file, You can obtain one at http://mozilla.org/MPL/2.0/.
++
+diff --git a/layout/build/Makefile.in b/layout/build/Makefile.in
+--- a/layout/build/Makefile.in
++++ b/layout/build/Makefile.in
+@@ -81,16 +81,17 @@ SHARED_LIBRARY_LIBS = \
+ 	$(DEPTH)/dom/src/events/$(LIB_PREFIX)jsdomevents_s.$(LIB_SUFFIX) \
+ 	$(DEPTH)/dom/src/json/$(LIB_PREFIX)json_s.$(LIB_SUFFIX) \
+ 	$(DEPTH)/dom/src/jsurl/$(LIB_PREFIX)jsurl_s.$(LIB_SUFFIX) \
+ 	$(DEPTH)/dom/src/storage/$(LIB_PREFIX)jsdomstorage_s.$(LIB_SUFFIX) \
+ 	$(DEPTH)/dom/src/offline/$(LIB_PREFIX)jsdomoffline_s.$(LIB_SUFFIX) \
+ 	$(DEPTH)/dom/src/geolocation/$(LIB_PREFIX)jsdomgeolocation_s.$(LIB_SUFFIX) \
+         $(DEPTH)/dom/audiochannel/$(LIB_PREFIX)domaudiochannel_s.$(LIB_SUFFIX) \
+ 	$(DEPTH)/dom/src/notification/$(LIB_PREFIX)jsdomnotification_s.$(LIB_SUFFIX) \
++  $(DEPTH)/dom/src/webcl/$(LIB_PREFIX)jsdomwebcl_s.$(LIB_SUFFIX) \
+ 	$(DEPTH)/dom/system/$(LIB_PREFIX)domsystem_s.$(LIB_SUFFIX) \
+ 	$(DEPTH)/dom/workers/$(LIB_PREFIX)domworkers_s.$(LIB_SUFFIX) \
+ 	$(DEPTH)/dom/indexedDB/$(LIB_PREFIX)dom_indexeddb_s.$(LIB_SUFFIX) \
+ 	$(DEPTH)/dom/indexedDB/ipc/$(LIB_PREFIX)dom_indexeddb_ipc_s.$(LIB_SUFFIX) \
+ 	$(DEPTH)/dom/browser-element/$(LIB_PREFIX)dom_browserelement_s.$(LIB_SUFFIX) \
+ 	$(DEPTH)/dom/time/$(LIB_PREFIX)dom_time_s.$(LIB_SUFFIX) \
+ 	$(DEPTH)/editor/libeditor/text/$(LIB_PREFIX)texteditor_s.$(LIB_SUFFIX) \
+ 	$(DEPTH)/editor/libeditor/base/$(LIB_PREFIX)editorbase_s.$(LIB_SUFFIX) \

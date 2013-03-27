@@ -1,0 +1,51 @@
+# HG changeset patch
+# User Chia-hung Tai <ctai@mozilla.com>
+# Date 1364378256 -28800
+# Node ID 7611f84aa75cee09d3408f145c2694477913d778
+# Parent  fc71a98193e9e4956a5372397b2b289ad08c1bac
+imported patch webcl-security.diff
+
+diff --git a/dom/base/nsGlobalWindow.cpp b/dom/base/nsGlobalWindow.cpp
+--- a/dom/base/nsGlobalWindow.cpp
++++ b/dom/base/nsGlobalWindow.cpp
+@@ -3130,16 +3130,19 @@ nsGlobalWindow::GetSelf(nsIDOMWindow** a
+ 
+ #ifdef MOZ_WEBCL
+ NS_IMETHODIMP
+ nsGlobalWindow::GetWebCL(nsIDOMWebCL **aWebCL)
+ {
+ 
+   *aWebCL = nsnull;
+ 
++  if(!Preferences::GetBool("webcl.force-enabled", PR_FALSE))
++    return NS_ERROR_FAILURE;
++
+   if (!mWebCL) {
+     mWebCL = new WebCL();
+     if (!mWebCL) {
+       return NS_ERROR_FAILURE;
+     }
+   }
+ 
+   NS_ADDREF(*aWebCL = mWebCL);
+diff --git a/modules/libpref/src/init/all.js b/modules/libpref/src/init/all.js
+--- a/modules/libpref/src/init/all.js
++++ b/modules/libpref/src/init/all.js
+@@ -3980,16 +3980,17 @@ pref("extensions.minCompatiblePlatformVe
+ 
+ pref("network.buffer.cache.count", 24);
+ pref("network.buffer.cache.size",  32768);
+ 
+ // Desktop Notification
+ pref("notification.feature.enabled", false);
+ 
+ // WebCL prefs
++pref("webcl.force-enabled", false);
+ pref("webcl.opencllib", "");
+ 
+ // Web Notification
+ pref("dom.webnotifications.enabled", true);
+ 
+ // Alert animation effect, name is disableSlidingEffect for backwards-compat.
+ pref("alerts.disableSlidingEffect", false);
+ 

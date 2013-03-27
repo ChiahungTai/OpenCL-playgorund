@@ -1,0 +1,1280 @@
+# HG changeset patch
+# User Chia-hung Tai <ctai@mozilla.com>
+# Date 1364378255 -28800
+# Node ID f11ca67953ec088488717d560208fc70189bf27a
+# Parent  6a730cc16c2449aff3219a8846cc6514376223a5
+imported patch webcl-idl.diff
+
+diff --git a/dom/interfaces/webcl/Makefile.in b/dom/interfaces/webcl/Makefile.in
+new file mode 100644
+--- /dev/null
++++ b/dom/interfaces/webcl/Makefile.in
+@@ -0,0 +1,18 @@
++#!nmake
++#
++# This Source Code Form is subject to the terms of the Mozilla Public
++# License, v. 2.0. If a copy of the MPL was not distributed with this
++# file, You can obtain one at http://mozilla.org/MPL/2.0/.
++
++
++DEPTH   = @DEPTH@
++topsrcdir = @top_srcdir@
++srcdir    = @srcdir@
++VPATH   = @srcdir@
++
++include $(DEPTH)/config/autoconf.mk
++
++MODULE    = dom
++
++include $(topsrcdir)/config/rules.mk
++
+diff --git a/dom/interfaces/webcl/moz.build b/dom/interfaces/webcl/moz.build
+new file mode 100644
+--- /dev/null
++++ b/dom/interfaces/webcl/moz.build
+@@ -0,0 +1,20 @@
++# vim: set filetype=python:
++# This Source Code Form is subject to the terms of the Mozilla Public
++# License, v. 2.0. If a copy of the MPL was not distributed with this
++# file, You can obtain one at http://mozilla.org/MPL/2.0/.
++
++XPIDL_SOURCES += [
++    'nsIDOMWebCLTypes.idl',
++    'nsIDOMWebCL.idl',
++    'nsIDOMWebCLPlatform.idl',
++    'nsIDOMWebCLDevice.idl',
++    'nsIDOMWebCLContext.idl',
++    'nsIDOMWebCLCommandQueue.idl',
++    'nsIDOMWebCLEvent.idl',
++    'nsIDOMWebCLProgram.idl',
++    'nsIDOMWebCLKernel.idl',
++    'nsIDOMWebCLMem.idl',
++    'nsIDOMWebCLSampler.idl',
++]
++
++XPIDL_MODULE = 'dom_webcl'
+diff --git a/dom/interfaces/webcl/nsIDOMWebCL.idl b/dom/interfaces/webcl/nsIDOMWebCL.idl
+new file mode 100644
+--- /dev/null
++++ b/dom/interfaces/webcl/nsIDOMWebCL.idl
+@@ -0,0 +1,350 @@
++/* ***** BEGIN LICENSE BLOCK *****
++ * Version: MPL 1.1/GPL 2.0/LGPL 2.1
++ *
++ * The contents of this file are subject to the Mozilla Public License Version
++ * 1.1 (the "License"); you may not use this file except in compliance with
++ * the License. You may obtain a copy of the License at
++ * http://www.mozilla.org/MPL/
++ *
++ * Software distributed under the License is distributed on an "AS IS" basis,
++ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
++ * for the specific language governing rights and limitations under the
++ * License.
++ *
++ * The Original Code is Nokia WebCL - http://webcl.nokiaresearch.com/ .
++ *
++ * The Initial Developer of the Original Code is
++ * Nokia Research Center Tampere.
++ * Portions created by the Initial Developer are Copyright (C) 2011
++ * the Initial Developer. All Rights Reserved.
++ *
++ * Contributor(s):
++ *   Janne Pietiäinen <jpieti@gmail.com>
++ *   Jari Nikara <jari.nikara@nokia.com>
++ *   Tomi Aarnio <tomi.aarnio@nokia.com>
++ *   Eero Aho <eero.aho@nokia.com>
++ *
++ * Alternatively, the contents of this file may be used under the terms of
++ * either the GNU General Public License Version 2 or later (the "GPL"), or
++ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
++ * in which case the provisions of the GPL or the LGPL are applicable instead
++ * of those above. If you wish to allow use of your version of this file only
++ * under the terms of either the GPL or the LGPL, and not to allow others to
++ * use your version of this file under the terms of the MPL, indicate your
++ * decision by deleting the provisions above and replace them with the notice
++ * and other provisions required by the GPL or the LGPL. If you do not delete
++ * the provisions above, a recipient may use your version of this file under
++ * the terms of any one of the MPL, the GPL or the LGPL.
++ *
++ * ***** END LICENSE BLOCK ***** */
++
++
++#include "nsISupports.idl"
++#include "nsIVariant.idl"
++#include "nsIArray.idl"
++
++#include "nsIDOMWebCLTypes.idl"
++
++interface nsIDOMWebCLContext;
++interface nsIDOMWebCLPlatform;
++
++[scriptable, uuid(cd247fc5-892e-4ee9-9bf2-15a22ec9a08a)]
++interface nsIDOMWebCL : nsISupports
++{
++  /* The data types that are supported on info patameters and kernel arguments */
++  readonly attribute nsIVariant types;
++
++  /* The WebCL version as an array of 2 integers, e.g. 1.0 -> [1, 0] */
++  readonly attribute nsIVariant version;
++
++  nsIVariant getPlatformIDs ();
++
++  nsIDOMWebCLContext createContext (in nsIVariant properties,
++                                    in nsIVariant devices);
++
++  nsIDOMWebCLContext createContextFromType (in nsIVariant properties,
++                                            in T_WebCLDeviceType deviceType);
++
++  void waitForEvents (in nsIVariant eventList);
++
++  void unloadCompiler ();
++
++  // TODO: These will conflict with cl.h if included on C++ code
++  const long CL_SUCCESS = 0;
++  const long CL_DEVICE_NOT_FOUND = -1;
++  const long CL_DEVICE_NOT_AVAILABLE = -2;
++  const long CL_COMPILER_NOT_AVAILABLE = -3;
++  const long CL_MEM_OBJECT_ALLOCATION_FAILURE = -4;
++  const long CL_OUT_OF_RESOURCES = -5;
++  const long CL_OUT_OF_HOST_MEMORY = -6;
++  const long CL_PROFILING_INFO_NOT_AVAILABLE = -7;
++  const long CL_MEM_COPY_OVERLAP = -8;
++  const long CL_IMAGE_FORMAT_MISMATCH = -9;
++  const long CL_IMAGE_FORMAT_NOT_SUPPORTED = -10;
++  const long CL_BUILD_PROGRAM_FAILURE = -11;
++  const long CL_MAP_FAILURE = -12;
++  const long CL_MISALIGNED_SUB_BUFFER_OFFSET = -13;
++  const long CL_EXEC_STATUS_ERROR_FOR_EVENTS_IN_WAIT_LIST = -14;
++  const long CL_INVALID_VALUE = -30;
++  const long CL_INVALID_DEVICE_TYPE = -31;
++  const long CL_INVALID_PLATFORM = -32;
++  const long CL_INVALID_DEVICE = -33;
++  const long CL_INVALID_CONTEXT = -34;
++  const long CL_INVALID_QUEUE_PROPERTIES = -35;
++  const long CL_INVALID_COMMAND_QUEUE = -36;
++  const long CL_INVALID_HOST_PTR = -37;
++  const long CL_INVALID_MEM_OBJECT = -38;
++  const long CL_INVALID_IMAGE_FORMAT_DESCRIPTOR = -39;
++  const long CL_INVALID_IMAGE_SIZE = -40;
++  const long CL_INVALID_SAMPLER = -41;
++  const long CL_INVALID_BINARY = -42;
++  const long CL_INVALID_BUILD_OPTIONS = -43;
++  const long CL_INVALID_PROGRAM = -44;
++  const long CL_INVALID_PROGRAM_EXECUTABLE = -45;
++  const long CL_INVALID_KERNEL_NAME = -46;
++  const long CL_INVALID_KERNEL_DEFINITION = -47;
++  const long CL_INVALID_KERNEL = -48;
++  const long CL_INVALID_ARG_INDEX = -49;
++  const long CL_INVALID_ARG_VALUE = -50;
++  const long CL_INVALID_ARG_SIZE = -51;
++  const long CL_INVALID_KERNEL_ARGS = -52;
++  const long CL_INVALID_WORK_DIMENSION = -53;
++  const long CL_INVALID_WORK_GROUP_SIZE = -54;
++  const long CL_INVALID_WORK_ITEM_SIZE = -55;
++  const long CL_INVALID_GLOBAL_OFFSET = -56;
++  const long CL_INVALID_EVENT_WAIT_LIST = -57;
++  const long CL_INVALID_EVENT = -58;
++  const long CL_INVALID_OPERATION = -59;
++  const long CL_INVALID_GL_OBJECT = -60;
++  const long CL_INVALID_BUFFER_SIZE = -61;
++  const long CL_INVALID_MIP_LEVEL = -62;
++  const long CL_INVALID_GLOBAL_WORK_SIZE = -63;
++  const long CL_INVALID_PROPERTY = -64;
++  const long CL_VERSION_1_0 = 1;
++  const long CL_VERSION_1_1 = 1;
++  const long CL_FALSE = 0;
++  const long CL_TRUE = 1;
++  const long CL_PLATFORM_PROFILE = 0x0900;
++  const long CL_PLATFORM_VERSION = 0x0901;
++  const long CL_PLATFORM_NAME = 0x0902;
++  const long CL_PLATFORM_VENDOR = 0x0903;
++  const long CL_PLATFORM_EXTENSIONS = 0x0904;
++  const long CL_DEVICE_TYPE_DEFAULT = (1<<0);
++  const long CL_DEVICE_TYPE_CPU = (1<<1);
++  const long CL_DEVICE_TYPE_GPU = (1<<2);
++  const long CL_DEVICE_TYPE_ACCELERATOR = (1<<3);
++  const long CL_DEVICE_TYPE_ALL = 0xFFFFFFFF;
++  const long CL_DEVICE_TYPE = 0x1000;
++  const long CL_DEVICE_VENDOR_ID = 0x1001;
++  const long CL_DEVICE_MAX_COMPUTE_UNITS = 0x1002;
++  const long CL_DEVICE_MAX_WORK_ITEM_DIMENSIONS = 0x1003;
++  const long CL_DEVICE_MAX_WORK_GROUP_SIZE = 0x1004;
++  const long CL_DEVICE_MAX_WORK_ITEM_SIZES = 0x1005;
++  const long CL_DEVICE_PREFERRED_VECTOR_WIDTH_CHAR = 0x1006;
++  const long CL_DEVICE_PREFERRED_VECTOR_WIDTH_SHORT = 0x1007;
++  const long CL_DEVICE_PREFERRED_VECTOR_WIDTH_INT = 0x1008;
++  const long CL_DEVICE_PREFERRED_VECTOR_WIDTH_LONG = 0x1009;
++  const long CL_DEVICE_PREFERRED_VECTOR_WIDTH_FLOAT = 0x100A;
++  const long CL_DEVICE_PREFERRED_VECTOR_WIDTH_DOUBLE = 0x100B;
++  const long CL_DEVICE_MAX_CLOCK_FREQUENCY = 0x100C;
++  const long CL_DEVICE_ADDRESS_BITS = 0x100D;
++  const long CL_DEVICE_MAX_READ_IMAGE_ARGS = 0x100E;
++  const long CL_DEVICE_MAX_WRITE_IMAGE_ARGS = 0x100F;
++  const long CL_DEVICE_MAX_MEM_ALLOC_SIZE = 0x1010;
++  const long CL_DEVICE_IMAGE2D_MAX_WIDTH = 0x1011;
++  const long CL_DEVICE_IMAGE2D_MAX_HEIGHT = 0x1012;
++  const long CL_DEVICE_IMAGE3D_MAX_WIDTH = 0x1013;
++  const long CL_DEVICE_IMAGE3D_MAX_HEIGHT = 0x1014;
++  const long CL_DEVICE_IMAGE3D_MAX_DEPTH = 0x1015;
++  const long CL_DEVICE_IMAGE_SUPPORT = 0x1016;
++  const long CL_DEVICE_MAX_PARAMETER_SIZE = 0x1017;
++  const long CL_DEVICE_MAX_SAMPLERS = 0x1018;
++  const long CL_DEVICE_MEM_BASE_ADDR_ALIGN = 0x1019;
++  const long CL_DEVICE_MIN_DATA_TYPE_ALIGN_SIZE = 0x101A;
++  const long CL_DEVICE_SINGLE_FP_CONFIG = 0x101B;
++  const long CL_DEVICE_GLOBAL_MEM_CACHE_TYPE = 0x101C;
++  const long CL_DEVICE_GLOBAL_MEM_CACHELINE_SIZE = 0x101D;
++  const long CL_DEVICE_GLOBAL_MEM_CACHE_SIZE = 0x101E;
++  const long CL_DEVICE_GLOBAL_MEM_SIZE = 0x101F;
++  const long CL_DEVICE_MAX_CONSTANT_BUFFER_SIZE = 0x1020;
++  const long CL_DEVICE_MAX_CONSTANT_ARGS = 0x1021;
++  const long CL_DEVICE_LOCAL_MEM_TYPE = 0x1022;
++  const long CL_DEVICE_LOCAL_MEM_SIZE = 0x1023;
++  const long CL_DEVICE_ERROR_CORRECTION_SUPPORT = 0x1024;
++  const long CL_DEVICE_PROFILING_TIMER_RESOLUTION = 0x1025;
++  const long CL_DEVICE_ENDIAN_LITTLE = 0x1026;
++  const long CL_DEVICE_AVAILABLE = 0x1027;
++  const long CL_DEVICE_COMPILER_AVAILABLE = 0x1028;
++  const long CL_DEVICE_EXECUTION_CAPABILITIES = 0x1029;
++  const long CL_DEVICE_QUEUE_PROPERTIES = 0x102A;
++  const long CL_DEVICE_NAME = 0x102B;
++  const long CL_DEVICE_VENDOR = 0x102C;
++  const long CL_DRIVER_VERSION = 0x102D;
++  const long CL_DEVICE_PROFILE = 0x102E;
++  const long CL_DEVICE_VERSION = 0x102F;
++  const long CL_DEVICE_EXTENSIONS = 0x1030;
++  const long CL_DEVICE_PLATFORM = 0x1031;
++  const long CL_DEVICE_DOUBLE_FP_CONFIG = 0x1032;
++  const long CL_DEVICE_HALF_FP_CONFIG = 0x1033;
++  const long CL_DEVICE_PREFERRED_VECTOR_WIDTH_HALF = 0x1034;
++  const long CL_DEVICE_HOST_UNIFIED_MEMORY = 0x1035;
++  const long CL_DEVICE_NATIVE_VECTOR_WIDTH_CHAR = 0x1036;
++  const long CL_DEVICE_NATIVE_VECTOR_WIDTH_SHORT = 0x1037;
++  const long CL_DEVICE_NATIVE_VECTOR_WIDTH_INT = 0x1038;
++  const long CL_DEVICE_NATIVE_VECTOR_WIDTH_LONG = 0x1039;
++  const long CL_DEVICE_NATIVE_VECTOR_WIDTH_FLOAT = 0x103A;
++  const long CL_DEVICE_NATIVE_VECTOR_WIDTH_DOUBLE = 0x103B;
++  const long CL_DEVICE_NATIVE_VECTOR_WIDTH_HALF = 0x103C;
++  const long CL_DEVICE_OPENCL_C_VERSION = 0x103D;
++  const long CL_FP_DENORM = (1<<0);
++  const long CL_FP_INF_NAN = (1<<1);
++  const long CL_FP_ROUND_TO_NEAREST = (1<<2);
++  const long CL_FP_ROUND_TO_ZERO = (1<<3);
++  const long CL_FP_ROUND_TO_INF = (1<<4);
++  const long CL_FP_FMA = (1<<5);
++  const long CL_FP_SOFT_FLOAT = (1<<6);
++  const long CL_NONE = 0x0;
++  const long CL_READ_ONLY_CACHE = 0x1;
++  const long CL_READ_WRITE_CACHE = 0x2;
++  const long CL_LOCAL = 0x1;
++  const long CL_GLOBAL = 0x2;
++  const long CL_EXEC_KERNEL = (1<<0);
++  const long CL_EXEC_NATIVE_KERNEL = (1<<1);
++  const long CL_QUEUE_OUT_OF_ORDER_EXEC_MODE_ENABLE = (1<<0);
++  const long CL_QUEUE_PROFILING_ENABLE = (1<<1);
++  const long CL_CONTEXT_REFERENCE_COUNT = 0x1080;
++  const long CL_CONTEXT_DEVICES = 0x1081;
++  const long CL_CONTEXT_PROPERTIES = 0x1082;
++  const long CL_CONTEXT_NUM_DEVICES = 0x1083;
++  const long CL_CONTEXT_PLATFORM = 0x1084;
++  const long CL_QUEUE_CONTEXT = 0x1090;
++  const long CL_QUEUE_DEVICE = 0x1091;
++  const long CL_QUEUE_REFERENCE_COUNT = 0x1092;
++  const long CL_QUEUE_PROPERTIES = 0x1093;
++  const long CL_MEM_READ_WRITE = (1<<0);
++  const long CL_MEM_WRITE_ONLY = (1<<1);
++  const long CL_MEM_READ_ONLY = (1<<2);
++  const long CL_MEM_USE_HOST_PTR = (1<<3);
++  const long CL_MEM_ALLOC_HOST_PTR = (1<<4);
++  const long CL_MEM_COPY_HOST_PTR = (1<<5);
++  const long CL_R = 0x10B0;
++  const long CL_A = 0x10B1;
++  const long CL_RG = 0x10B2;
++  const long CL_RA = 0x10B3;
++  const long CL_RGB = 0x10B4;
++  const long CL_RGBA = 0x10B5;
++  const long CL_BGRA = 0x10B6;
++  const long CL_ARGB = 0x10B7;
++  const long CL_INTENSITY = 0x10B8;
++  const long CL_LUMINANCE = 0x10B9;
++  const long CL_Rx = 0x10BA;
++  const long CL_RGx = 0x10BB;
++  const long CL_RGBx = 0x10BC;
++  const long CL_SNORM_INT8 = 0x10D0;
++  const long CL_SNORM_INT16 = 0x10D1;
++  const long CL_UNORM_INT8 = 0x10D2;
++  const long CL_UNORM_INT16 = 0x10D3;
++  const long CL_UNORM_SHORT_565 = 0x10D4;
++  const long CL_UNORM_SHORT_555 = 0x10D5;
++  const long CL_UNORM_INT_101010 = 0x10D6;
++  const long CL_SIGNED_INT8 = 0x10D7;
++  const long CL_SIGNED_INT16 = 0x10D8;
++  const long CL_SIGNED_INT32 = 0x10D9;
++  const long CL_UNSIGNED_INT8 = 0x10DA;
++  const long CL_UNSIGNED_INT16 = 0x10DB;
++  const long CL_UNSIGNED_INT32 = 0x10DC;
++  const long CL_HALF_FLOAT = 0x10DD;
++  const long CL_FLOAT = 0x10DE;
++  const long CL_MEM_OBJECT_BUFFER = 0x10F0;
++  const long CL_MEM_OBJECT_IMAGE2D = 0x10F1;
++  const long CL_MEM_OBJECT_IMAGE3D = 0x10F2;
++  const long CL_MEM_TYPE = 0x1100;
++  const long CL_MEM_FLAGS = 0x1101;
++  const long CL_MEM_SIZE = 0x1102;
++  const long CL_MEM_HOST_PTR = 0x1103;
++  const long CL_MEM_MAP_COUNT = 0x1104;
++  const long CL_MEM_REFERENCE_COUNT = 0x1105;
++  const long CL_MEM_CONTEXT = 0x1106;
++  const long CL_MEM_ASSOCIATED_MEMOBJECT = 0x1107;
++  const long CL_MEM_OFFSET = 0x1108;
++  const long CL_IMAGE_FORMAT = 0x1110;
++  const long CL_IMAGE_ELEMENT_SIZE = 0x1111;
++  const long CL_IMAGE_ROW_PITCH = 0x1112;
++  const long CL_IMAGE_SLICE_PITCH = 0x1113;
++  const long CL_IMAGE_WIDTH = 0x1114;
++  const long CL_IMAGE_HEIGHT = 0x1115;
++  const long CL_IMAGE_DEPTH = 0x1116;
++  const long CL_ADDRESS_NONE = 0x1130;
++  const long CL_ADDRESS_CLAMP_TO_EDGE = 0x1131;
++  const long CL_ADDRESS_CLAMP = 0x1132;
++  const long CL_ADDRESS_REPEAT = 0x1133;
++  const long CL_ADDRESS_MIRRORED_REPEAT = 0x1134;
++  const long CL_FILTER_NEAREST = 0x1140;
++  const long CL_FILTER_LINEAR = 0x1141;
++  const long CL_SAMPLER_REFERENCE_COUNT = 0x1150;
++  const long CL_SAMPLER_CONTEXT = 0x1151;
++  const long CL_SAMPLER_NORMALIZED_COORDS = 0x1152;
++  const long CL_SAMPLER_ADDRESSING_MODE = 0x1153;
++  const long CL_SAMPLER_FILTER_MODE = 0x1154;
++  const long CL_MAP_READ = (1<<0);
++  const long CL_MAP_WRITE = (1<<1);
++  const long CL_PROGRAM_REFERENCE_COUNT = 0x1160;
++  const long CL_PROGRAM_CONTEXT = 0x1161;
++  const long CL_PROGRAM_NUM_DEVICES = 0x1162;
++  const long CL_PROGRAM_DEVICES = 0x1163;
++  const long CL_PROGRAM_SOURCE = 0x1164;
++  const long CL_PROGRAM_BINARY_SIZES = 0x1165;
++  const long CL_PROGRAM_BINARIES = 0x1166;
++  const long CL_PROGRAM_BUILD_STATUS = 0x1181;
++  const long CL_PROGRAM_BUILD_OPTIONS = 0x1182;
++  const long CL_PROGRAM_BUILD_LOG = 0x1183;
++  const long CL_BUILD_SUCCESS = 0;
++  const long CL_BUILD_NONE = -1;
++  const long CL_BUILD_ERROR = -2;
++  const long CL_BUILD_IN_PROGRESS = -3;
++  const long CL_KERNEL_FUNCTION_NAME = 0x1190;
++  const long CL_KERNEL_NUM_ARGS = 0x1191;
++  const long CL_KERNEL_REFERENCE_COUNT = 0x1192;
++  const long CL_KERNEL_CONTEXT = 0x1193;
++  const long CL_KERNEL_PROGRAM = 0x1194;
++  const long CL_KERNEL_WORK_GROUP_SIZE = 0x11B0;
++  const long CL_KERNEL_COMPILE_WORK_GROUP_SIZE = 0x11B1;
++  const long CL_KERNEL_LOCAL_MEM_SIZE = 0x11B2;
++  const long CL_KERNEL_PREFERRED_WORK_GROUP_SIZE_MULTIPLE = 0x11B3;
++  const long CL_KERNEL_PRIVATE_MEM_SIZE = 0x11B4;
++  const long CL_EVENT_COMMAND_QUEUE = 0x11D0;
++  const long CL_EVENT_COMMAND_TYPE = 0x11D1;
++  const long CL_EVENT_REFERENCE_COUNT = 0x11D2;
++  const long CL_EVENT_COMMAND_EXECUTION_STATUS = 0x11D3;
++  const long CL_EVENT_CONTEXT = 0x11D4;
++  const long CL_COMMAND_NDRANGE_KERNEL = 0x11F0;
++  const long CL_COMMAND_TASK = 0x11F1;
++  const long CL_COMMAND_NATIVE_KERNEL = 0x11F2;
++  const long CL_COMMAND_READ_BUFFER = 0x11F3;
++  const long CL_COMMAND_WRITE_BUFFER = 0x11F4;
++  const long CL_COMMAND_COPY_BUFFER = 0x11F5;
++  const long CL_COMMAND_READ_IMAGE = 0x11F6;
++  const long CL_COMMAND_WRITE_IMAGE = 0x11F7;
++  const long CL_COMMAND_COPY_IMAGE = 0x11F8;
++  const long CL_COMMAND_COPY_IMAGE_TO_BUFFER = 0x11F9;
++  const long CL_COMMAND_COPY_BUFFER_TO_IMAGE = 0x11FA;
++  const long CL_COMMAND_MAP_BUFFER = 0x11FB;
++  const long CL_COMMAND_MAP_IMAGE = 0x11FC;
++  const long CL_COMMAND_UNMAP_MEM_OBJECT = 0x11FD;
++  const long CL_COMMAND_MARKER = 0x11FE;
++  const long CL_COMMAND_ACQUIRE_GL_OBJECTS = 0x11FF;
++  const long CL_COMMAND_RELEASE_GL_OBJECTS = 0x1200;
++  const long CL_COMMAND_READ_BUFFER_RECT = 0x1201;
++  const long CL_COMMAND_WRITE_BUFFER_RECT = 0x1202;
++  const long CL_COMMAND_COPY_BUFFER_RECT = 0x1203;
++  const long CL_COMMAND_USER = 0x1204;
++  const long CL_COMPLETE = 0x0;
++  const long CL_RUNNING = 0x1;
++  const long CL_SUBMITTED = 0x2;
++  const long CL_QUEUED = 0x3;
++  const long CL_BUFFER_CREATE_TYPE_REGION = 0x1220;
++  const long CL_PROFILING_COMMAND_QUEUED = 0x1280;
++  const long CL_PROFILING_COMMAND_SUBMIT = 0x1281;
++  const long CL_PROFILING_COMMAND_START = 0x1282;
++  const long CL_PROFILING_COMMAND_END = 0x1283;
++};
+diff --git a/dom/interfaces/webcl/nsIDOMWebCLCommandQueue.idl b/dom/interfaces/webcl/nsIDOMWebCLCommandQueue.idl
+new file mode 100644
+--- /dev/null
++++ b/dom/interfaces/webcl/nsIDOMWebCLCommandQueue.idl
+@@ -0,0 +1,196 @@
++/* ***** BEGIN LICENSE BLOCK *****
++ * Version: MPL 1.1/GPL 2.0/LGPL 2.1
++ *
++ * The contents of this file are subject to the Mozilla Public License Version
++ * 1.1 (the "License"); you may not use this file except in compliance with
++ * the License. You may obtain a copy of the License at
++ * http://www.mozilla.org/MPL/
++ *
++ * Software distributed under the License is distributed on an "AS IS" basis,
++ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
++ * for the specific language governing rights and limitations under the
++ * License.
++ *
++ * The Original Code is Nokia WebCL - http://webcl.nokiaresearch.com/ .
++ *
++ * The Initial Developer of the Original Code is
++ * Nokia Research Center Tampere.
++ * Portions created by the Initial Developer are Copyright (C) 2011
++ * the Initial Developer. All Rights Reserved.
++ *
++ * Contributor(s):
++ *   Janne Pietiäinen <jpieti@gmail.com>
++ *   Jari Nikara <jari.nikara@nokia.com>
++ *   Tomi Aarnio <tomi.aarnio@nokia.com>
++ *   Eero Aho <eero.aho@nokia.com>
++ *
++ * Alternatively, the contents of this file may be used under the terms of
++ * either the GNU General Public License Version 2 or later (the "GPL"), or
++ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
++ * in which case the provisions of the GPL or the LGPL are applicable instead
++ * of those above. If you wish to allow use of your version of this file only
++ * under the terms of either the GPL or the LGPL, and not to allow others to
++ * use your version of this file under the terms of the MPL, indicate your
++ * decision by deleting the provisions above and replace them with the notice
++ * and other provisions required by the GPL or the LGPL. If you do not delete
++ * the provisions above, a recipient may use your version of this file under
++ * the terms of any one of the MPL, the GPL or the LGPL.
++ *
++ * ***** END LICENSE BLOCK ***** */
++
++
++#include "nsISupports.idl"
++#include "nsIVariant.idl"
++
++#include "nsIDOMWebCLTypes.idl"
++
++interface nsIDOMWebCLEvent;
++interface nsIDOMWebCLKernel;
++interface nsIDOMWebCLMem;
++
++[scriptable, uuid(b3b6bd36-ed9f-4545-b87e-7b6bbfbfc5c1)]
++interface nsIDOMWebCLCommandQueue : nsISupports
++{
++  nsIVariant getCommandQueueInfo (in long name, [optional] in long type);
++
++  nsIDOMWebCLEvent enqueueNDRangeKernel (in nsIDOMWebCLKernel kernel,
++                                         in unsigned long workDim,
++                                         in nsIVariant globalWorkOffset,
++                                         in nsIVariant globalWorkSize,
++                                         in nsIVariant localWorkSize,
++                                         [optional] in nsIVariant eventWaitList);
++
++  nsIDOMWebCLEvent enqueueTask (in nsIDOMWebCLKernel kernel,
++                                [optional] in nsIVariant eventWaitList);
++
++  nsIDOMWebCLEvent enqueueWriteBuffer ([optional] in long dummy);
++  [noscript] nsIDOMWebCLEvent enqueueWriteBuffer_impl (in nsIDOMWebCLMem buffer,
++                                                       in boolean blockingWrite,
++                                                       in T_WebCLSize offset,
++                                                       in T_WebCLSize size,
++                                                       in WebCLArrayPtr data,
++                                                       [optional] in nsIVariant eventWaitList);
++
++  nsIDOMWebCLEvent enqueueReadBuffer ([optional] in long dummy);
++  [noscript] nsIDOMWebCLEvent enqueueReadBuffer_impl (in nsIDOMWebCLMem buffer,
++                                                      in boolean blockingRead,
++                                                      in T_WebCLSize offset,
++                                                      in T_WebCLSize size,
++                                                      in WebCLArrayPtr data,
++                                                      [optional] in nsIVariant eventWaitList);
++
++  nsIDOMWebCLEvent enqueueWriteBufferRect ([optional] in long dummy);
++  [noscript] nsIDOMWebCLEvent enqueueWriteBufferRect_impl (in nsIDOMWebCLMem buffer,
++                                                           in boolean blockingWrite,
++                                                           in nsIVariant bufferOrigin,
++                                                           in nsIVariant hostOrigin,
++                                                           in nsIVariant region,
++                                                           in T_WebCLSize bufferRowPitch,
++                                                           in T_WebCLSize bufferSlicePitch,
++                                                           in T_WebCLSize hostRowPitch,
++                                                           in T_WebCLSize hostSlicePitch,
++                                                           in WebCLArrayPtr data,
++                                                           [optional] in nsIVariant eventWaitList);
++
++  nsIDOMWebCLEvent enqueueReadBufferRect ([optional] in long dummy);
++  [noscript] nsIDOMWebCLEvent enqueueReadBufferRect_impl (in nsIDOMWebCLMem buffer,
++                                                          in boolean blockingRead,
++                                                          in nsIVariant bufferOrigin,
++                                                          in nsIVariant hostOrigin,
++                                                          in nsIVariant region,
++                                                          in T_WebCLSize bufferRowPitch,
++                                                          in T_WebCLSize bufferSlicePitch,
++                                                          in T_WebCLSize hostRowPitch,
++                                                          in T_WebCLSize hostSlicePitch,
++                                                          in WebCLArrayPtr data,
++                                                          [optional] in nsIVariant eventWaitList);
++
++  nsIDOMWebCLEvent enqueueWriteImage ([optional] in long dummy);
++  [noscript] nsIDOMWebCLEvent enqueueWriteImage_impl (in nsIDOMWebCLMem image,
++                                                      in boolean blockingWrite,
++                                                      in nsIVariant origin,
++                                                      in nsIVariant region,
++                                                      in T_WebCLSize inputRowPitch,
++                                                      in T_WebCLSize inputSlicePitch,
++                                                      in WebCLArrayPtr data,
++                                                      [optional] in nsIVariant eventWaitList);
++
++  nsIDOMWebCLEvent enqueueReadImage ([optional] in long dummy);
++  [noscript] nsIDOMWebCLEvent enqueueReadImage_impl (in nsIDOMWebCLMem image,
++                                                     in boolean blockingRead,
++                                                     in nsIVariant origin,
++                                                     in nsIVariant region,
++                                                     in T_WebCLSize rowPitch,
++                                                     in T_WebCLSize slicePitch,
++                                                     in WebCLArrayPtr data,
++                                                     [optional] in nsIVariant eventWaitList);
++
++  nsIDOMWebCLEvent enqueueCopyImage (in nsIDOMWebCLMem srcImage,
++                                     in nsIDOMWebCLMem dstImage,
++                                     in nsIVariant srcOrigin,
++                                     in nsIVariant dstOrigin,
++                                     in nsIVariant region,
++                                     [optional] in nsIVariant eventWaitList);
++
++  nsIDOMWebCLEvent enqueueCopyImageToBuffer (in nsIDOMWebCLMem srcImage,
++                                             in nsIDOMWebCLMem dstBuffer,
++                                             in nsIVariant srcOrigin,
++                                             in nsIVariant region,
++                                             in T_WebCLSize dstOffset,
++                                             [optional] in nsIVariant eventWaitList);
++
++  nsIDOMWebCLEvent enqueueCopyBufferToImage (in nsIDOMWebCLMem srcBuffer,
++                                             in nsIDOMWebCLMem dstImage,
++                                             in T_WebCLSize srcOffset,
++                                             in nsIVariant dstOrigin,
++                                             in nsIVariant region,
++                                             [optional] in nsIVariant eventWaitList);
++
++  /* TODO: enqueueMapBuffer replaces the arraybuffer or typedarray data with
++     the mapped pointer.
++     Maybe we should just return a new typedarray instead?
++   */
++  nsIDOMWebCLEvent enqueueMapBuffer ([optional] in long dummy);
++  [noscript] nsIDOMWebCLEvent enqueueMapBuffer_impl (in nsIDOMWebCLMem buffer,
++                                                     in boolean blockingMap,
++                                                     in T_WebCLMapFlags mapFlags,
++                                                     in T_WebCLSize offset,
++                                                     in T_WebCLSize size,
++                                                     in nsIVariant eventWaitList,
++                                                     in WebCLArrayPtr data);
++
++  /* TODO: enqueueMapImage replaces the arraybuffer or typedarray data with
++     the mapped pointer.
++     The JSObject of data is given two properties image_row_pitch and
++     image_slice_pitch containing image row and slice pitch values respectively.
++     Maybe we should just return a new typedarray instead?
++   */
++  nsIDOMWebCLEvent enqueueMapImage ([optional] in long dummy);
++  [noscript] nsIDOMWebCLEvent enqueueMapImage_impl (in nsIDOMWebCLMem image,
++                                                    in boolean blockingMap,
++                                                    in T_WebCLMapFlags mapFlags,
++                                                    in nsIVariant origin,
++                                                    in nsIVariant region,
++                                                    in nsIVariant eventWaitList,
++                                                    in WebCLJSObjectPtr data);
++
++  nsIDOMWebCLEvent enqueueUnmapMemObject ([optional] in long dummy);
++  [noscript] nsIDOMWebCLEvent enqueueUnmapMemObject_impl (in nsIDOMWebCLMem memObj,
++                                                          in WebCLArrayPtr mappedData,
++                                                          [optional] in nsIVariant eventWaitList);
++
++  nsIDOMWebCLEvent enqueueMarker ();
++
++  void enqueueWaitForEvents (in nsIVariant eventWaitList);
++
++  void enqueueBarrier ();
++
++  void flush ();
++
++  void finish ();
++
++  /* Immediately release all OpenCL related resources if any are currently
++     allocated for this object. The object should not be used after this call.
++   */
++  void releaseCLResources ();
++};
+diff --git a/dom/interfaces/webcl/nsIDOMWebCLContext.idl b/dom/interfaces/webcl/nsIDOMWebCLContext.idl
+new file mode 100644
+--- /dev/null
++++ b/dom/interfaces/webcl/nsIDOMWebCLContext.idl
+@@ -0,0 +1,94 @@
++/* ***** BEGIN LICENSE BLOCK *****
++ * Version: MPL 1.1/GPL 2.0/LGPL 2.1
++ *
++ * The contents of this file are subject to the Mozilla Public License Version
++ * 1.1 (the "License"); you may not use this file except in compliance with
++ * the License. You may obtain a copy of the License at
++ * http://www.mozilla.org/MPL/
++ *
++ * Software distributed under the License is distributed on an "AS IS" basis,
++ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
++ * for the specific language governing rights and limitations under the
++ * License.
++ *
++ * The Original Code is Nokia WebCL - http://webcl.nokiaresearch.com/ .
++ *
++ * The Initial Developer of the Original Code is
++ * Nokia Research Center Tampere.
++ * Portions created by the Initial Developer are Copyright (C) 2011
++ * the Initial Developer. All Rights Reserved.
++ *
++ * Contributor(s):
++ *   Janne Pietiäinen <jpieti@gmail.com>
++ *   Jari Nikara <jari.nikara@nokia.com>
++ *   Tomi Aarnio <tomi.aarnio@nokia.com>
++ *   Eero Aho <eero.aho@nokia.com>
++ *
++ * Alternatively, the contents of this file may be used under the terms of
++ * either the GNU General Public License Version 2 or later (the "GPL"), or
++ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
++ * in which case the provisions of the GPL or the LGPL are applicable instead
++ * of those above. If you wish to allow use of your version of this file only
++ * under the terms of either the GPL or the LGPL, and not to allow others to
++ * use your version of this file under the terms of the MPL, indicate your
++ * decision by deleting the provisions above and replace them with the notice
++ * and other provisions required by the GPL or the LGPL. If you do not delete
++ * the provisions above, a recipient may use your version of this file under
++ * the terms of any one of the MPL, the GPL or the LGPL.
++ *
++ * ***** END LICENSE BLOCK ***** */
++
++
++#include "nsISupports.idl"
++#include "nsIVariant.idl"
++
++#include "nsIDOMWebCLTypes.idl"
++
++interface nsIDOMWebCLProgram;
++interface nsIDOMWebCLCommandQueue;
++interface nsIDOMWebCLDevice;
++interface nsIDOMWebCLMem;
++interface nsIDOMWebCLSampler;
++interface nsIDOMWebCLEvent;
++
++[scriptable, uuid(de4a06fd-e239-41ea-a82a-206a829fdec9)]
++interface nsIDOMWebCLContext : nsISupports
++{
++  nsIVariant getContextInfo (in long name, [optional] in long type);
++
++  nsIDOMWebCLProgram createProgramWithSource (in string source);
++
++  nsIDOMWebCLCommandQueue createCommandQueue (in nsIDOMWebCLDevice device,
++                                              in T_WebCLCommandQueueProperties properties);
++
++  nsIDOMWebCLMem createBuffer (in T_WebCLMemFlags flags,
++                               in T_WebCLSize size);
++
++  nsIDOMWebCLMem createImage2D (in T_WebCLMemFlags flags,
++                                in nsIVariant imageFormat,
++                                in T_WebCLSize width,
++                                in T_WebCLSize height,
++                                in T_WebCLSize rowPitch);
++
++  nsIDOMWebCLMem createImage3D (in T_WebCLMemFlags flags,
++                                in nsIVariant imageFormat,
++                                in T_WebCLSize width,
++                                in T_WebCLSize height,
++                                in T_WebCLSize depth,
++                                in T_WebCLSize rowPitch,
++                                in T_WebCLSize slicePitch);
++
++  nsIDOMWebCLSampler createSampler (in boolean normalizedCoords,
++                                    in T_WebCLAddressingMode addressingMode,
++                                    in T_WebCLFilterMode filterMode);
++
++  nsIVariant getSupportedImageFormats (in T_WebCLMemFlags flags,
++                                       in T_WebCLMemObjectType imageType);
++
++  nsIDOMWebCLEvent createUserEvent ();
++
++  /* Immediately release all OpenCL related resources if any are currently
++     allocated for this object. The object should not be used after this call.
++   */
++  void releaseCLResources ();
++};
+diff --git a/dom/interfaces/webcl/nsIDOMWebCLDevice.idl b/dom/interfaces/webcl/nsIDOMWebCLDevice.idl
+new file mode 100644
+--- /dev/null
++++ b/dom/interfaces/webcl/nsIDOMWebCLDevice.idl
+@@ -0,0 +1,49 @@
++/* ***** BEGIN LICENSE BLOCK *****
++ * Version: MPL 1.1/GPL 2.0/LGPL 2.1
++ *
++ * The contents of this file are subject to the Mozilla Public License Version
++ * 1.1 (the "License"); you may not use this file except in compliance with
++ * the License. You may obtain a copy of the License at
++ * http://www.mozilla.org/MPL/
++ *
++ * Software distributed under the License is distributed on an "AS IS" basis,
++ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
++ * for the specific language governing rights and limitations under the
++ * License.
++ *
++ * The Original Code is Nokia WebCL - http://webcl.nokiaresearch.com/ .
++ *
++ * The Initial Developer of the Original Code is
++ * Nokia Research Center Tampere.
++ * Portions created by the Initial Developer are Copyright (C) 2011
++ * the Initial Developer. All Rights Reserved.
++ *
++ * Contributor(s):
++ *   Janne Pietiäinen <jpieti@gmail.com>
++ *   Jari Nikara <jari.nikara@nokia.com>
++ *   Tomi Aarnio <tomi.aarnio@nokia.com>
++ *   Eero Aho <eero.aho@nokia.com>
++ *
++ * Alternatively, the contents of this file may be used under the terms of
++ * either the GNU General Public License Version 2 or later (the "GPL"), or
++ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
++ * in which case the provisions of the GPL or the LGPL are applicable instead
++ * of those above. If you wish to allow use of your version of this file only
++ * under the terms of either the GPL or the LGPL, and not to allow others to
++ * use your version of this file under the terms of the MPL, indicate your
++ * decision by deleting the provisions above and replace them with the notice
++ * and other provisions required by the GPL or the LGPL. If you do not delete
++ * the provisions above, a recipient may use your version of this file under
++ * the terms of any one of the MPL, the GPL or the LGPL.
++ *
++ * ***** END LICENSE BLOCK ***** */
++
++
++#include "nsISupports.idl"
++#include "nsIVariant.idl"
++
++[scriptable, uuid(3fba975e-9877-43df-9d2d-1bd911e3ab43)]
++interface nsIDOMWebCLDevice : nsISupports
++{
++  nsIVariant getDeviceInfo (in long name, [optional] in long type);
++};
+diff --git a/dom/interfaces/webcl/nsIDOMWebCLEvent.idl b/dom/interfaces/webcl/nsIDOMWebCLEvent.idl
+new file mode 100644
+--- /dev/null
++++ b/dom/interfaces/webcl/nsIDOMWebCLEvent.idl
+@@ -0,0 +1,58 @@
++/* ***** BEGIN LICENSE BLOCK *****
++ * Version: MPL 1.1/GPL 2.0/LGPL 2.1
++ *
++ * The contents of this file are subject to the Mozilla Public License Version
++ * 1.1 (the "License"); you may not use this file except in compliance with
++ * the License. You may obtain a copy of the License at
++ * http://www.mozilla.org/MPL/
++ *
++ * Software distributed under the License is distributed on an "AS IS" basis,
++ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
++ * for the specific language governing rights and limitations under the
++ * License.
++ *
++ * The Original Code is Nokia WebCL - http://webcl.nokiaresearch.com/ .
++ *
++ * The Initial Developer of the Original Code is
++ * Nokia Research Center Tampere.
++ * Portions created by the Initial Developer are Copyright (C) 2011
++ * the Initial Developer. All Rights Reserved.
++ *
++ * Contributor(s):
++ *   Janne Pietiäinen <jpieti@gmail.com>
++ *   Jari Nikara <jari.nikara@nokia.com>
++ *   Tomi Aarnio <tomi.aarnio@nokia.com>
++ *   Eero Aho <eero.aho@nokia.com>
++ *
++ * Alternatively, the contents of this file may be used under the terms of
++ * either the GNU General Public License Version 2 or later (the "GPL"), or
++ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
++ * in which case the provisions of the GPL or the LGPL are applicable instead
++ * of those above. If you wish to allow use of your version of this file only
++ * under the terms of either the GPL or the LGPL, and not to allow others to
++ * use your version of this file under the terms of the MPL, indicate your
++ * decision by deleting the provisions above and replace them with the notice
++ * and other provisions required by the GPL or the LGPL. If you do not delete
++ * the provisions above, a recipient may use your version of this file under
++ * the terms of any one of the MPL, the GPL or the LGPL.
++ *
++ * ***** END LICENSE BLOCK ***** */
++
++
++#include "nsISupports.idl"
++#include "nsIVariant.idl"
++
++[scriptable, uuid(d51754ea-0471-4099-bcf8-83d5b0ba8ed0)]
++interface nsIDOMWebCLEvent : nsISupports
++{
++  nsIVariant getEventInfo (in long name, [optional] in long type);
++
++  nsIVariant getEventProfilingInfo (in long name, [optional] in long type);
++
++  void setUserEventStatus (in long executionStatus);
++
++  /* Immediately release all OpenCL related resources if any are currently
++     allocated for this object. The object should not be used after this call.
++   */
++  void releaseCLResources ();
++};
+diff --git a/dom/interfaces/webcl/nsIDOMWebCLKernel.idl b/dom/interfaces/webcl/nsIDOMWebCLKernel.idl
+new file mode 100644
+--- /dev/null
++++ b/dom/interfaces/webcl/nsIDOMWebCLKernel.idl
+@@ -0,0 +1,69 @@
++/* ***** BEGIN LICENSE BLOCK *****
++ * Version: MPL 1.1/GPL 2.0/LGPL 2.1
++ *
++ * The contents of this file are subject to the Mozilla Public License Version
++ * 1.1 (the "License"); you may not use this file except in compliance with
++ * the License. You may obtain a copy of the License at
++ * http://www.mozilla.org/MPL/
++ *
++ * Software distributed under the License is distributed on an "AS IS" basis,
++ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
++ * for the specific language governing rights and limitations under the
++ * License.
++ *
++ * The Original Code is Nokia WebCL - http://webcl.nokiaresearch.com/ .
++ *
++ * The Initial Developer of the Original Code is
++ * Nokia Research Center Tampere.
++ * Portions created by the Initial Developer are Copyright (C) 2011
++ * the Initial Developer. All Rights Reserved.
++ *
++ * Contributor(s):
++ *   Janne Pietiäinen <jpieti@gmail.com>
++ *   Jari Nikara <jari.nikara@nokia.com>
++ *   Tomi Aarnio <tomi.aarnio@nokia.com>
++ *   Eero Aho <eero.aho@nokia.com>
++ *
++ * Alternatively, the contents of this file may be used under the terms of
++ * either the GNU General Public License Version 2 or later (the "GPL"), or
++ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
++ * in which case the provisions of the GPL or the LGPL are applicable instead
++ * of those above. If you wish to allow use of your version of this file only
++ * under the terms of either the GPL or the LGPL, and not to allow others to
++ * use your version of this file under the terms of the MPL, indicate your
++ * decision by deleting the provisions above and replace them with the notice
++ * and other provisions required by the GPL or the LGPL. If you do not delete
++ * the provisions above, a recipient may use your version of this file under
++ * the terms of any one of the MPL, the GPL or the LGPL.
++ *
++ * ***** END LICENSE BLOCK ***** */
++
++
++#include "nsISupports.idl"
++#include "nsIVariant.idl"
++
++#include "nsIDOMWebCLTypes.idl"
++
++interface nsIDOMWebCLDevice;
++
++[scriptable, uuid(275cea3e-8374-4773-a2fb-8d443d218de2)]
++interface nsIDOMWebCLKernel : nsISupports
++{
++  nsIVariant getKernelInfo (in long name, [optional] in long type);
++
++  nsIVariant getKernelWorkGroupInfo (in nsIDOMWebCLDevice device,
++                                     in long name,
++                                     [optional] in long type);
++
++  void setKernelArg (in long index,
++                     in nsIVariant value,
++                     [optional] in long type);
++
++  void setKernelArgLocal (in long index,
++                          in unsigned long size);
++
++  /* Immediately release all OpenCL related resources if any are currently
++     allocated for this object. The object should not be used after this call.
++   */
++  void releaseCLResources ();
++};
+diff --git a/dom/interfaces/webcl/nsIDOMWebCLMem.idl b/dom/interfaces/webcl/nsIDOMWebCLMem.idl
+new file mode 100644
+--- /dev/null
++++ b/dom/interfaces/webcl/nsIDOMWebCLMem.idl
+@@ -0,0 +1,61 @@
++/* ***** BEGIN LICENSE BLOCK *****
++ * Version: MPL 1.1/GPL 2.0/LGPL 2.1
++ *
++ * The contents of this file are subject to the Mozilla Public License Version
++ * 1.1 (the "License"); you may not use this file except in compliance with
++ * the License. You may obtain a copy of the License at
++ * http://www.mozilla.org/MPL/
++ *
++ * Software distributed under the License is distributed on an "AS IS" basis,
++ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
++ * for the specific language governing rights and limitations under the
++ * License.
++ *
++ * The Original Code is Nokia WebCL - http://webcl.nokiaresearch.com/ .
++ *
++ * The Initial Developer of the Original Code is
++ * Nokia Research Center Tampere.
++ * Portions created by the Initial Developer are Copyright (C) 2011
++ * the Initial Developer. All Rights Reserved.
++ *
++ * Contributor(s):
++ *   Janne Pietiäinen <jpieti@gmail.com>
++ *   Jari Nikara <jari.nikara@nokia.com>
++ *   Tomi Aarnio <tomi.aarnio@nokia.com>
++ *   Eero Aho <eero.aho@nokia.com>
++ *
++ * Alternatively, the contents of this file may be used under the terms of
++ * either the GNU General Public License Version 2 or later (the "GPL"), or
++ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
++ * in which case the provisions of the GPL or the LGPL are applicable instead
++ * of those above. If you wish to allow use of your version of this file only
++ * under the terms of either the GPL or the LGPL, and not to allow others to
++ * use your version of this file under the terms of the MPL, indicate your
++ * decision by deleting the provisions above and replace them with the notice
++ * and other provisions required by the GPL or the LGPL. If you do not delete
++ * the provisions above, a recipient may use your version of this file under
++ * the terms of any one of the MPL, the GPL or the LGPL.
++ *
++ * ***** END LICENSE BLOCK ***** */
++
++
++#include "nsISupports.idl"
++#include "nsIVariant.idl"
++
++#include "nsIDOMWebCLTypes.idl"
++
++[scriptable, uuid(8dd041c5-58c5-4296-a196-2fe1481159d6)]
++interface nsIDOMWebCLMem : nsISupports
++{
++  nsIVariant getMemObjectInfo (in long name, [optional] in long type);
++
++  nsIVariant getImageInfo (in long name, [optional] in long type);
++
++  nsIDOMWebCLMem createSubBuffer (in T_WebCLMemFlags flags,
++                                  in nsIVariant region);
++
++  /* Immediately release all OpenCL related resources if any are currently
++     allocated for this object. The object should not be used after this call.
++   */
++  void releaseCLResources ();
++};
+diff --git a/dom/interfaces/webcl/nsIDOMWebCLPlatform.idl b/dom/interfaces/webcl/nsIDOMWebCLPlatform.idl
+new file mode 100644
+--- /dev/null
++++ b/dom/interfaces/webcl/nsIDOMWebCLPlatform.idl
+@@ -0,0 +1,53 @@
++/* ***** BEGIN LICENSE BLOCK *****
++ * Version: MPL 1.1/GPL 2.0/LGPL 2.1
++ *
++ * The contents of this file are subject to the Mozilla Public License Version
++ * 1.1 (the "License"); you may not use this file except in compliance with
++ * the License. You may obtain a copy of the License at
++ * http://www.mozilla.org/MPL/
++ *
++ * Software distributed under the License is distributed on an "AS IS" basis,
++ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
++ * for the specific language governing rights and limitations under the
++ * License.
++ *
++ * The Original Code is Nokia WebCL - http://webcl.nokiaresearch.com/ .
++ *
++ * The Initial Developer of the Original Code is
++ * Nokia Research Center Tampere.
++ * Portions created by the Initial Developer are Copyright (C) 2011
++ * the Initial Developer. All Rights Reserved.
++ *
++ * Contributor(s):
++ *   Janne Pietiäinen <jpieti@gmail.com>
++ *   Jari Nikara <jari.nikara@nokia.com>
++ *   Tomi Aarnio <tomi.aarnio@nokia.com>
++ *   Eero Aho <eero.aho@nokia.com>
++ *
++ * Alternatively, the contents of this file may be used under the terms of
++ * either the GNU General Public License Version 2 or later (the "GPL"), or
++ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
++ * in which case the provisions of the GPL or the LGPL are applicable instead
++ * of those above. If you wish to allow use of your version of this file only
++ * under the terms of either the GPL or the LGPL, and not to allow others to
++ * use your version of this file under the terms of the MPL, indicate your
++ * decision by deleting the provisions above and replace them with the notice
++ * and other provisions required by the GPL or the LGPL. If you do not delete
++ * the provisions above, a recipient may use your version of this file under
++ * the terms of any one of the MPL, the GPL or the LGPL.
++ *
++ * ***** END LICENSE BLOCK ***** */
++
++
++#include "nsISupports.idl"
++#include "nsIVariant.idl"
++
++#include "nsIDOMWebCLTypes.idl"
++
++[scriptable, uuid(a805e1d5-388f-44c8-a35f-5cb42ec9bc73)]
++interface nsIDOMWebCLPlatform : nsISupports
++{
++  nsIVariant getPlatformInfo (in long name, [optional] in long type);
++
++  nsIVariant getDeviceIDs (in T_WebCLDeviceType type);
++};
+diff --git a/dom/interfaces/webcl/nsIDOMWebCLProgram.idl b/dom/interfaces/webcl/nsIDOMWebCLProgram.idl
+new file mode 100644
+--- /dev/null
++++ b/dom/interfaces/webcl/nsIDOMWebCLProgram.idl
+@@ -0,0 +1,70 @@
++/* ***** BEGIN LICENSE BLOCK *****
++ * Version: MPL 1.1/GPL 2.0/LGPL 2.1
++ *
++ * The contents of this file are subject to the Mozilla Public License Version
++ * 1.1 (the "License"); you may not use this file except in compliance with
++ * the License. You may obtain a copy of the License at
++ * http://www.mozilla.org/MPL/
++ *
++ * Software distributed under the License is distributed on an "AS IS" basis,
++ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
++ * for the specific language governing rights and limitations under the
++ * License.
++ *
++ * The Original Code is Nokia WebCL - http://webcl.nokiaresearch.com/ .
++ *
++ * The Initial Developer of the Original Code is
++ * Nokia Research Center Tampere.
++ * Portions created by the Initial Developer are Copyright (C) 2011
++ * the Initial Developer. All Rights Reserved.
++ *
++ * Contributor(s):
++ *   Janne Pietiäinen <jpieti@gmail.com>
++ *   Jari Nikara <jari.nikara@nokia.com>
++ *   Tomi Aarnio <tomi.aarnio@nokia.com>
++ *   Eero Aho <eero.aho@nokia.com>
++ *
++ * Alternatively, the contents of this file may be used under the terms of
++ * either the GNU General Public License Version 2 or later (the "GPL"), or
++ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
++ * in which case the provisions of the GPL or the LGPL are applicable instead
++ * of those above. If you wish to allow use of your version of this file only
++ * under the terms of either the GPL or the LGPL, and not to allow others to
++ * use your version of this file under the terms of the MPL, indicate your
++ * decision by deleting the provisions above and replace them with the notice
++ * and other provisions required by the GPL or the LGPL. If you do not delete
++ * the provisions above, a recipient may use your version of this file under
++ * the terms of any one of the MPL, the GPL or the LGPL.
++ *
++ * ***** END LICENSE BLOCK ***** */
++
++
++#include "nsISupports.idl"
++#include "nsIVariant.idl"
++
++#include "nsIDOMWebCLTypes.idl"
++
++interface nsIDOMWebCLDevice;
++interface nsIDOMWebCLKernel;
++
++[scriptable, uuid(6b7f5d94-c57e-4823-a8e8-fc4cafa5680f)]
++interface nsIDOMWebCLProgram : nsISupports
++{
++  nsIVariant getProgramInfo (in long name, [optional] in long type);
++
++  nsIVariant getProgramBuildInfo (in nsIDOMWebCLDevice device,
++                                  in long name,
++                                  [optional] in long type);
++
++  void buildProgram (in nsIVariant devices,
++                     in string options);
++
++  nsIDOMWebCLKernel createKernel (in string kernelName);
++
++  nsIVariant createKernelsInProgram ();
++
++  /* Immediately release all OpenCL related resources if any are currently
++     allocated for this object. The object should not be used after this call.
++   */
++  void releaseCLResources ();
++};
+diff --git a/dom/interfaces/webcl/nsIDOMWebCLSampler.idl b/dom/interfaces/webcl/nsIDOMWebCLSampler.idl
+new file mode 100644
+--- /dev/null
++++ b/dom/interfaces/webcl/nsIDOMWebCLSampler.idl
+@@ -0,0 +1,56 @@
++/* ***** BEGIN LICENSE BLOCK *****
++ * Version: MPL 1.1/GPL 2.0/LGPL 2.1
++ *
++ * The contents of this file are subject to the Mozilla Public License Version
++ * 1.1 (the "License"); you may not use this file except in compliance with
++ * the License. You may obtain a copy of the License at
++ * http://www.mozilla.org/MPL/
++ *
++ * Software distributed under the License is distributed on an "AS IS" basis,
++ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
++ * for the specific language governing rights and limitations under the
++ * License.
++ *
++ * The Original Code is Nokia WebCL - http://webcl.nokiaresearch.com/ .
++ *
++ * The Initial Developer of the Original Code is
++ * Nokia Research Center Tampere.
++ * Portions created by the Initial Developer are Copyright (C) 2011
++ * the Initial Developer. All Rights Reserved.
++ *
++ * Contributor(s):
++ *   Janne Pietiäinen <jpieti@gmail.com>
++ *   Jari Nikara <jari.nikara@nokia.com>
++ *   Tomi Aarnio <tomi.aarnio@nokia.com>
++ *   Eero Aho <eero.aho@nokia.com>
++ *
++ * Alternatively, the contents of this file may be used under the terms of
++ * either the GNU General Public License Version 2 or later (the "GPL"), or
++ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
++ * in which case the provisions of the GPL or the LGPL are applicable instead
++ * of those above. If you wish to allow use of your version of this file only
++ * under the terms of either the GPL or the LGPL, and not to allow others to
++ * use your version of this file under the terms of the MPL, indicate your
++ * decision by deleting the provisions above and replace them with the notice
++ * and other provisions required by the GPL or the LGPL. If you do not delete
++ * the provisions above, a recipient may use your version of this file under
++ * the terms of any one of the MPL, the GPL or the LGPL.
++ *
++ * ***** END LICENSE BLOCK ***** */
++
++
++#include "nsISupports.idl"
++#include "nsIVariant.idl"
++
++#include "nsIDOMWebCLTypes.idl"
++
++[scriptable, uuid(a7d28aec-e087-402b-8d63-5e1dcc2b4124)]
++interface nsIDOMWebCLSampler : nsISupports
++{
++  nsIVariant getSamplerInfo (in long name, [optional] in long type);
++
++  /* Immediately release all OpenCL related resources if any are currently
++     allocated for this object. The object should not be used after this call.
++   */
++  void releaseCLResources ();
++};
+diff --git a/dom/interfaces/webcl/nsIDOMWebCLTypes.idl b/dom/interfaces/webcl/nsIDOMWebCLTypes.idl
+new file mode 100644
+--- /dev/null
++++ b/dom/interfaces/webcl/nsIDOMWebCLTypes.idl
+@@ -0,0 +1,93 @@
++/* ***** BEGIN LICENSE BLOCK *****
++ * Version: MPL 1.1/GPL 2.0/LGPL 2.1
++ *
++ * The contents of this file are subject to the Mozilla Public License Version
++ * 1.1 (the "License"); you may not use this file except in compliance with
++ * the License. You may obtain a copy of the License at
++ * http://www.mozilla.org/MPL/
++ *
++ * Software distributed under the License is distributed on an "AS IS" basis,
++ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
++ * for the specific language governing rights and limitations under the
++ * License.
++ *
++ * The Original Code is Nokia WebCL - http://webcl.nokiaresearch.com/ .
++ *
++ * The Initial Developer of the Original Code is
++ * Nokia Research Center Tampere.
++ * Portions created by the Initial Developer are Copyright (C) 2011
++ * the Initial Developer. All Rights Reserved.
++ *
++ * Contributor(s):
++ *   Janne Pietiäinen <jpieti@gmail.com>
++ *   Jari Nikara <jari.nikara@nokia.com>
++ *   Tomi Aarnio <tomi.aarnio@nokia.com>
++ *   Eero Aho <eero.aho@nokia.com>
++ *
++ * Alternatively, the contents of this file may be used under the terms of
++ * either the GNU General Public License Version 2 or later (the "GPL"), or
++ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
++ * in which case the provisions of the GPL or the LGPL are applicable instead
++ * of those above. If you wish to allow use of your version of this file only
++ * under the terms of either the GPL or the LGPL, and not to allow others to
++ * use your version of this file under the terms of the MPL, indicate your
++ * decision by deleting the provisions above and replace them with the notice
++ * and other provisions required by the GPL or the LGPL. If you do not delete
++ * the provisions above, a recipient may use your version of this file under
++ * the terms of any one of the MPL, the GPL or the LGPL.
++ *
++ * ***** END LICENSE BLOCK ***** */
++
++typedef unsigned long           T_WebCLSize;
++typedef long                    T_WebCLEnum;
++typedef T_WebCLEnum             T_WebCLAddressingMode;
++typedef T_WebCLEnum             T_WebCLBufferCreateType;
++typedef T_WebCLEnum             T_WebCLBuildStatus;
++typedef T_WebCLEnum             T_WebCLChannelOrder;
++typedef T_WebCLEnum             T_WebCLChannelType;
++typedef T_WebCLEnum             T_WebCLCommandQueueInfo;
++typedef T_WebCLEnum             T_WebCLCommandQueueProperties;
++typedef T_WebCLEnum             T_WebCLCommandType;
++typedef T_WebCLEnum             T_WebCLContextInfo;
++typedef T_WebCLEnum             T_WebCLContextProperties;
++typedef T_WebCLEnum             T_WebCLDeviceExecCapabilities;
++typedef T_WebCLEnum             T_WebCLDeviceFPConfig;
++typedef T_WebCLEnum             T_WebCLDeviceInfo;
++typedef T_WebCLEnum             T_WebCLDeviceLocalMemType;
++typedef T_WebCLEnum             T_WebCLDeviceMemCacheType;
++typedef T_WebCLEnum             T_WebCLDeviceType;
++typedef T_WebCLEnum             T_WebCLEventInfo;
++typedef T_WebCLEnum             T_WebCLFilterMode;
++typedef T_WebCLEnum             T_WebCLGLObjectType;
++typedef T_WebCLEnum             T_WebCLGLTextureInfo;
++typedef T_WebCLEnum             T_WebCLImageInfo;
++typedef T_WebCLEnum             T_WebCLKernelInfo;
++typedef T_WebCLEnum             T_WebCLKernelWorkGroupInfo;
++typedef T_WebCLEnum             T_WebCLMapFlags;
++typedef T_WebCLEnum             T_WebCLFenceFlags;
++typedef T_WebCLEnum             T_WebCLMemFlags;
++typedef T_WebCLEnum             T_WebCLMemInfo;
++typedef T_WebCLEnum             T_WebCLMemObjectType;
++typedef T_WebCLEnum             T_WebCLPlatformInfo;
++typedef T_WebCLEnum             T_WebCLProfilingInfo;
++typedef T_WebCLEnum             T_WebCLProgramBuildInfo;
++typedef T_WebCLEnum             T_WebCLSamplerInfo;
++
++
++// From nsIDOMWebGLRenderingContext.idl:
++%{C++
++// for jsval
++#include "jsapi.h"
++
++namespace js {
++struct ArrayBuffer;
++struct TypedArray;
++}
++
++/* Avoid conflict with WinAPI */
++#undef NO_ERROR
++%}
++
++[ptr] native WebCLArrayPtr (js::TypedArray);
++[ptr] native WebCLJSObjectPtr (JSObject);
++
+diff --git a/dom/moz.build b/dom/moz.build
+--- a/dom/moz.build
++++ b/dom/moz.build
+@@ -24,16 +24,17 @@ interfaces = [
+     'json',
+     'offline',
+     'geolocation',
+     'notification',
+     'permission',
+     'svg',
+     'smil',
+     'apps',
++    'webcl',
+ ]
+ 
+ PARALLEL_DIRS += ['interfaces/' + i for i in interfaces]
+ 
+ PARALLEL_DIRS += [
+     'apps',
+     'base',
+     'activities',

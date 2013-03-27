@@ -1,0 +1,266 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{4E0D1E38-9A4A-47BA-B3F3-4FDB9E200822}</ProjectGuid>
+    <RootNamespace>ConG</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+    <Import Project="fxc.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="Build_Host_32r.props" />
+    <Import Project="ConG.props" />
+    <Import Project="..\..\..\templates\dxsdk_32r.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="Build_Host_32d.props" />
+    <Import Project="ConG.props" />
+    <Import Project="..\..\..\templates\dxsdk_32d.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="Build_Host_64r.props" />
+    <Import Project="ConG.props" />
+    <Import Project="..\..\..\templates\dxsdk_64r.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="Build_Host_64d.props" />
+    <Import Project="ConG.props" />
+    <Import Project="..\..\..\templates\dxsdk_64d.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.40219.1</_ProjectFileVersion>
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" />
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release|x64'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|x64'" />
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Lib>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Midl>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Lib>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Lib>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Midl>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Lib>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <PreBuildEvent Include="d3d10\IndexCombinerD3D10.fx">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">make_header "%(FullPath)" "$(IntDir)%(Filename)%(Extension).h"</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">make_header "%(FullPath)" "$(IntDir)%(Filename)%(Extension).h"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename)%(Extension).h;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">make_header "%(FullPath)" "$(IntDir)%(Filename)%(Extension).h"</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">make_header "%(FullPath)" "$(IntDir)%(Filename)%(Extension).h"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)%(Filename)%(Extension).h;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">make_header "%(FullPath)" "$(IntDir)%(Filename)%(Extension).h"</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">make_header "%(FullPath)" "$(IntDir)%(Filename)%(Extension).h"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename)%(Extension).h;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">make_header "%(FullPath)" "$(IntDir)%(Filename)%(Extension).h"</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">make_header "%(FullPath)" "$(IntDir)%(Filename)%(Extension).h"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)%(Filename)%(Extension).h;%(Outputs)</Outputs>
+    </PreBuildEvent>
+    <PreBuildEvent Include="d3d10\MorphingD3D10.fx">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">make_header "%(FullPath)" "$(IntDir)%(Filename)%(Extension).h"</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">make_header "%(FullPath)" "$(IntDir)%(Filename)%(Extension).h"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename)%(Extension).h;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">make_header "%(FullPath)" "$(IntDir)%(Filename)%(Extension).h"</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">make_header "%(FullPath)" "$(IntDir)%(Filename)%(Extension).h"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)%(Filename)%(Extension).h;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">make_header "%(FullPath)" "$(IntDir)%(Filename)%(Extension).h"</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">make_header "%(FullPath)" "$(IntDir)%(Filename)%(Extension).h"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename)%(Extension).h;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">make_header "%(FullPath)" "$(IntDir)%(Filename)%(Extension).h"</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">make_header "%(FullPath)" "$(IntDir)%(Filename)%(Extension).h"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)%(Filename)%(Extension).h;%(Outputs)</Outputs>
+    </PreBuildEvent>
+    <PreBuildEvent Include="d3d10\RenderCommonD3D10.fxh">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">make_header "%(FullPath)" "$(IntDir)%(Filename)%(Extension).h"</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">make_header "%(FullPath)" "$(IntDir)%(Filename)%(Extension).h"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename)%(Extension).h;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">make_header "%(FullPath)" "$(IntDir)%(Filename)%(Extension).h"</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">make_header "%(FullPath)" "$(IntDir)%(Filename)%(Extension).h"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)%(Filename)%(Extension).h;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">make_header "%(FullPath)" "$(IntDir)%(Filename)%(Extension).h"</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">make_header "%(FullPath)" "$(IntDir)%(Filename)%(Extension).h"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename)%(Extension).h;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">make_header "%(FullPath)" "$(IntDir)%(Filename)%(Extension).h"</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">make_header "%(FullPath)" "$(IntDir)%(Filename)%(Extension).h"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)%(Filename)%(Extension).h;%(Outputs)</Outputs>
+    </PreBuildEvent>
+    <PreBuildEvent Include="d3d10\RenderD3D10.fx">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">make_header "%(FullPath)" "$(IntDir)%(Filename)%(Extension).h"</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">make_header "%(FullPath)" "$(IntDir)%(Filename)%(Extension).h"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename)%(Extension).h;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">make_header "%(FullPath)" "$(IntDir)%(Filename)%(Extension).h"</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">make_header "%(FullPath)" "$(IntDir)%(Filename)%(Extension).h"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)%(Filename)%(Extension).h;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">make_header "%(FullPath)" "$(IntDir)%(Filename)%(Extension).h"</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">make_header "%(FullPath)" "$(IntDir)%(Filename)%(Extension).h"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename)%(Extension).h;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">make_header "%(FullPath)" "$(IntDir)%(Filename)%(Extension).h"</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">make_header "%(FullPath)" "$(IntDir)%(Filename)%(Extension).h"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)%(Filename)%(Extension).h;%(Outputs)</Outputs>
+    </PreBuildEvent>
+    <PreBuildEvent Include="d3d10\SkinningD3D10.fx">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">make_header "%(FullPath)" "$(IntDir)%(Filename)%(Extension).h"</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">make_header "%(FullPath)" "$(IntDir)%(Filename)%(Extension).h"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename)%(Extension).h;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">make_header "%(FullPath)" "$(IntDir)%(Filename)%(Extension).h"</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">make_header "%(FullPath)" "$(IntDir)%(Filename)%(Extension).h"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)%(Filename)%(Extension).h;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">make_header "%(FullPath)" "$(IntDir)%(Filename)%(Extension).h"</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">make_header "%(FullPath)" "$(IntDir)%(Filename)%(Extension).h"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename)%(Extension).h;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">make_header "%(FullPath)" "$(IntDir)%(Filename)%(Extension).h"</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">make_header "%(FullPath)" "$(IntDir)%(Filename)%(Extension).h"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)%(Filename)%(Extension).h;%(Outputs)</Outputs>
+    </PreBuildEvent>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="d3d10\RenderD3D10Impl.cpp" />
+    <ClCompile Include="d3d10\ResourceWrapperD3D10Impl.cpp" />
+    <ClCompile Include="d3d10\AccessProviderD3D10Impl.cpp" />
+    <ClCompile Include="d3d10\IndexCombinerAlgorithmD3D10Impl.cpp" />
+    <ClCompile Include="d3d10\MorphingAlgorithmD3D10Impl.cpp" />
+    <ClCompile Include="d3d10\SkinningAlgorithmD3D10Impl.cpp" />
+    <ClCompile Include="d3d10\DeviceManagerD3D10Impl.cpp" />
+    <ClCompile Include="d3d10\EffectManagerD3D10Impl.cpp" />
+    <ClCompile Include="d3d10\stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="d3d10\TgaImage.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="d3d10\RenderD3D10Impl.h" />
+    <ClInclude Include="d3d10\ResourceWrapperD3D10Impl.h" />
+    <ClInclude Include="include\d3d10\AccessProviderD3D10.h" />
+    <ClInclude Include="d3d10\AccessProviderD3D10Impl.h" />
+    <ClInclude Include="include\d3d10\IndexCombinerAlgorithmD3D10.h" />
+    <ClInclude Include="d3d10\IndexCombinerAlgorithmD3D10Impl.h" />
+    <ClInclude Include="include\d3d10\MorphingAlgorithmD3D10.h" />
+    <ClInclude Include="d3d10\MorphingAlgorithmD3D10Impl.h" />
+    <ClInclude Include="include\d3d10\SkinningAlgorithmD3D10.h" />
+    <ClInclude Include="d3d10\SkinningAlgorithmD3D10Impl.h" />
+    <ClInclude Include="include\d3d10\DeviceManagerD3D10.h" />
+    <ClInclude Include="d3d10\DeviceManagerD3D10Impl.h" />
+    <ClInclude Include="d3d10\EffectManagerD3D10Impl.h" />
+    <ClInclude Include="d3d10\stdafx.h" />
+    <ClInclude Include="d3d10\TgaImage.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="d3d10\IndexCombinerD3D10.fx" />
+    <None Include="d3d10\MorphingD3D10.fx" />
+    <None Include="d3d10\RenderCommonD3D10.fxh" />
+    <None Include="d3d10\RenderD3D10.fx" />
+    <None Include="d3d10\SkinningD3D10.fx" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+    <Import Project="fxc.targets" />
+  </ImportGroup>
+</Project>

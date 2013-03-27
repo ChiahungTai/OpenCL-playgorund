@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="Windows-1252"?>
+<VisualStudioPropertySheet
+	ProjectType="Visual C++"
+	Version="8.00"
+	Name="Build_Host_32r"
+	OutputDirectory="$(SolutionDir)$(PlatformName)\$(ConfigurationName)"
+	IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
+	>
+	<Tool
+		Name="VCCLCompilerTool"
+		Optimization="3"
+		InlineFunctionExpansion="2"
+		EnableIntrinsicFunctions="true"
+		FavorSizeOrSpeed="1"
+		PreprocessorDefinitions="NDEBUG;"
+		StringPooling="true"
+		RuntimeLibrary="2"
+		BufferSecurityCheck="false"
+		EnableEnhancedInstructionSet="2"
+		FloatingPointModel="2"
+		UsePrecompiledHeader="2"
+		WarningLevel="3"
+		DebugInformationFormat="3"
+	/>
+	<Tool
+		Name="VCLibrarianTool"
+		OutputFile="$(OutDir)\$(ProjectName)$(TARGET_POSTFIX).lib"
+	/>
+	<Tool
+		Name="VCLinkerTool"
+		OutputFile="$(OutDir)\$(ProjectName)$(TARGET_POSTFIX).exe"
+		RandomizedBaseAddress="1"
+		TargetMachine="1"
+	/>
+	<UserMacro
+		Name="TARGET_POSTFIX"
+		Value="32r"
+	/>
+</VisualStudioPropertySheet>

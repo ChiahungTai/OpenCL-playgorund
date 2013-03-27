@@ -1,0 +1,6 @@
+; colladaLoader.def : Declares the module parameters for the DLL.
+
+; LIBRARY "colladaLoader"
+
+EXPORTS
+	OpenColladaFile @1 ; OPEN COLLADA FILE FUNCTION

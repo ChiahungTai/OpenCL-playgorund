@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="Windows-1252"?>
+<VisualStudioPropertySheet
+	ProjectType="Visual C++"
+	Version="8.00"
+	Name="dxsdk_64r"
+	>
+	<Tool
+		Name="VCCLCompilerTool"
+		AdditionalIncludeDirectories="..\common\DXUT\Core\;..\common\DXUT\Optional\;&quot;$(DXSDK_DIR)\Include\&quot;"
+	/>
+	<Tool
+		Name="VCLinkerTool"
+		AdditionalDependencies="comctl32.lib d3d9.lib d3dx9$(CFG_POSTFIX).lib d3d10.lib d3dx10$(CFG_POSTFIX).lib dxerr.lib dxguid.lib dxgi.lib"
+		AdditionalLibraryDirectories="&quot;$(DXSDK_DIR)\Lib\$(ARCH)\&quot;"
+	/>
+	<UserMacro
+		Name="CFG_LONG"
+		Value="Release64"
+	/>
+	<UserMacro
+		Name="CFG_POSTFIX"
+		Value=""
+	/>
+	<UserMacro
+		Name="ARCH"
+		Value="x64"
+	/>
+	<UserMacro
+		Name="TARGET_POSTFIX"
+		Value=""
+	/>
+	<UserMacro
+		Name="CORE_POSTFIX"
+		Value=""
+	/>
+</VisualStudioPropertySheet>

@@ -1,0 +1,247 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Utils">
+      <UniqueIdentifier>{8e5921fe-fbb5-4c7a-865f-8f342764c7a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{51b329c6-9ad9-4062-9785-14fa265a25c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header files">
+      <UniqueIdentifier>{29d3124a-082b-4fe0-a3dc-462d27b02afd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source files">
+      <UniqueIdentifier>{ce780f5c-a077-4897-b998-75179a86608c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="common\Flux\actions\CActionManager.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="common\Util\CFileMemory.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="common\Flux\actions\CFlux2DBC_Gen.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="common\Flux\actions\CFlux2DBCCopy.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="common\Flux\actions\CFlux2DBCReflectLine.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="common\Flux\CFlux2DGrid.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="common\Flux\CFlux2DScene.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="common\Util\memory.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="solver\HybridMethod\boatlogic.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="host\Utils\CDXMeshBase.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="host\Utils\CDXQuad.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="host\Utils\CDXRenderTarget.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="solver\CFlux2Do2ScalarCalculator.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="solver\CFlux2DScalarCalculator.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="solver\CFlux2DSSECalculator.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="host\CSceneVisual.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="host\CSky.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="host\Utils\CVBGridGenerator.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="host\CVisual3DBottom.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="host\CVisual3DCommonData.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="host\CVisual3DGathered.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="host\CVisual3DSimple.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="host\CVisual3DTexAdvection.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="host\fluidsimhost.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="solver\HybridMethod\HybridMethod.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="host\mainHOST.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="host\SampleBase.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="host\scenes_creation.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="solver\shallow_water.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\common\utils.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="host\Utils\vismodes.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="common\Flux\actions\CActionManager.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="common\Util\CFileMemory.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="common\Flux\actions\CFlux2DBC_Gen.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="common\Flux\actions\CFlux2DBCCopy.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="common\Flux\actions\CFlux2DBCReflectLine.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="common\Flux\CFlux2DGrid.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="common\Flux\CFlux2DScene.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="common\Flux\CFlux2DSceneDef.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="common\Util\CSamplerBilinear.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="common\Util\memory.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="solver\HybridMethod\boatlogic.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="host\Utils\CDXMeshBase.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="host\Utils\CDXQuad.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="host\Utils\CDXRenderTarget.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="solver\CFlux2DMethod.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="solver\CFlux2Do2ScalarCalculator.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="solver\CFlux2DScalarCalculator.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="solver\CFlux2DSSECalculator.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="host\Utils\CFXConstWrapper.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="host\CSceneVisual.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="host\CSky.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="host\Utils\CVBGridGenerator.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="host\CVisual3DBottom.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="host\CVisual3DCommonData.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="host\CVisual3DGathered.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="host\CVisual3DInterface.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="host\CVisual3DSimple.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="host\CVisual3DTexAdvection.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="host\fluidsimhost.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="solver\HybridMethod\HybridMethod.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="host\initParams.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="common\physics_3D_fluid_sim_common.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="host\SampleBase.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="host\scenes_creation.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="solver\sseoperators.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\utils.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="host\Utils\vismodes.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ShallowWater.cl">
+      <Filter>Source files</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuildStep Include="Shaders\advect.fx">
+      <Filter>Shaders</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="Shaders\bottom.fx">
+      <Filter>Shaders</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="Shaders\gathered_sky.fx">
+      <Filter>Shaders</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="Shaders\simple.fx">
+      <Filter>Shaders</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="Shaders\sky.fx">
+      <Filter>Shaders</Filter>
+    </CustomBuildStep>
+  </ItemGroup>
+</Project>

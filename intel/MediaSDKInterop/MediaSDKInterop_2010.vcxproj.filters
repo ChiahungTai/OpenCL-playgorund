@@ -1,0 +1,62 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="MediaSDK">
+      <UniqueIdentifier>{4d96f494-3c86-4355-be36-a034fef48700}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{7e25dbdb-4a21-4aeb-a1b5-87ffc6c4ad31}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CL">
+      <UniqueIdentifier>{43ec11ab-9a23-4170-b0a6-4ae0774174dd}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src_MediaSDK\base_alllocator.cpp">
+      <Filter>MediaSDK</Filter>
+    </ClCompile>
+    <ClCompile Include="src_MediaSDK\d3d_allocator.cpp">
+      <Filter>MediaSDK</Filter>
+    </ClCompile>
+    <ClCompile Include="src\main.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\OCLStruct.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\pipeline_decode.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sample_opencl_plugin.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src_MediaSDK\base_allocator.h">
+      <Filter>MediaSDK</Filter>
+    </ClInclude>
+    <ClInclude Include="src_MediaSDK\d3d_allocator.h">
+      <Filter>MediaSDK</Filter>
+    </ClInclude>
+    <ClInclude Include="src_MediaSDK\sample_defs.h">
+      <Filter>MediaSDK</Filter>
+    </ClInclude>
+    <ClInclude Include="src\OCLStruct.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\pipeline_decode.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\sample_opencl_plugin.h">
+      <Filter>src</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuildStep Include="_color_control.cl">
+      <Filter>CL</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="_wave.cl">
+      <Filter>CL</Filter>
+    </CustomBuildStep>
+  </ItemGroup>
+</Project>

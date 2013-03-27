@@ -1,0 +1,438 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{A23D46F7-4C7F-6061-80E6-959CE1F0DBA7}</ProjectGuid>
+    <RootNamespace>ShallowWater</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>false</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\templates\dxsdk_32r.props" />
+    <Import Project="..\templates\intelocl_win32_release.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\templates\dxsdk_32d.props" />
+    <Import Project="..\templates\intelocl_win32_debug.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\templates\dxsdk_64r.props" />
+    <Import Project="..\templates\intelocl_win64_release.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\templates\dxsdk_64d.props" />
+    <Import Project="..\templates\intelocl_win64_debug.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.40219.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\$(Platform)\$(Configuration)\</OutDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</GenerateManifest>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\$(Platform)\$(Configuration)\</OutDir>
+    <ExtensionsToDeleteOnClean Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">*.obj%3b*.o%3b*.tlb%3b*.tli%3b*.tlh%3b*.tmp%3b*.rsp%3b*.pgc%3b*.pgd%3b$(TargetPath)</ExtensionsToDeleteOnClean>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</GenerateManifest>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\$(Platform)\$(Configuration)\</OutDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</GenerateManifest>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\$(Platform)\$(Configuration)\</OutDir>
+    <ExtensionsToDeleteOnClean Condition="'$(Configuration)|$(Platform)'=='Release|x64'">*.obj%3b*.o%3b*.tlb%3b*.tli%3b*.tlh%3b*.tmp%3b*.rsp%3b*.pgc%3b*.pgd%3b$(TargetPath)</ExtensionsToDeleteOnClean>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</GenerateManifest>
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" />
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release|x64'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|x64'" />
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>solver;.\;common;.\lib\ConG\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;DEBUG;PROFILE;_WINDOWS;_RTSCSTATIC_;_CRT_SECURE_NO_WARNINGS;HOST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <ExceptionHandling>
+      </ExceptionHandling>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <OpenMPSupport>false</OpenMPSupport>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <PrecompiledHeaderFile>DXUT.h</PrecompiledHeaderFile>
+      <WarningLevel>Level4</WarningLevel>
+      <TreatWarningAsError>false</TreatWarningAsError>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <DisableSpecificWarnings>4530;  4005; 4100; 4512; 4324;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <EnablePREfast>false</EnablePREfast>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>shlwapi.lib;winmm.lib;wsock32.lib;comsuppw.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <IgnoreSpecificDefaultLibraries>LIBCMTD; MSVCRT;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <DelayLoadDLLs>%(DelayLoadDLLs)</DelayLoadDLLs>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AssemblyDebug>true</AssemblyDebug>
+      <SubSystem>Console</SubSystem>
+      <LargeAddressAware>
+      </LargeAddressAware>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <FixedBaseAddress>false</FixedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <TargetMachine>MachineX86</TargetMachine>
+      <Profile>false</Profile>
+    </Link>
+    <PostBuildEvent>
+      <Command>copy ShallowWater.cl "$(OutDir)ShallowWater.cl"
+md "$(OutDir)Media\"
+copy .\Media\*.* "$(OutDir)Media\*.*"
+md "$(OutDir)Media\Lighthouse"
+copy .\Media\Lighthouse\*.* "$(OutDir)Media\Lighthouse\*.*"
+md "$(OutDir)Data"
+copy .\Data\*.* "$(OutDir)Data\*.*"
+md "$(OutDir)Shaders"
+copy .\Shaders\*.* "$(OutDir)Shaders\*.*"
+md "$(OutDir)lib"
+md "$(OutDir)lib\ConG\bin"
+copy .\lib\ConG\bin\ConG_collada32r.dll "$(OutDir)lib\ConG\bin\ConG_collada32r.dll"
+</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Midl>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>solver;.\;common;.\lib\ConG\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN64;_WIN64;_M_X64;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;HOST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <ExceptionHandling>
+      </ExceptionHandling>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level4</WarningLevel>
+      <TreatWarningAsError>false</TreatWarningAsError>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DisableSpecificWarnings>4530;  4005; 4100; 4512; 4324;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <ShowIncludes>false</ShowIncludes>
+      <EnablePREfast>false</EnablePREfast>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>shlwapi.lib;winmm.lib;wsock32.lib;comsuppw.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <IgnoreSpecificDefaultLibraries>LIBCMTD;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AssemblyDebug>true</AssemblyDebug>
+      <SubSystem>Console</SubSystem>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <FixedBaseAddress>false</FixedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <TargetMachine>MachineX64</TargetMachine>
+      <Profile>true</Profile>
+    </Link>
+    <PostBuildEvent>
+      <Command>copy ShallowWater.cl "$(OutDir)ShallowWater.cl"
+md "$(OutDir)Media\"
+copy .\Media\*.* "$(OutDir)Media\*.*"
+md "$(OutDir)Media\Lighthouse"
+copy .\Media\Lighthouse\*.* "$(OutDir)Media\Lighthouse\*.*"
+md "$(OutDir)Data"
+copy .\Data\*.* "$(OutDir)Data\*.*"
+md "$(OutDir)Shaders"
+copy .\Shaders\*.* "$(OutDir)Shaders\*.*"
+md "$(OutDir)lib"
+md "$(OutDir)lib\ConG\bin"
+copy .\lib\ConG\bin\ConG_collada64r.dll "$(OutDir)lib\ConG\bin\ConG_collada64r.dll"
+</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <Optimization>Full</Optimization>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <WholeProgramOptimization>true</WholeProgramOptimization>
+      <AdditionalIncludeDirectories>solver;.\;common;.\lib\ConG\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_RTSCSTATIC_;_CRT_SECURE_NO_WARNINGS;HOST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <MinimalRebuild>false</MinimalRebuild>
+      <ExceptionHandling>
+      </ExceptionHandling>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <OpenMPSupport>true</OpenMPSupport>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <PrecompiledHeaderFile>DXUT.h</PrecompiledHeaderFile>
+      <AssemblerOutput>
+      </AssemblerOutput>
+      <AssemblerListingLocation>$(OutDir)</AssemblerListingLocation>
+      <WarningLevel>Level4</WarningLevel>
+      <TreatWarningAsError>false</TreatWarningAsError>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DisableSpecificWarnings>4530;  4005; 4100; 4512; 4324;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <EnablePREfast>false</EnablePREfast>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>shlwapi.lib;winmm.lib;wsock32.lib;comsuppw.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <IgnoreSpecificDefaultLibraries>LIBCMT;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <DelayLoadDLLs>%(DelayLoadDLLs)</DelayLoadDLLs>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AssemblyDebug>false</AssemblyDebug>
+      <SubSystem>Console</SubSystem>
+      <LargeAddressAware>true</LargeAddressAware>
+      <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <FixedBaseAddress>false</FixedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <TargetMachine>MachineX86</TargetMachine>
+      <Profile>true</Profile>
+    </Link>
+    <PostBuildEvent>
+      <Command>copy ShallowWater.cl "$(OutDir)ShallowWater.cl"
+md "$(OutDir)Media\"
+copy .\Media\*.* "$(OutDir)Media\*.*"
+md "$(OutDir)Media\Lighthouse"
+copy .\Media\Lighthouse\*.* "$(OutDir)Media\Lighthouse\*.*"
+md "$(OutDir)Data"
+copy .\Data\*.* "$(OutDir)Data\*.*"
+md "$(OutDir)Shaders"
+copy .\Shaders\*.* "$(OutDir)Shaders\*.*"
+md "$(OutDir)lib"
+md "$(OutDir)lib\ConG\bin"
+copy .\lib\ConG\bin\ConG_collada32r.dll "$(OutDir)lib\ConG\bin\ConG_collada32r.dll"
+</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Midl>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <Optimization>Full</Optimization>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <WholeProgramOptimization>true</WholeProgramOptimization>
+      <AdditionalIncludeDirectories>solver;.\;common;.\lib\ConG\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN64;_WIN64;NDEBUG;_WINDOWS;_M_X64;_CRT_SECURE_NO_WARNINGS;HOST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <MinimalRebuild>false</MinimalRebuild>
+      <ExceptionHandling>
+      </ExceptionHandling>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <OpenMPSupport>true</OpenMPSupport>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <AssemblerOutput>
+      </AssemblerOutput>
+      <AssemblerListingLocation>$(OutDir)</AssemblerListingLocation>
+      <WarningLevel>Level4</WarningLevel>
+      <TreatWarningAsError>false</TreatWarningAsError>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DisableSpecificWarnings>4530;  4005; 4100; 4512; 4324;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <EnablePREfast>false</EnablePREfast>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>shlwapi.lib;winmm.lib;wsock32.lib;comsuppw.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <IgnoreSpecificDefaultLibraries>LIBCMT;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AssemblyDebug>false</AssemblyDebug>
+      <SubSystem>Console</SubSystem>
+      <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <FixedBaseAddress>false</FixedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <TargetMachine>MachineX64</TargetMachine>
+      <Profile>true</Profile>
+    </Link>
+    <PostBuildEvent>
+      <Command>copy ShallowWater.cl "$(OutDir)ShallowWater.cl"
+md "$(OutDir)Media\"
+copy .\Media\*.* "$(OutDir)Media\*.*"
+md "$(OutDir)Media\Lighthouse"
+copy .\Media\Lighthouse\*.* "$(OutDir)Media\Lighthouse\*.*"
+md "$(OutDir)Data"
+copy .\Data\*.* "$(OutDir)Data\*.*"
+md "$(OutDir)Shaders"
+copy .\Shaders\*.* "$(OutDir)Shaders\*.*"
+md "$(OutDir)lib"
+md "$(OutDir)lib\ConG\bin"
+copy .\lib\ConG\bin\ConG_collada64r.dll "$(OutDir)lib\ConG\bin\ConG_collada64r.dll"
+</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="common\Flux\actions\CActionManager.cpp" />
+    <ClCompile Include="common\Util\CFileMemory.cpp" />
+    <ClCompile Include="common\Flux\actions\CFlux2DBC_Gen.cpp" />
+    <ClCompile Include="common\Flux\actions\CFlux2DBCCopy.cpp" />
+    <ClCompile Include="common\Flux\actions\CFlux2DBCReflectLine.cpp" />
+    <ClCompile Include="common\Flux\CFlux2DGrid.cpp" />
+    <ClCompile Include="common\Flux\CFlux2DScene.cpp" />
+    <ClCompile Include="common\Util\memory.cpp" />
+    <ClCompile Include="solver\HybridMethod\boatlogic.cpp" />
+    <ClCompile Include="host\Utils\CDXMeshBase.cpp" />
+    <ClCompile Include="host\Utils\CDXQuad.cpp" />
+    <ClCompile Include="host\Utils\CDXRenderTarget.cpp" />
+    <ClCompile Include="solver\CFlux2Do2ScalarCalculator.cpp" />
+    <ClCompile Include="solver\CFlux2DScalarCalculator.cpp" />
+    <ClCompile Include="solver\CFlux2DSSECalculator.cpp" />
+    <ClCompile Include="host\CSceneVisual.cpp" />
+    <ClCompile Include="host\CSky.cpp" />
+    <ClCompile Include="host\Utils\CVBGridGenerator.cpp" />
+    <ClCompile Include="host\CVisual3DBottom.cpp" />
+    <ClCompile Include="host\CVisual3DCommonData.cpp" />
+    <ClCompile Include="host\CVisual3DGathered.cpp" />
+    <ClCompile Include="host\CVisual3DSimple.cpp" />
+    <ClCompile Include="host\CVisual3DTexAdvection.cpp" />
+    <ClCompile Include="host\fluidsimhost.cpp" />
+    <ClCompile Include="solver\HybridMethod\HybridMethod.cpp" />
+    <ClCompile Include="host\mainHOST.cpp" />
+    <ClCompile Include="host\SampleBase.cpp" />
+    <ClCompile Include="host\scenes_creation.cpp" />
+    <ClCompile Include="solver\shallow_water.cpp" />
+    <ClCompile Include="..\common\utils.cpp" />
+    <ClCompile Include="host\Utils\vismodes.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="common\Flux\actions\CActionManager.h" />
+    <ClInclude Include="common\Util\CFileMemory.h" />
+    <ClInclude Include="common\Flux\actions\CFlux2DBC_Gen.h" />
+    <ClInclude Include="common\Flux\actions\CFlux2DBCCopy.h" />
+    <ClInclude Include="common\Flux\actions\CFlux2DBCReflectLine.h" />
+    <ClInclude Include="common\Flux\CFlux2DGrid.h" />
+    <ClInclude Include="common\Flux\CFlux2DScene.h" />
+    <ClInclude Include="common\Flux\CFlux2DSceneDef.h" />
+    <ClInclude Include="common\Util\CSamplerBilinear.h" />
+    <ClInclude Include="common\Util\memory.h" />
+    <ClInclude Include="solver\HybridMethod\boatlogic.h" />
+    <ClInclude Include="host\Utils\CDXMeshBase.h" />
+    <ClInclude Include="host\Utils\CDXQuad.h" />
+    <ClInclude Include="host\Utils\CDXRenderTarget.h" />
+    <ClInclude Include="solver\CFlux2DMethod.h" />
+    <ClInclude Include="solver\CFlux2Do2ScalarCalculator.h" />
+    <ClInclude Include="solver\CFlux2DScalarCalculator.h" />
+    <ClInclude Include="solver\CFlux2DSSECalculator.h" />
+    <ClInclude Include="host\Utils\CFXConstWrapper.h" />
+    <ClInclude Include="host\CSceneVisual.h" />
+    <ClInclude Include="host\CSky.h" />
+    <ClInclude Include="host\Utils\CVBGridGenerator.h" />
+    <ClInclude Include="host\CVisual3DBottom.h" />
+    <ClInclude Include="host\CVisual3DCommonData.h" />
+    <ClInclude Include="host\CVisual3DGathered.h" />
+    <ClInclude Include="host\CVisual3DInterface.h" />
+    <ClInclude Include="host\CVisual3DSimple.h" />
+    <ClInclude Include="host\CVisual3DTexAdvection.h" />
+    <ClInclude Include="host\fluidsimhost.h" />
+    <ClInclude Include="solver\HybridMethod\HybridMethod.h" />
+    <ClInclude Include="host\initParams.h" />
+    <ClInclude Include="common\physics_3D_fluid_sim_common.h" />
+    <ClInclude Include="host\SampleBase.h" />
+    <ClInclude Include="host\scenes_creation.h" />
+    <ClInclude Include="solver\sseoperators.h" />
+    <ClInclude Include="..\common\utils.h" />
+    <ClInclude Include="host\Utils\vismodes.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuildStep Include="Shaders\advect.fx">
+      <FileType>Document</FileType>
+    </CustomBuildStep>
+    <CustomBuildStep Include="Shaders\bottom.fx">
+      <FileType>Document</FileType>
+    </CustomBuildStep>
+    <CustomBuildStep Include="Shaders\gathered_sky.fx">
+      <FileType>Document</FileType>
+    </CustomBuildStep>
+    <CustomBuildStep Include="Shaders\simple.fx">
+      <FileType>Document</FileType>
+    </CustomBuildStep>
+    <CustomBuildStep Include="Shaders\sky.fx">
+      <FileType>Document</FileType>
+    </CustomBuildStep>
+    <None Include="ShallowWater.cl" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\common\DXUT\Core\DXUT_2010.vcxproj">
+      <Project>{e0cf097b-f22d-465b-a884-d89e55bd7ecd}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\common\DXUT\Optional\DXUTOpt_2010.vcxproj">
+      <Project>{9f64786d-4f8f-43bf-ada0-133abae1e52d}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="lib\ConG\ConG.vcxproj">
+      <Project>{718f978c-51e6-4130-bb6b-da3591ee0b92}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="lib\ConG\ConG_d3d10.vcxproj">
+      <Project>{4e0d1e38-9a4a-47ba-b3f3-4fdb9e200822}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="UserMacros">
+    <CFG_LONG>Release64</CFG_LONG>
+    <CFG_POSTFIX />
+    <ARCH>x64</ARCH>
+    <TARGET_POSTFIX />
+    <CORE_POSTFIX />
+  </PropertyGroup>
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.40219.1</_ProjectFileVersion>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>..\common\DXUT\Core\;..\common\DXUT\Optional\;$(DXSDK_DIR)\Include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>comctl32.lib;d3d9.lib;d3dx9$(CFG_POSTFIX).lib;d3d10.lib;d3dx10$(CFG_POSTFIX).lib;dxerr.lib;dxguid.lib;dxgi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(DXSDK_DIR)\Lib\$(ARCH)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <BuildMacro Include="CFG_LONG">
+      <Value>$(CFG_LONG)</Value>
+    </BuildMacro>
+    <BuildMacro Include="CFG_POSTFIX">
+      <Value>$(CFG_POSTFIX)</Value>
+    </BuildMacro>
+    <BuildMacro Include="ARCH">
+      <Value>$(ARCH)</Value>
+    </BuildMacro>
+    <BuildMacro Include="TARGET_POSTFIX">
+      <Value>$(TARGET_POSTFIX)</Value>
+    </BuildMacro>
+    <BuildMacro Include="CORE_POSTFIX">
+      <Value>$(CORE_POSTFIX)</Value>
+    </BuildMacro>
+  </ItemGroup>
+</Project>

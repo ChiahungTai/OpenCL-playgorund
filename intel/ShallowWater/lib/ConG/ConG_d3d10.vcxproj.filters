@@ -1,0 +1,95 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="fx">
+      <UniqueIdentifier>{e556fc9e-dd9a-4738-929e-f64f3506b825}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plugins">
+      <UniqueIdentifier>{1265956d-6a53-4cd0-b738-90fe60f50903}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Allocators">
+      <UniqueIdentifier>{e99df021-8a08-4ded-9290-33608dbcabc4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Algorithms">
+      <UniqueIdentifier>{bf2c33e0-6025-49e5-89d5-6ef5c14da604}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="d3d10\RenderD3D10Impl.cpp">
+      <Filter>Plugins</Filter>
+    </ClCompile>
+    <ClCompile Include="d3d10\ResourceWrapperD3D10Impl.cpp">
+      <Filter>Plugins</Filter>
+    </ClCompile>
+    <ClCompile Include="d3d10\AccessProviderD3D10Impl.cpp">
+      <Filter>Allocators</Filter>
+    </ClCompile>
+    <ClCompile Include="d3d10\IndexCombinerAlgorithmD3D10Impl.cpp">
+      <Filter>Algorithms</Filter>
+    </ClCompile>
+    <ClCompile Include="d3d10\MorphingAlgorithmD3D10Impl.cpp">
+      <Filter>Algorithms</Filter>
+    </ClCompile>
+    <ClCompile Include="d3d10\SkinningAlgorithmD3D10Impl.cpp">
+      <Filter>Algorithms</Filter>
+    </ClCompile>
+    <ClCompile Include="d3d10\DeviceManagerD3D10Impl.cpp" />
+    <ClCompile Include="d3d10\EffectManagerD3D10Impl.cpp" />
+    <ClCompile Include="d3d10\stdafx.cpp" />
+    <ClCompile Include="d3d10\TgaImage.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="d3d10\RenderD3D10Impl.h">
+      <Filter>Plugins</Filter>
+    </ClInclude>
+    <ClInclude Include="d3d10\ResourceWrapperD3D10Impl.h">
+      <Filter>Plugins</Filter>
+    </ClInclude>
+    <ClInclude Include="include\d3d10\AccessProviderD3D10.h">
+      <Filter>Allocators</Filter>
+    </ClInclude>
+    <ClInclude Include="d3d10\AccessProviderD3D10Impl.h">
+      <Filter>Allocators</Filter>
+    </ClInclude>
+    <ClInclude Include="include\d3d10\IndexCombinerAlgorithmD3D10.h">
+      <Filter>Algorithms</Filter>
+    </ClInclude>
+    <ClInclude Include="d3d10\IndexCombinerAlgorithmD3D10Impl.h">
+      <Filter>Algorithms</Filter>
+    </ClInclude>
+    <ClInclude Include="include\d3d10\MorphingAlgorithmD3D10.h">
+      <Filter>Algorithms</Filter>
+    </ClInclude>
+    <ClInclude Include="d3d10\MorphingAlgorithmD3D10Impl.h">
+      <Filter>Algorithms</Filter>
+    </ClInclude>
+    <ClInclude Include="include\d3d10\SkinningAlgorithmD3D10.h">
+      <Filter>Algorithms</Filter>
+    </ClInclude>
+    <ClInclude Include="d3d10\SkinningAlgorithmD3D10Impl.h">
+      <Filter>Algorithms</Filter>
+    </ClInclude>
+    <ClInclude Include="include\d3d10\DeviceManagerD3D10.h" />
+    <ClInclude Include="d3d10\DeviceManagerD3D10Impl.h" />
+    <ClInclude Include="d3d10\EffectManagerD3D10Impl.h" />
+    <ClInclude Include="d3d10\stdafx.h" />
+    <ClInclude Include="d3d10\TgaImage.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="d3d10\IndexCombinerD3D10.fx">
+      <Filter>fx</Filter>
+    </None>
+    <None Include="d3d10\MorphingD3D10.fx">
+      <Filter>fx</Filter>
+    </None>
+    <None Include="d3d10\RenderD3D10.fx">
+      <Filter>fx</Filter>
+    </None>
+    <None Include="d3d10\SkinningD3D10.fx">
+      <Filter>fx</Filter>
+    </None>
+    <None Include="d3d10\RenderCommonD3D10.fxh">
+      <Filter>fx</Filter>
+    </None>
+  </ItemGroup>
+</Project>

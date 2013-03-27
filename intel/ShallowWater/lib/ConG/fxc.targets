@@ -1,0 +1,91 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <PropertyPageSchema
+      Include="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).xml" />
+    <AvailableItemName
+      Include="FXC">
+      <Targets>_FXC</Targets>
+    </AvailableItemName>
+  </ItemGroup>
+  <UsingTask
+    TaskName="FXC"
+    TaskFactory="XamlTaskFactory"
+    AssemblyName="Microsoft.Build.Tasks.v4.0">
+    <Task>$(MSBuildThisFileDirectory)$(MSBuildThisFileName).xml</Task>
+  </UsingTask>
+  <Target
+    Name="_FXC"
+    BeforeTargets="$(FXCBeforeTargets)"
+    AfterTargets="$(FXCAfterTargets)"
+    Condition="'@(FXC)' != ''"
+    DependsOnTargets="$(FXCDependsOn);ComputeFXCOutput"
+    Outputs="%(FXC.Outputs)"
+    Inputs="%(FXC.Identity);%(FXC.AdditionalDependencies);$(MSBuildProjectFile)">
+    <ItemGroup
+      Condition="'@(SelectedFiles)' != ''">
+      <FXC
+        Remove="@(FXC)"
+        Condition="'%(Identity)' != '@(SelectedFiles)'" />
+    </ItemGroup>
+    <ItemGroup>
+      <FXC_tlog
+        Include="%(FXC.Outputs)"
+        Condition="'%(FXC.Outputs)' != '' and '%(FXC.ExcludedFromBuild)' != 'true'">
+        <Source>@(FXC, '|')</Source>
+      </FXC_tlog>
+    </ItemGroup>
+    <Message
+      Importance="High"
+      Text="%(FXC.ExecutionDescription)" />
+    <WriteLinesToFile
+      Condition="'@(FXC_tlog)' != '' and '%(FXC_tlog.ExcludedFromBuild)' != 'true'"
+      File="$(IntDir)$(ProjectName).write.1.tlog"
+      Lines="^%(FXC_tlog.Source);@(FXC_tlog-&gt;'%(Fullpath)')" />
+    <FXC
+      Condition="'@(FXC)' != '' and '%(FXC.ExcludedFromBuild)' != 'true'"
+      CommandLineTemplate="%(FXC.CommandLineTemplate)"
+      strict="%(FXC.strict)"
+      compat="%(FXC.compat)"
+      perf="%(FXC.perf)"
+      noopt="%(FXC.noopt)"
+      nopre="%(FXC.nopre)"
+      child="%(FXC.child)"
+      include="%(FXC.include)"
+      outputdir="%(FXC.outputdir)"
+      output="%(FXC.output)"
+      target="%(FXC.target)"
+      AdditionalOptions="%(FXC.AdditionalOptions)"
+      Inputs="%(FXC.Identity)" />
+  </Target>
+  <PropertyGroup>
+    <ComputeLinkInputsTargets>
+            $(ComputeLinkInputsTargets);
+            ComputeFXCOutput;
+          </ComputeLinkInputsTargets>
+    <ComputeLibInputsTargets>
+            $(ComputeLibInputsTargets);
+            ComputeFXCOutput;
+          </ComputeLibInputsTargets>
+  </PropertyGroup>
+  <Target
+    Name="ComputeFXCOutput"
+    Condition="'@(FXC)' != ''">
+    <ItemGroup>
+      <FXCDirsToMake
+        Condition="'@(FXC)' != '' and '%(FXC.ExcludedFromBuild)' != 'true'"
+        Include="%(FXC.Outputs)" />
+      <Link
+        Include="%(FXCDirsToMake.Identity)"
+        Condition="'%(Extension)'=='.obj' or '%(Extension)'=='.res' or '%(Extension)'=='.rsc' or '%(Extension)'=='.lib'" />
+      <Lib
+        Include="%(FXCDirsToMake.Identity)"
+        Condition="'%(Extension)'=='.obj' or '%(Extension)'=='.res' or '%(Extension)'=='.rsc' or '%(Extension)'=='.lib'" />
+      <ImpLib
+        Include="%(FXCDirsToMake.Identity)"
+        Condition="'%(Extension)'=='.obj' or '%(Extension)'=='.res' or '%(Extension)'=='.rsc' or '%(Extension)'=='.lib'" />
+    </ItemGroup>
+    <MakeDir
+      Directories="@(FXCDirsToMake-&gt;'%(RootDir)%(Directory)')" />
+  </Target>
+</Project>

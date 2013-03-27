@@ -1,0 +1,314 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="SceneGraph">
+      <UniqueIdentifier>{b9fe2f89-a4c6-42c9-97bd-363e5054e975}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plugins">
+      <UniqueIdentifier>{7ba1c02c-e278-4b9d-b773-b29b44a9c323}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="misc">
+      <UniqueIdentifier>{b712e4bc-ec47-43de-97ff-430882d1af81}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Memory">
+      <UniqueIdentifier>{23f50edd-db2d-4dd7-b749-bcf7d88a6c4d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Algorithms">
+      <UniqueIdentifier>{85085fc3-20bb-4b5b-bbc9-249814c6fda5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IO">
+      <UniqueIdentifier>{813f6784-1a34-4823-be30-3ebe8d87e499}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\SceneGraph.h">
+      <Filter>SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SceneGraphBase.h">
+      <Filter>SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SceneUtils.h">
+      <Filter>SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SGAnimation.h">
+      <Filter>SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SGCamera.h">
+      <Filter>SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SGEffect.h">
+      <Filter>SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SGGeometryInstance.h">
+      <Filter>SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SGGeometryInstanceAdapter.h">
+      <Filter>SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SGImage.h">
+      <Filter>SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SGImplBase.h">
+      <Filter>SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SGLight.h">
+      <Filter>SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SGMaterial.h">
+      <Filter>SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SGMaterialBinding.h">
+      <Filter>SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SGMesh.h">
+      <Filter>SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SGMeshAdapter.h">
+      <Filter>SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SGMorphedMesh.h">
+      <Filter>SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SGNode.h">
+      <Filter>SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SGProperty.h">
+      <Filter>SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SGScene.h">
+      <Filter>SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SGSceneAdapter.h">
+      <Filter>SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SGSkinnedMesh.h">
+      <Filter>SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="include\IndexCombinerPlugin.h">
+      <Filter>Plugins</Filter>
+    </ClInclude>
+    <ClInclude Include="src\IndexCombinerPluginImpl.h">
+      <Filter>Plugins</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MorphingPlugin.h">
+      <Filter>Plugins</Filter>
+    </ClInclude>
+    <ClInclude Include="src\MorphingPluginImpl.h">
+      <Filter>Plugins</Filter>
+    </ClInclude>
+    <ClInclude Include="include\NodeControlPlugin.h">
+      <Filter>Plugins</Filter>
+    </ClInclude>
+    <ClInclude Include="src\NodeControlPluginImpl.h">
+      <Filter>Plugins</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SkinningPlugin.h">
+      <Filter>Plugins</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SkinningPluginImpl.h">
+      <Filter>Plugins</Filter>
+    </ClInclude>
+    <ClInclude Include="include\TriangulatorPlugin.h">
+      <Filter>Plugins</Filter>
+    </ClInclude>
+    <ClInclude Include="src\TriangulatorPluginImpl.h">
+      <Filter>Plugins</Filter>
+    </ClInclude>
+    <ClInclude Include="include\TriSortPlugin.h">
+      <Filter>Plugins</Filter>
+    </ClInclude>
+    <ClInclude Include="src\TriSortPluginImpl.h">
+      <Filter>Plugins</Filter>
+    </ClInclude>
+    <ClInclude Include="include\AutoPtr.h">
+      <Filter>misc</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MessageListener.h">
+      <Filter>misc</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RefCounted.h">
+      <Filter>misc</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RefCountedImpl.h">
+      <Filter>misc</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SSEOps.h">
+      <Filter>misc</Filter>
+    </ClInclude>
+    <ClInclude Include="include\win32\Win32Utils.h">
+      <Filter>misc</Filter>
+    </ClInclude>
+    <ClInclude Include="include\AccessProviderDefault.h">
+      <Filter>Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AccessProviderDefaultImpl.h">
+      <Filter>Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MemoryManager.h">
+      <Filter>Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="src\MemoryManagerImpl.h">
+      <Filter>Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Processor.h">
+      <Filter>Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ProcessorBaseImpl.h">
+      <Filter>Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ProviderBinding.h">
+      <Filter>Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="include\AABBCalcAlgorithm.h">
+      <Filter>Algorithms</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AABBCalcAlgorithmDefaultImpl.h">
+      <Filter>Algorithms</Filter>
+    </ClInclude>
+    <ClInclude Include="include\AlgorithmBase.h">
+      <Filter>Algorithms</Filter>
+    </ClInclude>
+    <ClInclude Include="include\IndexCombinerAlgorithm.h">
+      <Filter>Algorithms</Filter>
+    </ClInclude>
+    <ClInclude Include="src\IndexCombinerAlgorithmDefaultImpl.h">
+      <Filter>Algorithms</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MorphingAlgorithm.h">
+      <Filter>Algorithms</Filter>
+    </ClInclude>
+    <ClInclude Include="src\MorphingAlgorithmDefaultImpl.h">
+      <Filter>Algorithms</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SkinningAlgorithm.h">
+      <Filter>Algorithms</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SkinningAlgorithmDefaultImpl.h">
+      <Filter>Algorithms</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SkinningAlgorithmSSEImpl.h">
+      <Filter>Algorithms</Filter>
+    </ClInclude>
+    <ClInclude Include="include\TriangulatorAlgorithm.h">
+      <Filter>Algorithms</Filter>
+    </ClInclude>
+    <ClInclude Include="src\TriangulatorAlgorithmDefaultImpl.h">
+      <Filter>Algorithms</Filter>
+    </ClInclude>
+    <ClInclude Include="include\collada\SceneReaderDae.h">
+      <Filter>IO</Filter>
+    </ClInclude>
+    <ClInclude Include="src\stdafx.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\SceneUtils.cpp">
+      <Filter>SceneGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SGAnimation.cpp">
+      <Filter>SceneGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SGCamera.cpp">
+      <Filter>SceneGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SGEffect.cpp">
+      <Filter>SceneGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SGGeometryInstanceAdapter.cpp">
+      <Filter>SceneGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SGImage.cpp">
+      <Filter>SceneGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SGLight.cpp">
+      <Filter>SceneGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SGMaterial.cpp">
+      <Filter>SceneGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SGMaterialBinding.cpp">
+      <Filter>SceneGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SGMesh.cpp">
+      <Filter>SceneGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SGMeshAdapter.cpp">
+      <Filter>SceneGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SGMorphedMesh.cpp">
+      <Filter>SceneGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SGNode.cpp">
+      <Filter>SceneGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SGProperty.cpp">
+      <Filter>SceneGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SGScene.cpp">
+      <Filter>SceneGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SGSceneAdapter.cpp">
+      <Filter>SceneGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SGSkinnedMesh.cpp">
+      <Filter>SceneGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="src\IndexCombinerPluginImpl.cpp">
+      <Filter>Plugins</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MorphingPluginImpl.cpp">
+      <Filter>Plugins</Filter>
+    </ClCompile>
+    <ClCompile Include="src\NodeControlPluginImpl.cpp">
+      <Filter>Plugins</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SkinningPluginImpl.cpp">
+      <Filter>Plugins</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TriangulatorPluginImpl.cpp">
+      <Filter>Plugins</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TriSortPluginImpl.cpp">
+      <Filter>Plugins</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MsgListenerStdImpl.cpp">
+      <Filter>misc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SSEOps.cpp">
+      <Filter>misc</Filter>
+    </ClCompile>
+    <ClCompile Include="win32\Win32Utils.cpp">
+      <Filter>misc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AccessProviderDefaultImpl.cpp">
+      <Filter>Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MemoryManagerImpl.cpp">
+      <Filter>Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ProcessorBaseImpl.cpp">
+      <Filter>Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AABBCalcAlgorithmDefaultImpl.cpp">
+      <Filter>Algorithms</Filter>
+    </ClCompile>
+    <ClCompile Include="src\IndexCombinerAlgorithmDefaultImpl.cpp">
+      <Filter>Algorithms</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MorphingAlgorithmDefaultImpl.cpp">
+      <Filter>Algorithms</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SkinningAlgorithmDefaultImpl.cpp">
+      <Filter>Algorithms</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SkinningAlgorithmSSEImpl.cpp">
+      <Filter>Algorithms</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TriangulatorAlgorithmDefaultImpl.cpp">
+      <Filter>Algorithms</Filter>
+    </ClCompile>
+    <ClCompile Include="collada\SceneReaderDae.cpp">
+      <Filter>IO</Filter>
+    </ClCompile>
+    <ClCompile Include="src\stdafx.cpp" />
+  </ItemGroup>
+</Project>

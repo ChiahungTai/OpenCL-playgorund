@@ -1,0 +1,242 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{718F978C-51E6-4130-BB6B-DA3591EE0B92}</ProjectGuid>
+    <RootNamespace>ConG</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="math.props" />
+    <Import Project="Build_Host_32r.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="math.props" />
+    <Import Project="Build_Host_32d.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="math.props" />
+    <Import Project="Build_Host_64r.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="math.props" />
+    <Import Project="Build_Host_64d.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" />
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release|x64'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|x64'" />
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ProjectDir)..\..\bin\$(Platform)\$(ProjectName)\$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ProjectDir)..\..\bin\$(Platform)\$(ProjectName)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>.\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+    </ClCompile>
+    <Lib>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Midl>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <AdditionalIncludeDirectories>.\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+    </ClCompile>
+    <Lib>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>.\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <FloatingPointModel>Fast</FloatingPointModel>
+    </ClCompile>
+    <Lib>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Midl>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <AdditionalIncludeDirectories>.\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+    </ClCompile>
+    <Lib>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="include\SceneGraph.h" />
+    <ClInclude Include="include\SceneGraphBase.h" />
+    <ClInclude Include="include\SceneUtils.h" />
+    <ClInclude Include="src\SGAnimation.h" />
+    <ClInclude Include="src\SGCamera.h" />
+    <ClInclude Include="src\SGEffect.h" />
+    <ClInclude Include="src\SGGeometryInstance.h" />
+    <ClInclude Include="src\SGGeometryInstanceAdapter.h" />
+    <ClInclude Include="src\SGImage.h" />
+    <ClInclude Include="src\SGImplBase.h" />
+    <ClInclude Include="src\SGLight.h" />
+    <ClInclude Include="src\SGMaterial.h" />
+    <ClInclude Include="src\SGMaterialBinding.h" />
+    <ClInclude Include="src\SGMesh.h" />
+    <ClInclude Include="src\SGMeshAdapter.h" />
+    <ClInclude Include="src\SGMorphedMesh.h" />
+    <ClInclude Include="src\SGNode.h" />
+    <ClInclude Include="src\SGProperty.h" />
+    <ClInclude Include="src\SGScene.h" />
+    <ClInclude Include="src\SGSceneAdapter.h" />
+    <ClInclude Include="src\SGSkinnedMesh.h" />
+    <ClInclude Include="include\IndexCombinerPlugin.h" />
+    <ClInclude Include="src\IndexCombinerPluginImpl.h" />
+    <ClInclude Include="include\MorphingPlugin.h" />
+    <ClInclude Include="src\MorphingPluginImpl.h" />
+    <ClInclude Include="include\NodeControlPlugin.h" />
+    <ClInclude Include="src\NodeControlPluginImpl.h" />
+    <ClInclude Include="include\SkinningPlugin.h" />
+    <ClInclude Include="src\SkinningPluginImpl.h" />
+    <ClInclude Include="include\TriangulatorPlugin.h" />
+    <ClInclude Include="src\TriangulatorPluginImpl.h" />
+    <ClInclude Include="include\TriSortPlugin.h" />
+    <ClInclude Include="src\TriSortPluginImpl.h" />
+    <ClInclude Include="include\AutoPtr.h" />
+    <ClInclude Include="include\MessageListener.h" />
+    <ClInclude Include="include\RefCounted.h" />
+    <ClInclude Include="include\RefCountedImpl.h" />
+    <ClInclude Include="include\SSEOps.h" />
+    <ClInclude Include="include\win32\Win32Utils.h" />
+    <ClInclude Include="include\AccessProviderDefault.h" />
+    <ClInclude Include="src\AccessProviderDefaultImpl.h" />
+    <ClInclude Include="include\MemoryManager.h" />
+    <ClInclude Include="src\MemoryManagerImpl.h" />
+    <ClInclude Include="include\Processor.h" />
+    <ClInclude Include="include\ProcessorBaseImpl.h" />
+    <ClInclude Include="include\ProviderBinding.h" />
+    <ClInclude Include="include\AABBCalcAlgorithm.h" />
+    <ClInclude Include="src\AABBCalcAlgorithmDefaultImpl.h" />
+    <ClInclude Include="include\AlgorithmBase.h" />
+    <ClInclude Include="include\IndexCombinerAlgorithm.h" />
+    <ClInclude Include="src\IndexCombinerAlgorithmDefaultImpl.h" />
+    <ClInclude Include="include\MorphingAlgorithm.h" />
+    <ClInclude Include="src\MorphingAlgorithmDefaultImpl.h" />
+    <ClInclude Include="include\SkinningAlgorithm.h" />
+    <ClInclude Include="src\SkinningAlgorithmDefaultImpl.h" />
+    <ClInclude Include="src\SkinningAlgorithmSSEImpl.h" />
+    <ClInclude Include="include\TriangulatorAlgorithm.h" />
+    <ClInclude Include="src\TriangulatorAlgorithmDefaultImpl.h" />
+    <ClInclude Include="include\collada\SceneReaderDae.h" />
+    <ClInclude Include="src\stdafx.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\SceneUtils.cpp" />
+    <ClCompile Include="src\SGAnimation.cpp" />
+    <ClCompile Include="src\SGCamera.cpp" />
+    <ClCompile Include="src\SGEffect.cpp" />
+    <ClCompile Include="src\SGGeometryInstanceAdapter.cpp" />
+    <ClCompile Include="src\SGImage.cpp" />
+    <ClCompile Include="src\SGLight.cpp" />
+    <ClCompile Include="src\SGMaterial.cpp" />
+    <ClCompile Include="src\SGMaterialBinding.cpp" />
+    <ClCompile Include="src\SGMesh.cpp" />
+    <ClCompile Include="src\SGMeshAdapter.cpp" />
+    <ClCompile Include="src\SGMorphedMesh.cpp" />
+    <ClCompile Include="src\SGNode.cpp" />
+    <ClCompile Include="src\SGProperty.cpp" />
+    <ClCompile Include="src\SGScene.cpp" />
+    <ClCompile Include="src\SGSceneAdapter.cpp" />
+    <ClCompile Include="src\SGSkinnedMesh.cpp" />
+    <ClCompile Include="src\IndexCombinerPluginImpl.cpp" />
+    <ClCompile Include="src\MorphingPluginImpl.cpp" />
+    <ClCompile Include="src\NodeControlPluginImpl.cpp" />
+    <ClCompile Include="src\SkinningPluginImpl.cpp" />
+    <ClCompile Include="src\TriangulatorPluginImpl.cpp" />
+    <ClCompile Include="src\TriSortPluginImpl.cpp" />
+    <ClCompile Include="src\MsgListenerStdImpl.cpp" />
+    <ClCompile Include="src\SSEOps.cpp" />
+    <ClCompile Include="win32\Win32Utils.cpp" />
+    <ClCompile Include="src\AccessProviderDefaultImpl.cpp" />
+    <ClCompile Include="src\MemoryManagerImpl.cpp" />
+    <ClCompile Include="src\ProcessorBaseImpl.cpp" />
+    <ClCompile Include="src\AABBCalcAlgorithmDefaultImpl.cpp" />
+    <ClCompile Include="src\IndexCombinerAlgorithmDefaultImpl.cpp" />
+    <ClCompile Include="src\MorphingAlgorithmDefaultImpl.cpp" />
+    <ClCompile Include="src\SkinningAlgorithmDefaultImpl.cpp" />
+    <ClCompile Include="src\SkinningAlgorithmSSEImpl.cpp" />
+    <ClCompile Include="src\TriangulatorAlgorithmDefaultImpl.cpp" />
+    <ClCompile Include="collada\SceneReaderDae.cpp" />
+    <ClCompile Include="src\stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+    </ClCompile>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

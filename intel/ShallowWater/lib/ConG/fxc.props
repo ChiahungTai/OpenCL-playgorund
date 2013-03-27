@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup
+    Condition="'$(FXCBeforeTargets)' == '' and '$(FXCAfterTargets)' == '' and '$(ConfigurationType)' != 'Makefile'">
+    <FXCBeforeTargets>Midl</FXCBeforeTargets>
+    <FXCAfterTargets>CustomBuild</FXCAfterTargets>
+  </PropertyGroup>
+  <PropertyGroup>
+    <FXCDependsOn
+      Condition="'$(ConfigurationType)' != 'Makefile'">_SelectedFiles;$(FXCDependsOn)</FXCDependsOn>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <FXC>
+      <strict>true</strict>
+      <compat>False</compat>
+      <perf>False</perf>
+      <noopt>False</noopt>
+      <nopre>False</nopre>
+      <child>False</child>
+      <include></include>
+      <outputdir>$(IntDir)</outputdir>
+      <output>0</output>
+      <target>0</target>
+      <CommandLineTemplate>fxc.exe [output] [target] [strict] [compat] [perf] [noopt] [nopre] [child] [Inputs] /I [include]</CommandLineTemplate>
+      <Outputs>[outputdir]\%(Filename).o</Outputs>
+      <ExecutionDescription>Executing tool...</ExecutionDescription>
+    </FXC>
+  </ItemDefinitionGroup>
+</Project>

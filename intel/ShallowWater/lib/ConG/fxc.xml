@@ -1,0 +1,213 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ProjectSchemaDefinitions xmlns="clr-namespace:Microsoft.Build.Framework.XamlTypes;assembly=Microsoft.Build.Framework" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:sys="clr-namespace:System;assembly=mscorlib" xmlns:transformCallback="Microsoft.Cpp.Dev10.ConvertPropertyCallback">
+  <Rule
+    Name="FXC"
+    PageTemplate="tool"
+    DisplayName="FXC"
+    Order="200">
+    <Rule.DataSource>
+      <DataSource
+        Persistence="ProjectFile"
+        ItemType="FXC" />
+    </Rule.DataSource>
+    <Rule.Categories>
+      <Category
+        Name="General">
+        <Category.DisplayName>
+          <sys:String>General</sys:String>
+        </Category.DisplayName>
+      </Category>
+      <Category
+        Name="Command Line"
+        Subtype="CommandLine">
+        <Category.DisplayName>
+          <sys:String>Command Line</sys:String>
+        </Category.DisplayName>
+      </Category>
+    </Rule.Categories>
+    <StringListProperty
+      Name="Inputs"
+      Category="Command Line"
+      IsRequired="true"
+      Switch=" ">
+      <StringListProperty.DataSource>
+        <DataSource
+          Persistence="ProjectFile"
+          ItemType="FXC"
+          SourceType="Item" />
+      </StringListProperty.DataSource>
+    </StringListProperty>
+    <BoolProperty
+      Name="strict"
+      Subcategory="Default"
+      HelpContext="0"
+      DisplayName="Enable Strict Mode"
+      Description="Enables strict mode."
+      Switch="/Ges" />
+    <BoolProperty
+      Name="compat"
+      Subcategory="Dx10"
+      HelpContext="0"
+      DisplayName="Backwards Compatibility ( DX9 syntax )"
+      Description="Allows shaders written in SM 3.0 and lower syntax to be compiled for SM 4.0 targets.  Useful for moving DX9 content over to DX10."
+      Switch="/Gec" />
+    <BoolProperty
+      Name="perf"
+      Subcategory="Default"
+      HelpContext="0"
+      DisplayName="Disable Performance Mode"
+      Description="Disabiling performance mode allows the application to update state object members among other things. "
+      Switch="/Gdp" />
+    <BoolProperty
+      Name="noopt"
+      Subcategory="Debug"
+      HelpContext="0"
+      DisplayName="Disable Optimizations"
+      Description="Turns off shader optimizations."
+      Switch="/Od" />
+    <BoolProperty
+      Name="nopre"
+      Subcategory="Debug"
+      HelpContext="0"
+      DisplayName="Disable Preshaders"
+      Description="Disables preshaders.  By default preshaders should be enabled because they can greatly improve performance."
+      Switch="/Op" />
+    <BoolProperty
+      Name="child"
+      Subcategory="Dx10"
+      HelpContext="0"
+      DisplayName="Child Effect"
+      Description="Allows a shader to be compiled as a child effect which allows it to be added to a pool. "
+      Switch="/Gch" />
+    <StringProperty
+      Name="include"
+      Subcategory="Default"
+      HelpContext="0"
+      DisplayName="Additional include path"
+      Description=""
+      Switch="[value]" />
+    <StringProperty
+      Name="outputdir"
+      Subcategory="Default"
+      HelpContext="0"
+      DisplayName="Output Directory"
+      Description="The directory to place the compiled object file in (when not compiling to STDOUT).  The default value is the project's temp folder."
+      Switch="[value]" />
+    <EnumProperty
+      Name="output"
+      Subcategory="Default"
+      HelpContext="0"
+      DisplayName="Compiler Output"
+      Description="Output to an object file or to stdout if you wish to see the assembler.">
+      <EnumValue
+        Name="0"
+        DisplayName="Object File"
+        Switch="/Fo &quot;[outputdir]\$(InputName).o&quot;" />
+      <EnumValue
+        Name="1"
+        DisplayName="No output.  Just compile to STDOUT."
+        Switch="/Cc" />
+    </EnumProperty>
+    <EnumProperty
+      Name="target"
+      Subcategory="Default"
+      HelpContext="0"
+      DisplayName="Compiler Target"
+      Description="Which shader model target to compile against.">
+      <EnumValue
+        Name="0"
+        DisplayName="FX 4.0 ( DX10 for shader model 4 and up )"
+        Switch="/T fx_4_0" />
+      <EnumValue
+        Name="1"
+        DisplayName="FX 2.0 ( DX9 for shader model 3 and down )"
+        Switch="/T fx_2_0" />
+    </EnumProperty>
+    <StringProperty
+      Name="CommandLineTemplate"
+      DisplayName="Command Line"
+      Visible="False"
+      IncludeInCommandLine="False" />
+    <DynamicEnumProperty
+      Name="FXCBeforeTargets"
+      Category="General"
+      EnumProvider="Targets"
+      IncludeInCommandLine="False">
+      <DynamicEnumProperty.DisplayName>
+        <sys:String>Execute Before</sys:String>
+      </DynamicEnumProperty.DisplayName>
+      <DynamicEnumProperty.Description>
+        <sys:String>Specifies the targets for the build customization to run before.</sys:String>
+      </DynamicEnumProperty.Description>
+      <DynamicEnumProperty.ProviderSettings>
+        <NameValuePair
+          Name="Exclude"
+          Value="^FXCBeforeTargets|^Compute" />
+      </DynamicEnumProperty.ProviderSettings>
+      <DynamicEnumProperty.DataSource>
+        <DataSource
+          Persistence="ProjectFile"
+          HasConfigurationCondition="true" />
+      </DynamicEnumProperty.DataSource>
+    </DynamicEnumProperty>
+    <DynamicEnumProperty
+      Name="FXCAfterTargets"
+      Category="General"
+      EnumProvider="Targets"
+      IncludeInCommandLine="False">
+      <DynamicEnumProperty.DisplayName>
+        <sys:String>Execute After</sys:String>
+      </DynamicEnumProperty.DisplayName>
+      <DynamicEnumProperty.Description>
+        <sys:String>Specifies the targets for the build customization to run after.</sys:String>
+      </DynamicEnumProperty.Description>
+      <DynamicEnumProperty.ProviderSettings>
+        <NameValuePair
+          Name="Exclude"
+          Value="^FXCAfterTargets|^Compute" />
+      </DynamicEnumProperty.ProviderSettings>
+      <DynamicEnumProperty.DataSource>
+        <DataSource
+          Persistence="ProjectFile"
+          ItemType=""
+          HasConfigurationCondition="true" />
+      </DynamicEnumProperty.DataSource>
+    </DynamicEnumProperty>
+    <StringListProperty
+      Name="Outputs"
+      DisplayName="Outputs"
+      Visible="False"
+      IncludeInCommandLine="False" />
+    <StringProperty
+      Name="ExecutionDescription"
+      DisplayName="Execution Description"
+      Visible="False"
+      IncludeInCommandLine="False" />
+    <StringListProperty
+      Name="AdditionalDependencies"
+      DisplayName="Additional Dependencies"
+      IncludeInCommandLine="False"
+      Visible="false" />
+    <StringProperty
+      Subtype="AdditionalOptions"
+      Name="AdditionalOptions"
+      Category="Command Line">
+      <StringProperty.DisplayName>
+        <sys:String>Additional Options</sys:String>
+      </StringProperty.DisplayName>
+      <StringProperty.Description>
+        <sys:String>Additional Options</sys:String>
+      </StringProperty.Description>
+    </StringProperty>
+  </Rule>
+  <ItemType
+    Name="FXC"
+    DisplayName="FXC" />
+  <FileExtension
+    Name="*.fx, *.fxh"
+    ContentType="FXC" />
+  <ContentType
+    Name="FXC"
+    DisplayName="FXC"
+    ItemType="FXC" />
+</ProjectSchemaDefinitions>

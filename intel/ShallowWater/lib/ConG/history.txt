@@ -1,0 +1,20 @@
+baseCollada version history
+
+* version 0.1.0 cl 63934 03.04.2009
+  - initial version
+
+* version 0.2.0 cl xxxxx 10.07.2009
+  - Some interfaces became ref-counted
+  - Added helper AutoPtr class
+  - Added IEnvironment interface
+  - Added IClock interface
+  - Improved contexts concept
+  - Fixed BBox calculation
+  - Fixed view notifications for nodes
+  - Improved Effect interface
+  - Added support for TGA format in DX10 render
+  - Fixed lots of stability issues
+  - Improved mathlib usage
+  - OpenColladaFile allows merging with the existing scene
+  - Improved x-fov and y-fov handling
+  

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="Windows-1252"?>
+<VisualStudioPropertySheet
+	ProjectType="Visual C++"
+	Version="8.00"
+	Name="intelocl_release"
+  OutputDirectory="$(SolutionDir)$(PlatformName)\$(ConfigurationName)"
+	IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
+	>
+	<Tool
+		Name="VCCLCompilerTool"
+		Optimization="2"
+		EnableIntrinsicFunctions="true"
+		WholeProgramOptimization="true"
+		PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;DX9_MEDIA_SHARING;DX9_SHARING;__D3D10__"
+		AdditionalIncludeDirectories="&quot;$(INTELOCLSDKROOT)\include&quot;;&quot;..\common&quot;"
+		RuntimeLibrary="1"
+		EnableFunctionLevelLinking="true"
+	/>
+	<Tool
+		Name="VCLinkerTool"
+		AdditionalDependencies="opencl.lib"
+		AdditionalLibraryDirectories="&quot;$(INTELOCLSDKROOT)\lib\x86&quot;"
+		GenerateDebugInformation="true"
+		TargetMachine="1"
+	/>
+</VisualStudioPropertySheet>

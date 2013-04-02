@@ -4,4 +4,5 @@ nvidia/nvidia-opencl-examples/OpenCL/src/*/obj/
 nvidia/nvidia-opencl-examples/shared/obj
 *.project
 *.cproject
-
+*.pyc
+*.pydevproject

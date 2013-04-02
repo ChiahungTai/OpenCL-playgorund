@@ -7,9 +7,9 @@ from __future__ import unicode_literals
 import inspect
 import types
 
-from hce_base import MethodHandler
-from config import ConfigProvider
-from registrar import Registrar
+from .base import MethodHandler
+from .config import ConfigProvider
+from .registrar import Registrar
 
 
 def CommandProvider(cls):

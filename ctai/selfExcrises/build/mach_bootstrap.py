@@ -8,23 +8,41 @@ import os
 import platform
 import sys
 
+# TODO Bug 794506 Integrate with the in-tree virtualenv configuration.
 SEARCH_PATHS = [
-    'python/mach/mach',
-#    'python/hce_build_sys/mach',
+    'python/mach',
+    'python/mozboot',
+    'python/mozbuild',
+    'build/pymake',
+    'python/blessings',
+    'python/psutil',
+    'python/which',
+#    'other-licenses/ply',
+#    'xpcom/idl-parser',
+    'testing',
+#    'testing/xpcshell',
+    'testing/mozbase/mozprocess',
+    'testing/mozbase/mozfile',
+    'testing/mozbase/mozinfo',
 ]
 
 # Individual files providing mach commands.
 MACH_MODULES = [
+#    'addon-sdk/mach_commands.py',
+#    'layout/tools/reftest/mach_commands.py',
     'python/mach/mach/commands/commandinfo.py',
-#    'python/hce_build_sys/hcf_build_sys/config.py',
-#    'python/hce_build_sys/hcf_build_sys/mach_commands.py',
-#    'python/hce_build_sys/hcf_build_sys/frontend/mach_commands.py',
+    'python/mozboot/mozboot/mach_commands.py',
+    'python/mozbuild/mozbuild/config.py',
+    'python/mozbuild/mozbuild/mach_commands.py',
+#    'python/mozbuild/mozbuild/frontend/mach_commands.py',
+#    'testing/mochitest/mach_commands.py',
+#    'testing/xpcshell/mach_commands.py',
 #    'tools/mach_commands.py',
 ]
 
-def bootstrap(topsrcdir, hce_dir=None):
-    if hce_dir is None:
-        hce_dir = topsrcdir
+def bootstrap(topsrcdir, mozilla_dir=None):
+    if mozilla_dir is None:
+        mozilla_dir = topsrcdir
 
     # Ensure we are running Python 2.7+. We put this check here so we generate a
     # user-friendly error message rather than a cryptic stack trace on module
@@ -35,13 +53,12 @@ def bootstrap(topsrcdir, hce_dir=None):
         sys.exit(1)
 
     try:
-        import main_module
+        import mach.main
     except ImportError:
-        sys.path[0:0] = [os.path.join(hce_dir, path) for path in SEARCH_PATHS]
-        import main_module
+        sys.path[0:0] = [os.path.join(mozilla_dir, path) for path in SEARCH_PATHS]
+        import mach.main
 
-    mach = main_module.Mach(topsrcdir)
+    mach = mach.main.Mach(topsrcdir)
     for path in MACH_MODULES:
-        mach.load_commands_from_file(os.path.join(hce_dir, path))
+        mach.load_commands_from_file(os.path.join(mozilla_dir, path))
     return mach
-

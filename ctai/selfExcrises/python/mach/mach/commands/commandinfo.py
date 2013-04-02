@@ -4,7 +4,7 @@
 
 from __future__ import print_function, unicode_literals
 
-from decorators import (
+from mach.decorators import (
     CommandProvider,
     Command,
 )

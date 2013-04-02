@@ -2,5 +2,6 @@ nvidia/nvidia-opencl-examples/OpenCL/common/obj/
 nvidia/nvidia-opencl-examples/OpenCL/bin/
 nvidia/nvidia-opencl-examples/OpenCL/src/*/obj/
 nvidia/nvidia-opencl-examples/shared/obj
-
+*.project
+*.cproject
 

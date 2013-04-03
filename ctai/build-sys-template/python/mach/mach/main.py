@@ -174,6 +174,7 @@ To see more help for a specific command, run:
                 sys.modules[b'mach.commands'] = mod
 
             module_name = 'mach.commands.%s' % uuid.uuid1().get_hex()
+
         imp.load_source(module_name, path)
 
     def run(self, argv, stdin=None, stdout=None, stderr=None):

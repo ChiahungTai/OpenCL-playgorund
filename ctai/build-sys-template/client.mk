@@ -242,7 +242,6 @@ EXTRA_CONFIG_DEPS := \
   $(NULL)
 
 $(CONFIGURES): %: %.in $(EXTRA_CONFIG_DEPS)
-	@$(PYTHON) $(TOPSRCDIR)/build
 	@echo Generating $@ using autoconf
 	cd $(@D); $(AUTOCONF)
 

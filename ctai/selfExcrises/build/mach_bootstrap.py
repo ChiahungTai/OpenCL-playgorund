@@ -13,6 +13,7 @@ SEARCH_PATHS = [
     'python/mach',
     'python/mozboot',
     'python/mozbuild',
+    'build/pymake',
     'python/which',
     'testing',
     'testing/mozbase/mozprocess',

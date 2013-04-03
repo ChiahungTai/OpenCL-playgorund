@@ -7,3 +7,4 @@ nvidia/nvidia-opencl-examples/shared/obj
 *.pyc
 *.pydevproject
 configure
+obj-*

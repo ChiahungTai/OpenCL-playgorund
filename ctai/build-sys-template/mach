@@ -24,19 +24,19 @@ def load_mach(topsrcdir):
 # Check whether the current directory is within a mach src or obj dir.
 for dir_path in ancestors(os.getcwd()):
     # If we find a "mozinfo.json" file, we are in the objdir.
-    mozinfo_path = os.path.join(dir_path, "mozinfo.json")
-    if os.path.isfile(mozinfo_path):
+    hceinfo_path = os.path.join(dir_path, "hceinfo.json")
+    if os.path.isfile(hceinfo_path):
         import json
-        info = json.load(open(mozinfo_path))
-        if "mozconfig" in info and "MOZCONFIG" not in os.environ:
-            # If the MOZCONFIG environment variable is not already set, set it
-            # to the value from mozinfo.json.  This will tell the build system
-            # to look for a config file at the path in $MOZCONFIG rather than
+        info = json.load(open(hceinfo_path))
+        if "hceconfig" in info and "HCECONFIG" not in os.environ:
+            # If the HCECONFIG environment variable is not already set, set it
+            # to the value from hceinfo.json.  This will tell the build system
+            # to look for a config file at the path in $HCECONFIG rather than
             # its default locations.
             #
             # Note: subprocess requires native strings in os.environ Python
             # 2.7.2 and earlier on Windows.
-            os.environ[b"MOZCONFIG"] = str(info["mozconfig"])
+            os.environ[b"HCECONFIG"] = str(info["hceconfig"])
 
         if "topsrcdir" in info:
             # Continue searching for mach_bootstrap in the source directory.

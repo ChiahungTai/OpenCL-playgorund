@@ -11,27 +11,16 @@ import sys
 # TODO Bug 794506 Integrate with the in-tree virtualenv configuration.
 SEARCH_PATHS = [
     'python/mach',
-    'python/mozboot',
-    'python/mozbuild',
-    'python/which',
-    'testing',
-    'testing/mozbase/mozprocess',
-    'testing/mozbase/mozfile',
-    'testing/mozbase/mozinfo',
 ]
 
 # Individual files providing mach commands.
 MACH_MODULES = [
     'python/mach/mach/commands/commandinfo.py',
-    'python/mozboot/mozboot/mach_commands.py',
-    'python/mozbuild/mozbuild/config.py',
-    'python/mozbuild/mozbuild/mach_commands.py',
-    'python/mozbuild/mozbuild/frontend/mach_commands.py',
 ]
 
-def bootstrap(topsrcdir, mozilla_dir=None):
-    if mozilla_dir is None:
-        mozilla_dir = topsrcdir
+def bootstrap(topsrcdir, hce_dir=None):
+    if hce_dir is None:
+        hce_dir = topsrcdir
 
     # Ensure we are running Python 2.7+. We put this check here so we generate a
     # user-friendly error message rather than a cryptic stack trace on module
@@ -44,11 +33,11 @@ def bootstrap(topsrcdir, mozilla_dir=None):
     try:
         import mach.main
     except ImportError:
-        sys.path[0:0] = [os.path.join(mozilla_dir, path) for path in SEARCH_PATHS]
+        sys.path[0:0] = [os.path.join(hce_dir, path) for path in SEARCH_PATHS]
         import mach.main
 
     mach = mach.main.Mach(topsrcdir)
     for path in MACH_MODULES:
-        mach.load_commands_from_file(os.path.join(mozilla_dir, path))
+        mach.load_commands_from_file(os.path.join(hce_dir, path))
     return mach
 

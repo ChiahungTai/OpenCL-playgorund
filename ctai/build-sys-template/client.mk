@@ -241,7 +241,7 @@ EXTRA_CONFIG_DEPS := \
   $(wildcard $(TOPSRCDIR)/build/autoconf/*.m4) \
   $(NULL)
 
-$(CONFIGURES): %: %.ac $(EXTRA_CONFIG_DEPS)
+$(CONFIGURES): %: %.in $(EXTRA_CONFIG_DEPS)
 	@echo Generating $@ using autoconf
 	cd $(@D); $(AUTOCONF)
 

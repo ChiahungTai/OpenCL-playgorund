@@ -8,3 +8,8 @@ nvidia/nvidia-opencl-examples/shared/obj
 *.pydevproject
 configure
 obj-*
+autom4te.cache
+autoscan.log
+configure.scan
+.mozconfig.out
+

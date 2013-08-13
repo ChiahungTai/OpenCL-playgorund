@@ -64,7 +64,8 @@ inline int ConvertSMVer2Cores(int major, int minor)
 	  { 0x13,  8 }, // Tesla Generation (SM 1.3) GT200 class
 	  { 0x20, 32 }, // Fermi Generation (SM 2.0) GF100 class
 	  { 0x21, 48 }, // Fermi Generation (SM 2.1) GF10x class
-	  { 0x30, 192}, // Fermi Generation (SM 3.0) GK10x class
+	  { 0x30, 192}, // Kepler Generation (SM 3.0) GK10x class
+	  { 0x35, 192}, // Kepler Generation (SM 3.5) GK11x class
 	  {   -1, -1 }
 	};
 
@@ -75,8 +76,9 @@ inline int ConvertSMVer2Cores(int major, int minor)
 		}
 		index++;
 	}
-	printf("MapSMtoCores SM %d.%d is undefined (please update to the latest SDK)!\n", major, minor);
-	return -1;
+    // If we don't find the values, we default use the previous one to run properly
+    printf("MapSMtoCores for SM %d.%d is undefined.  Default to use %d Cores/SM\n", major, minor, nGpuArchCoresPerSM[7].Cores);
+    return nGpuArchCoresPerSM[7].Cores;
 }
 // end of GPU Architecture definitions
 

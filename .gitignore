@@ -25,3 +25,4 @@ configure.scan
 *.unsuccessfulbuild
 *.user
 *.opensdf
+*.sdf

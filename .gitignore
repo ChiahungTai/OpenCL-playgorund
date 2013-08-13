@@ -12,4 +12,16 @@ autom4te.cache
 autoscan.log
 configure.scan
 .mozconfig.out
-
+*.sln
+*.vcxproj
+*.obj
+*.log
+*.tlog
+*.idb
+*.pdb
+*.filters
+*.lastbuildstate
+*.cache
+*.unsuccessfulbuild
+*.user
+*.opensdf

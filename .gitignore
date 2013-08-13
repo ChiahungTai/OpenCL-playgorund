@@ -26,3 +26,4 @@ configure.scan
 *.user
 *.opensdf
 *.sdf
+*.suo

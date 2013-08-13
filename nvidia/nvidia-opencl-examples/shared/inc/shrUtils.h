@@ -76,8 +76,9 @@ inline int ConvertSMVer2Cores(int major, int minor)
 		}
 		index++;
 	}
-	printf("MapSMtoCores SM %d.%d is undefined (please update to the latest SDK)!\n", major, minor);
-	return -1;
+    // If we don't find the values, we default use the previous one to run properly
+    printf("MapSMtoCores for SM %d.%d is undefined.  Default to use %d Cores/SM\n", major, minor, nGpuArchCoresPerSM[7].Cores);
+    return nGpuArchCoresPerSM[7].Cores;
 }
 // end of GPU Architecture definitions
 

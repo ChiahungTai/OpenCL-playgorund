@@ -133,92 +133,14 @@ int main(int argc, char* argv[])
     	size_t sourceSize2[] ={strlen(source2)};
 
 		cl::Program::Sources sources;
+		cl::Program::Sources sources2;
 		sources.push_back(std::make_pair(source, strlen(source)));
-//		sources.push_back(std::make_pair(source2, strlen(source2)));
+		sources2.push_back(std::make_pair(source2, strlen(source2)));
 
 		cl::Program program = cl::Program(context, sources);
 		program.build(devices, "-g");
-
-
-#if 0		
-	////create program
-	//cl_program program = clCreateProgramWithSource(context(), 1, &source, sourceSize, &status);
-	//if (status != CL_SUCCESS)
-	//{
-	//	std::cout<<"Error: Creating program object failed!"<<std::endl;
-	//	return FAILURE;
-	//}
-	cl_program program2 = clCreateProgramWithSource(context(), 1, &source2, sourceSize2, &status);
-	if (status != CL_SUCCESS)
-	{
-		std::cout<<"Error: Creating program object failed!"<<std::endl;
-		return FAILURE;
-	}
-
-	//build program with the command line option '-g' so we can debug kernel
-	/*status = clBuildProgram(program,1, &devices[0](), "-g", NULL, NULL);
-	if (status != CL_SUCCESS)
-	{
-		std::cout<<"Error: Building program failed!"<<std::endl;
-		return FAILURE;
-	}*/
-	status = clBuildProgram(program(),1, &devices[0](), "-g", NULL, NULL);
-	if (status != CL_SUCCESS)
-	{
-		std::cout<<"Error: Building program failed!"<<std::endl;
-		return FAILURE;
-	}
-
-	//create printf kernel	
-	/*cl_kernel kernel1 = clCreateKernel(program, "printfKernel", &status);
-	if (status != CL_SUCCESS)
-	{
-		std::cout<<"Error: Creating kernel failed!"<<std::endl;
-		return FAILURE;
-	}
-//	set kernel args.
-	status = clSetKernelArg(kernel1, 0, sizeof(cl_mem), (void *)&inputBuffer);
-	*/
-	////create debug kernel	
-	cl_kernel kernel2 = clCreateKernel(program(), "debugKernel", &status);
-	if (status != CL_SUCCESS)
-	{
-		std::cout<<"Error: Creating kernel failed!"<<std::endl;
-		return FAILURE;
-	}
-	//set kernel args.
-	status = clSetKernelArg(kernel2, 0, sizeof(cl_mem), (void *)&inputBuffer);
-	status = clSetKernelArg(kernel2, 1, sizeof(cl_mem), (void *)&outputBuffer);
-	
-
-	size_t global_threads[1];
-	size_t local_threads[1];
-	global_threads[0] = GlobalThreadSize;
-    local_threads[0] = GroupSize;
-
-	////execute the kernel
-	//status = clEnqueueNDRangeKernel(queue(), kernel1, 1, NULL, global_threads, local_threads, 0, NULL, NULL);
-	//if (status != CL_SUCCESS)
-	//{
-	//	std::cout<<"Error: Enqueue kernel onto command queue failed!"<<std::endl;
-	//	return FAILURE;
-	//}
-	//status = clFinish(queue());
-
-	status = clEnqueueNDRangeKernel(queue(), kernel2, 1, NULL, global_threads, local_threads, 0, NULL, NULL);
-	if (status != CL_SUCCESS)
-	{
-		std::cout<<"Error: Enqueue kernel onto command queue failed!"<<std::endl;
-		return FAILURE;
-	}
-	status = clFinish(queue());
-	
-	// Clean the resources.
-//	status = clReleaseKernel(kernel1);//Release kernel.
-	status = clReleaseKernel(kernel2);
-//	status = clReleaseProgram(program);//Release program.
-
-#else
+		cl::Program program2 = cl::Program(context, sources2);
+		program2.build(devices, "-g");
 
 		cl::Kernel printfKernel(program, "printfKernel", &status);
 		if (status != CL_SUCCESS) {
@@ -227,13 +149,13 @@ int main(int argc, char* argv[])
 		//set kernel args.
 		status = clSetKernelArg(printfKernel(), 0, sizeof(cl_mem), (void *)&inputBuffer);
 
-		//cl::Kernel debugKernel(program, "debugKernel", &status);
-		//if (status != CL_SUCCESS) {
-		//	throw cl::Error(status, "DebugKernel!");
-		//}
-		////set kernel args.
-		//status = clSetKernelArg(debugKernel(), 0, sizeof(cl_mem), (void *)&inputBuffer);
-		//status = clSetKernelArg(debugKernel(), 1, sizeof(cl_mem), (void *)&outputBuffer);
+		cl::Kernel debugKernel(program2, "debugKernel", &status);
+		if (status != CL_SUCCESS) {
+			throw cl::Error(status, "DebugKernel!");
+		}
+		//set kernel args.
+		status = clSetKernelArg(debugKernel(), 0, sizeof(cl_mem), (void *)&inputBuffer);
+		status = clSetKernelArg(debugKernel(), 1, sizeof(cl_mem), (void *)&outputBuffer);
 
 		size_t global_threads[1];
 		size_t local_threads[1];
@@ -254,7 +176,7 @@ int main(int argc, char* argv[])
 			throw cl::Error(status, "Execute printfKernel!");
 		}
 		status = clFinish(queue());
-		/*
+		
 		status = queue.enqueueNDRangeKernel(
 			debugKernel,
 			cl::NullRange,
@@ -265,12 +187,12 @@ int main(int argc, char* argv[])
 		if (status != CL_SUCCESS) {
 			throw cl::Error(status, "Execute DebugKernel!");
 		}
-*/
+
 		status = clReleaseMemObject(inputBuffer);//Release mem object.
 		status = clReleaseMemObject(outputBuffer);
 
 		status = clFinish(queue());
-#endif
+//#endif
 		free(input);
 	} catch (cl::Error err) {
 		if (input) {

@@ -1,0 +1,15 @@
+Setting target instruction set architecture to: Default (Advanced Vector Extension 2 (AVX2))
+OpenCL Intel CPU device was found!
+Device name: Intel(R) Core(TM) i7-4770K CPU @ 3.50GHz
+Device version: OpenCL 1.2 (Build 117)
+Device vendor: Intel(R) Corporation
+Device profile: FULL_PROFILE
+Compilation started
+Compilation done
+Linking started
+Linking done
+Device build started
+Device build done
+Kernel <debugKernel> was successfully vectorized
+Done.
+Build succeeded!

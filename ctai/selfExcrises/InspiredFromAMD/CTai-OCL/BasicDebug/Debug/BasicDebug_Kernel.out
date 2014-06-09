@@ -1,0 +1,17 @@
+Setting target instruction set architecture to: Default (Advanced Vector Extension 2 (AVX2))
+OpenCL Intel CPU device was found!
+Device name: Intel(R) Core(TM) i7-4770K CPU @ 3.50GHz
+Device version: OpenCL 1.2 (Build 117)
+Device vendor: Intel(R) Corporation
+Device profile: FULL_PROFILE
+Compilation started
+D:\glaxy-backup\WorkRelated\GitHub\OpenCL-playgorund\ctai\selfExcrises\InspiredFromAMD\CTai-OCL\BasicDebug\BasicDebug_Kernel.cl(33,37) :warning CL : array index 10 is past the end of the array (which contains 10 elements)
+D:\glaxy-backup\WorkRelated\GitHub\OpenCL-playgorund\ctai\selfExcrises\InspiredFromAMD\CTai-OCL\BasicDebug\BasicDebug_Kernel.cl:26:2: note: array 'data' declared here
+Compilation done
+Linking started
+Linking done
+Device build started
+Device build done
+Kernel <printfKernel> was successfully vectorized
+Done.
+Build succeeded!
